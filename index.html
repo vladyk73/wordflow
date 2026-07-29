@@ -280,6 +280,78 @@ body.training-active .grading .grade{
   .bulk-preview-actions .btn{width:100%;min-height:44px}
 }
 
+
+.stats{grid-template-columns:repeat(5,1fr)}
+.progress-stat-card{
+  appearance:none;text-align:left;color:var(--text);cursor:pointer;
+  border:1px solid rgba(232,234,240,.95);
+  font:inherit;transition:.16s
+}
+.progress-stat-card strong{color:var(--accent)}
+.progress-stat-card span{
+  display:flex;justify-content:space-between;align-items:center;gap:8px
+}
+.progress-stat-card span b{
+  font-size:17px;color:var(--accent);line-height:1
+}
+.progress-stat-card:hover{
+  transform:translateY(-2px);
+  border-color:#cfd4ff;
+  box-shadow:0 18px 42px rgba(98,107,232,.14)
+}
+.progress-modal-card{width:min(680px,100%)}
+.topic-progress-list{display:grid;gap:10px}
+.topic-progress-item{
+  padding:12px 13px;border:1px solid var(--line);
+  border-radius:14px;background:#fbfcfe
+}
+.topic-progress-top{
+  display:flex;justify-content:space-between;gap:12px;
+  align-items:center;margin-bottom:8px
+}
+.topic-progress-name{
+  font-weight:900;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap
+}
+.topic-progress-count{
+  font-size:12px;color:var(--muted);white-space:nowrap
+}
+.topic-progress-bar{
+  height:10px;border-radius:999px;background:#e9ecf3;
+  overflow:hidden
+}
+.topic-progress-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .3s ease
+}
+.topic-progress-meta{
+  display:flex;justify-content:space-between;gap:8px;
+  margin-top:7px;font-size:11px;color:var(--muted)
+}
+.topic-progress-empty{
+  padding:26px;text-align:center;color:var(--muted);
+  border:1px dashed var(--line);border-radius:14px
+}
+@media(max-width:700px){
+  .stats{grid-template-columns:1fr 1fr}
+  .progress-stat-card{
+    grid-column:1/-1;min-height:74px;
+    display:grid;grid-template-columns:auto 1fr;
+    align-items:center;column-gap:14px;text-align:left
+  }
+  .progress-stat-card strong{margin:0;font-size:28px}
+  .progress-stat-card span{font-size:13px}
+  .topic-progress-top{align-items:flex-start}
+  .topic-progress-name{white-space:normal}
+}
+
+
+@media(min-width:701px) and (max-width:1050px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .progress-stat-card{grid-column:span 2}
+}
+
 </style>
 </head>
 <body>
@@ -322,6 +394,10 @@ body.training-active .grading .grade{
       <div class="panel stat"><strong id="statLearned">0</strong><span>Вивчено</span></div>
       <div class="panel stat"><strong id="statLearning">0</strong><span>Вчу</span></div>
       <div class="panel stat"><strong id="statFiltered">0</strong><span>Після фільтрів</span></div>
+      <button class="panel stat progress-stat-card" id="progressBtn" type="button">
+        <strong id="statProgressPct">0%</strong>
+        <span>Прогрес по темах <b aria-hidden="true">→</b></span>
+      </button>
     </div>
     <div class="panel dictionary">
       <div class="toolbar">
@@ -422,6 +498,18 @@ body.training-active .grading .grade{
   </section>
 </div>
 
+<div class="modal" id="progressModal">
+  <div class="modal-card progress-modal-card">
+    <div class="modal-head">
+      <div>
+        <h3>Прогрес по темах</h3>
+        <div class="small-note" id="progressOverall"></div>
+      </div>
+      <button class="icon-btn" id="closeProgressModal" aria-label="Закрити">×</button>
+    </div>
+    <div class="topic-progress-list" id="topicProgressList"></div>
+  </div>
+</div>
 <div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">Видалення теми не видаляє слова — лише прибирає цю тему з них.</p></div></div>
 <button class="love-easter-egg" id="loveBtn" title="♥" aria-label="Сюрприз">♥</button><div class="toast" id="toast"></div>
 <script type="module">
@@ -449,7 +537,7 @@ const firestore = initializeFirestore(firebaseApp,{
 const googleProvider = new GoogleAuthProvider();
 
 (()=>{
-const $=id=>document.getElementById(id); const GUEST_DB_KEY='wordflow_guest_v1';
+const $=id=>document.getElementById(id); const GUEST_DB_KEY='wordflow_guest_v1'; const LEGACY_DB_KEYS=['wordflow_dictionary_v1'];
 
 let cloudUser=null;
 let cloudReady=false;
@@ -502,11 +590,26 @@ function readLocalByKey(key){
     return null;
   }
 }
-function loadLocalDB(){
-  return readLocalByKey(localKey());
-}
 function loadGuestDB(){
-  return readLocalByKey(GUEST_DB_KEY);
+  const current=readLocalByKey(GUEST_DB_KEY);
+  if(current)return current;
+
+  // One-time compatibility migration from earlier WordFlow builds.
+  for(const oldKey of LEGACY_DB_KEYS){
+    const legacy=readLocalByKey(oldKey);
+    if(!legacy)continue;
+    try{
+      localStorage.setItem(GUEST_DB_KEY,JSON.stringify(legacy));
+      localStorage.removeItem(oldKey);
+    }catch(err){
+      console.error('WordFlow local migration:',err);
+    }
+    return legacy;
+  }
+  return null;
+}
+function loadLocalDB(){
+  return cloudUser ? readLocalByKey(localKey()) : loadGuestDB();
 }
 function saveLocalDB(){
   try{localStorage.setItem(localKey(),JSON.stringify(db))}
@@ -838,7 +941,55 @@ function quickSetStatus(id,status){if(!['new','learning','learned'].includes(sta
 function currentFilters(){return {q:norm($('search').value),type:$('typeFilter').value,status:$('statusFilter').value,sort:$('sort').value,cats:[...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat)}}
 function filteredEntries(){const f=currentFilters();let out=db.entries.filter(x=>{const hay=norm([x.en,x.ua,x.transcription,x.note,(x.categories||[]).join(' ')].join(' '));return(!f.q||hay.includes(f.q))&&(!f.type||x.type===f.type)&&(!f.status||x.status===f.status)&&(!f.cats.length||f.cats.some(c=>(x.categories||[]).includes(c)))});out.sort((a,b)=>f.sort==='za'?b.en.localeCompare(a.en,'en',{sensitivity:'base'}):f.sort==='recent'?String(b.createdAt||'').localeCompare(String(a.createdAt||'')):a.en.localeCompare(b.en,'en',{sensitivity:'base'}));return out}
 function renderAll(){renderStats();renderCategories();renderList();renderEditorCats();renderCategoryManage()}
-function renderStats(){const f=filteredEntries();$('statAll').textContent=db.entries.length;$('statLearned').textContent=db.entries.filter(x=>x.status==='learned').length;$('statLearning').textContent=db.entries.filter(x=>x.status==='learning').length;$('statFiltered').textContent=f.length}
+function renderStats(){
+  const f=filteredEntries();
+  const learned=db.entries.filter(x=>x.status==='learned').length;
+  $('statAll').textContent=db.entries.length;
+  $('statLearned').textContent=learned;
+  $('statLearning').textContent=db.entries.filter(x=>x.status==='learning').length;
+  $('statFiltered').textContent=f.length;
+  $('statProgressPct').textContent=db.entries.length?Math.round(learned/db.entries.length*100)+'%':'0%';
+}
+function renderTopicProgress(){
+  const cats=allCategories();
+  const total=db.entries.length;
+  const learnedTotal=db.entries.filter(x=>x.status==='learned').length;
+  const overallPct=total?Math.round(learnedTotal/total*100):0;
+  $('progressOverall').textContent=total
+    ? `Загалом вивчено ${learnedTotal} із ${total} записів · ${overallPct}%`
+    : 'У словнику поки немає записів.';
+
+  if(!cats.length){
+    $('topicProgressList').innerHTML='<div class="topic-progress-empty">Тем поки немає.</div>';
+    return;
+  }
+
+  const rows=cats.map(cat=>{
+    const items=db.entries.filter(x=>(x.categories||[]).includes(cat));
+    const learned=items.filter(x=>x.status==='learned').length;
+    const learning=items.filter(x=>x.status==='learning').length;
+    const fresh=items.filter(x=>x.status==='new').length;
+    const pct=items.length?Math.round(learned/items.length*100):0;
+    return {cat,total:items.length,learned,learning,fresh,pct};
+  }).sort((a,b)=>b.pct-a.pct||b.total-a.total||a.cat.localeCompare(b.cat,'uk'));
+
+  $('topicProgressList').innerHTML=rows.map(r=>`
+    <div class="topic-progress-item">
+      <div class="topic-progress-top">
+        <div class="topic-progress-name">${esc(r.cat)}</div>
+        <div class="topic-progress-count">${r.learned} / ${r.total} вивчено · ${r.pct}%</div>
+      </div>
+      <div class="topic-progress-bar" aria-label="${esc(r.cat)}: ${r.pct}%">
+        <div class="topic-progress-fill" style="width:${r.pct}%"></div>
+      </div>
+      <div class="topic-progress-meta">
+        <span>Вчу: ${r.learning}</span>
+        <span>Нові: ${r.fresh}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
 function renderCategories(){const active=new Set([...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat));$('categoryFilters').innerHTML=allCategories().map(c=>`<button class="chip ${active.has(c)?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')||'<span class="small-note">Тем ще немає.</span>';document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{b.classList.toggle('active');renderStats();renderList()})}
 function renderList(){const arr=filteredEntries();renderAlphabet(arr);$('listInfo').textContent=`${arr.length} ${arr.length===1?'запис':'записів'}`;$('wordList').innerHTML=arr.length?arr.map(x=>`<div class="word-row" data-letter="${initialLetter(x.en)}"><div><div class="en">${esc(x.en)}</div>${x.transcription?`<div class="ipa">${esc(x.transcription)}</div>`:''}<div class="tags">${(x.categories||[]).map(c=>`<span class="tag">${esc(c)}</span>`).join('')}</div></div><div class="ua">${esc(x.ua)}${x.note?`<div class="small-note" style="margin-top:5px">${esc(x.note)}</div>`:''}</div><div class="meta"><div class="type">${typeLabel(x.type)}</div><div class="quick-status" aria-label="Швидка зміна статусу"><button class="quick-status-btn ${x.status==='new'?'active new':''}" data-id="${x.id}" data-status="new" title="Позначити як нове">Нове</button><button class="quick-status-btn ${x.status==='learning'?'active learning':''}" data-id="${x.id}" data-status="learning" title="Позначити: вчу">Вчу</button><button class="quick-status-btn ${x.status==='learned'?'active learned':''}" data-id="${x.id}" data-status="learned" title="Позначити як вивчене">Вивчено</button></div></div><div class="row-actions"><button class="icon-btn edit" data-id="${x.id}" title="Редагувати" aria-label="Редагувати «${esc(x.en)}»">✎</button><button class="icon-btn del" data-id="${x.id}" title="Видалити" aria-label="Видалити «${esc(x.en)}»">×</button></div></div>`).join(''):'<div class="empty">Нічого не знайдено. Зміни фільтри або додай нові слова.</div>';document.querySelectorAll('.quick-status-btn').forEach(b=>b.onclick=()=>quickSetStatus(b.dataset.id,b.dataset.status));document.querySelectorAll('.edit').forEach(b=>b.onclick=()=>editEntry(b.dataset.id));document.querySelectorAll('.del').forEach(b=>b.onclick=()=>deleteEntry(b.dataset.id))}
 function renderEditorCats(){const cats=allCategories();$('categoryPicks').innerHTML=cats.map(c=>`<button type="button" class="cat-pick ${selectedCategories.has(c)?'selected':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')||'<span class="small-note">Додай першу тему нижче.</span>';document.querySelectorAll('.cat-pick').forEach(b=>b.onclick=()=>{selectedCategories.has(b.dataset.cat)?selectedCategories.delete(b.dataset.cat):selectedCategories.add(b.dataset.cat);renderEditorCats()})}
@@ -1133,7 +1284,11 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.manage-wrap'))setManageMenu(false);
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')setManageMenu(false);
+  if(e.key==='Escape'){
+    setManageMenu(false);
+    $('progressModal').classList.remove('open');
+    $('categoryModal').classList.remove('open');
+  }
 });
 
 getRedirectResult(firebaseAuth).catch(err=>console.error(err));
@@ -1206,7 +1361,10 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   };
   r.readAsText(f);
   e.target.value='';
-};$('migrateOld').onclick=migrateOld;$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=prepareTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
+};$('migrateOld').onclick=migrateOld;$('progressBtn').onclick=()=>{renderTopicProgress();$('progressModal').classList.add('open')};
+$('closeProgressModal').onclick=()=>$('progressModal').classList.remove('open');
+$('progressModal').onclick=e=>{if(e.target===$('progressModal'))$('progressModal').classList.remove('open')};
+$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=prepareTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
 $('loveBtn').onclick=()=>{const m=['Я тебе люблю.','Ти молодець. Навіть коли якесь слово думає інакше.','Словник росте. Моя любов до тебе теж, але вона вже не влазить у статистику.','Правильна відповідь дня: ти неймовірна.','Ще одне слово — ще один маленький крок. Я бачу, як ти стараєшся.'];toast(m[Math.floor(Math.random()*m.length)])};
 })();
 </script>
