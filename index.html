@@ -47,11 +47,96 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
   .app{padding-left:8px;padding-right:8px}.actions{grid-template-columns:1fr}.actions>:last-child:nth-child(odd){grid-column:auto}.stats{grid-template-columns:1fr 1fr}.stat{padding:10px}.stat strong{font-size:20px}.tab{font-size:12px;padding:8px 9px}.en{font-size:18px}.quick-status-btn{font-size:11px;padding-left:3px;padding-right:3px}.dictionary,.editor,.trainer{padding:10px}
 }
 
+
+.auth-box{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.auth-user{display:none;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);background:#fff;border-radius:12px;min-height:40px}
+.auth-user.show{display:flex}.auth-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#eef0ff}
+.auth-name{font-size:12px;font-weight:850;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sync-state{font-size:11px;color:var(--muted);white-space:nowrap}.sync-state.ok{color:var(--green)}.sync-state.busy{color:var(--amber)}.sync-state.error{color:var(--red)}
+@media(max-width:700px){.auth-box{grid-column:1/-1;display:grid;grid-template-columns:1fr;gap:7px;width:100%}.auth-box .btn{width:100%;justify-content:center}.auth-user{width:100%;justify-content:center}.auth-name{max-width:190px}}
+
+.manage-wrap{position:relative}
+.manage-btn{display:flex;align-items:center;gap:7px;min-height:40px}
+.manage-icon{font-size:15px;line-height:1}
+.manage-menu{
+  position:absolute;right:0;top:calc(100% + 8px);z-index:45;
+  width:min(310px,calc(100vw - 24px));padding:7px;
+  border:1px solid var(--line);border-radius:16px;background:#fff;
+  box-shadow:0 18px 50px rgba(28,36,67,.16);
+  opacity:0;visibility:hidden;transform:translateY(-5px);
+  transition:.16s ease;
+}
+.manage-menu.open{opacity:1;visibility:visible;transform:none}
+.manage-item{
+  width:100%;border:0;background:transparent;color:var(--text);
+  display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:center;
+  padding:10px;border-radius:11px;text-align:left;cursor:pointer;
+}
+.manage-item:hover{background:#f6f7fb}
+.manage-item>span:first-child{display:grid;place-items:center;font-size:16px;color:#6069d9}
+.manage-item b{display:block;font-size:13px}
+.manage-item small{display:block;margin-top:2px;color:var(--muted);font-size:11px;font-weight:500}
+.manage-label input{display:none}
+@media(max-width:700px){
+  .actions{display:flex;gap:8px;align-items:stretch}
+  .auth-box{flex:1}
+  .manage-wrap{width:100%}
+  .manage-btn{width:100%;justify-content:center;min-height:44px}
+  .manage-menu{
+    position:fixed;left:10px;right:10px;bottom:10px;top:auto;width:auto;
+    padding:9px;border-radius:18px;
+    transform:translateY(10px);
+  }
+  .manage-menu.open{transform:none}
+  .manage-item{min-height:54px}
+}
+
+
+@media(max-width:700px){
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+  .auth-box{grid-column:1/-1}
+  #categoryBtn,.manage-wrap{width:100%}
+  #categoryBtn,.manage-btn{min-height:44px}
+}
+@media(max-width:430px){
+  .actions{grid-template-columns:1fr}
+  .auth-box{grid-column:auto}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="topbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення</p></div></div><div class="actions"><button class="btn" id="exportBtn">Експорт JSON</button><label class="btn file-label">Імпорт JSON<input id="importJson" type="file" accept=".json,application/json"></label><button class="btn" id="categoryBtn">Теми</button></div></div>
+  <div class="topbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення</p></div></div><div class="actions">
+    <div class="auth-box">
+      <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
+      <div class="auth-user" id="authUser">
+        <img class="auth-avatar" id="authAvatar" alt="">
+        <div>
+          <div class="auth-name" id="authName"></div>
+          <div class="sync-state" id="syncState">Локальний режим</div>
+        </div>
+      </div>
+      <button class="btn" id="logoutBtn" type="button" style="display:none">Вийти</button>
+    </div>
+
+    <button class="btn" id="categoryBtn" type="button">Теми</button>
+
+    <div class="manage-wrap">
+      <button class="btn manage-btn" id="manageBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="manage-icon">⋯</span> Резервна копія
+      </button>
+      <div class="manage-menu" id="manageMenu" role="menu" aria-hidden="true">
+        <button class="manage-item" id="exportBtn" type="button" role="menuitem">
+          <span>↓</span><span><b>Експорт JSON</b><small>Зберегти резервну копію</small></span>
+        </button>
+        <label class="manage-item manage-label" role="menuitem">
+          <span>↑</span><span><b>Імпорт JSON</b><small>Відновити резервну копію</small></span>
+          <input id="importJson" type="file" accept=".json,application/json">
+        </label>
+      </div>
+    </div>
+  </div></div>
   <div class="panel tabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button></div>
 
   <section class="view active" id="dictionaryView">
@@ -94,7 +179,7 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
         <div class="field"><textarea id="bulkInput" placeholder="ground — земля — /ɡraʊnd/ — Природа\nground meat — фарш — — Їжа, Робота"></textarea></div>
         <div class="editor-actions"><label class="btn file-label">Завантажити файл<input id="bulkFile" type="file" accept=".txt,.csv,.json,text/plain,text/csv,application/json"></label><button class="btn primary" id="bulkAdd">Додати розпізнані записи</button></div>
       </div>
-      <div class="import-box"><h3>Перенести слова зі старого WordFlow</h3><p class="small-note">Кнопка шукає старі ключі <code>wordflow_sets</code> і <code>wordflow_words</code> у цьому браузері. Повторні слова не дублюються: категорії об’єднуються.</p><button class="btn" id="migrateOld">Імпортувати старі дані</button></div>
+      <div class="import-box"><h3>Перенести слова зі старого WordFlow</h3><p class="small-note"><b>Потрібен вхід через Google.</b> Перенесені записи одразу підуть у словник цього акаунта.</p><p class="small-note">Кнопка шукає старі ключі <code>wordflow_sets</code> і <code>wordflow_words</code> у цьому браузері. Повторні слова не дублюються: категорії об’єднуються.</p><button class="btn" id="migrateOld">Імпортувати старі дані</button></div>
     </div>
   </section>
 
@@ -105,9 +190,290 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 
 <div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">Видалення теми не видаляє слова — лише прибирає цю тему з них.</p></div></div>
 <button class="love-easter-egg" id="loveBtn" title="♥" aria-label="Сюрприз">♥</button><div class="toast" id="toast"></div>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import {
+  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  collection, doc, getDoc, getDocs, setDoc, deleteDoc, writeBatch,
+  onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKnt0KiAZzmnnHSaUYqxZ1htAF_xZFHFk",
+  authDomain: "wordflow-7d977.firebaseapp.com",
+  projectId: "wordflow-7d977",
+  storageBucket: "wordflow-7d977.firebasestorage.app",
+  messagingSenderId: "353664661399",
+  appId: "1:353664661399:web:90914560e35f018d7176d2"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const firebaseAuth = getAuth(firebaseApp);
+const firestore = initializeFirestore(firebaseApp,{
+  localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})
+});
+const googleProvider = new GoogleAuthProvider();
+
 (()=>{
 const $=id=>document.getElementById(id); const DB_KEY='wordflow_dictionary_v1';
+
+let cloudUser=null;
+let cloudReady=false;
+let wordsUnsubscribe=null;
+let settingsUnsubscribe=null;
+let cloudMirror=new Map();
+let cloudThemes=[];
+let syncTimer=null;
+let pendingLocalWrite=false;
+
+function setSyncState(text,kind=''){
+  const el=$('syncState');
+  if(!el)return;
+  el.textContent=text;
+  el.className='sync-state'+(kind?' '+kind:'');
+}
+
+function seedDB(){
+  const now=new Date().toISOString();
+  return {
+    version:2,
+    entries:NOTEBOOK_SEED.map((e,i)=>({
+      ...e,
+      id:'notes_'+String(i+1).padStart(3,'0'),
+      createdAt:now,
+      updatedAt:now
+    })),
+    categories:[...NOTEBOOK_TOPICS],
+    notebookSeedVersion:NOTEBOOK_SEED_VERSION
+  };
+}
+
+function wordsRef(user=cloudUser){return user?collection(firestore,'users',user.uid,'words'):null}
+function wordRef(id,user=cloudUser){return user?doc(firestore,'users',user.uid,'words',String(id)):null}
+function settingsRef(user=cloudUser){return user?doc(firestore,'users',user.uid,'settings','dictionary'):null}
+function legacyMainRef(user=cloudUser){return user?doc(firestore,'users',user.uid,'wordflow','main'):null}
+
+function cleanEntry(e,idFallback=''){
+  const allowedTypes=new Set(['word','phrase','phrasal','idiom']);
+  const allowedStatuses=new Set(['new','learning','learned']);
+  const en=String(e?.en||'').trim(), ua=String(e?.ua||'').trim();
+  if(!en||!ua)return null;
+  let cats=Array.isArray(e?.categories)?e.categories:[];
+  cats=[...new Set(cats.map(String).map(v=>v.trim()).filter(Boolean))];
+  return {
+    id:String(e?.id||idFallback||uid()),
+    en,ua,
+    transcription:String(e?.transcription||'').trim(),
+    type:allowedTypes.has(e?.type)?e.type:guessType(en),
+    categories:cats,
+    status:allowedStatuses.has(e?.status)?e.status:'new',
+    note:String(e?.note||'').trim(),
+    createdAt:e?.createdAt||new Date().toISOString(),
+    updatedAt:e?.updatedAt||new Date().toISOString()
+  };
+}
+
+function entryForCloud(e){
+  const {id,...rest}=e;
+  return {...rest};
+}
+
+function stableEntry(e){
+  return JSON.stringify(entryForCloud(e));
+}
+
+function applyRemoteState(entries,themes){
+  db={
+    version:2,
+    entries,
+    categories:[...new Set((themes||[]).map(String).map(v=>v.trim()).filter(Boolean))],
+    notebookSeedVersion:NOTEBOOK_SEED_VERSION
+  };
+  selectedCategories=new Set([...selectedCategories].filter(c=>allCategories().includes(c)));
+  renderAll();
+}
+
+async function seedOrMigrateCloud(user){
+  const sref=settingsRef(user);
+  const settingsSnap=await getDoc(sref);
+  if(settingsSnap.exists())return;
+
+  // Migration from the previous Firebase version, if it was ever used.
+  const legacySnap=await getDoc(legacyMainRef(user));
+  let initial=seedDB();
+  if(legacySnap.exists()){
+    const data=legacySnap.data()||{};
+    const legacyEntries=Array.isArray(data.entries)
+      ? data.entries.map((e,i)=>cleanEntry(e,e.id||('migrated_'+String(i+1).padStart(3,'0')))).filter(Boolean)
+      : [];
+    if(legacyEntries.length){
+      initial.entries=legacyEntries;
+      initial.categories=Array.isArray(data.categories)?data.categories:[...NOTEBOOK_TOPICS];
+    }
+  }
+
+  // Seed in batches so each word becomes its own Firestore document.
+  const chunkSize=400;
+  for(let offset=0;offset<initial.entries.length;offset+=chunkSize){
+    const batch=writeBatch(firestore);
+    initial.entries.slice(offset,offset+chunkSize).forEach(e=>{
+      batch.set(wordRef(e.id,user),entryForCloud(e));
+    });
+    await batch.commit();
+  }
+  await setDoc(sref,{
+    themes:[...new Set(initial.categories)],
+    initialized:true,
+    schemaVersion:2,
+    notebookSeedVersion:NOTEBOOK_SEED_VERSION,
+    updatedAt:serverTimestamp()
+  });
+}
+
+function stopCloudListeners(){
+  if(wordsUnsubscribe){wordsUnsubscribe();wordsUnsubscribe=null}
+  if(settingsUnsubscribe){settingsUnsubscribe();settingsUnsubscribe=null}
+  cloudMirror=new Map();
+  cloudThemes=[];
+  cloudReady=false;
+}
+
+async function connectUserCloud(user){
+  stopCloudListeners();
+  setSyncState('Завантажуємо словник…','busy');
+
+  try{
+    await seedOrMigrateCloud(user);
+
+    let remoteThemes=[];
+    const initialSettings=await getDoc(settingsRef(user));
+    if(initialSettings.exists()&&Array.isArray(initialSettings.data().themes)){
+      remoteThemes=initialSettings.data().themes;
+    }
+
+    const initialWords=await getDocs(wordsRef(user));
+    const initialEntries=initialWords.docs
+      .map(d=>cleanEntry(d.data(),d.id))
+      .filter(Boolean);
+
+    cloudMirror=new Map(initialEntries.map(e=>[e.id,stableEntry(e)]));
+    cloudThemes=[...new Set(remoteThemes)];
+    applyRemoteState(initialEntries,remoteThemes);
+
+    cloudReady=true;
+    setSyncState(navigator.onLine?'Синхронізовано':'Офлайн','ok');
+
+    wordsUnsubscribe=onSnapshot(
+      wordsRef(user),
+      {includeMetadataChanges:true},
+      snap=>{
+        const entries=snap.docs.map(d=>cleanEntry(d.data(),d.id)).filter(Boolean);
+        cloudMirror=new Map(entries.map(e=>[e.id,stableEntry(e)]));
+        db.entries=entries;
+        renderAll();
+
+        const pending=snap.metadata.hasPendingWrites;
+        const cached=snap.metadata.fromCache;
+        if(pending)setSyncState('Зберігаємо…','busy');
+        else if(cached||!navigator.onLine)setSyncState('Офлайн','busy');
+        else setSyncState('Синхронізовано','ok');
+      },
+      err=>{
+        console.error('WordFlow words listener:',err);
+        setSyncState('Помилка синхронізації','error');
+      }
+    );
+
+    settingsUnsubscribe=onSnapshot(
+      settingsRef(user),
+      {includeMetadataChanges:true},
+      snap=>{
+        if(!snap.exists())return;
+        const themes=Array.isArray(snap.data().themes)?snap.data().themes:[];
+        cloudThemes=[...new Set(themes)];
+        db.categories=cloudThemes;
+        renderAll();
+      },
+      err=>console.error('WordFlow settings listener:',err)
+    );
+  }catch(err){
+    console.error('WordFlow cloud connect:',err);
+    cloudReady=false;
+    setSyncState('Помилка підключення','error');
+  }
+}
+
+function queueCloudSave(){
+  if(!cloudReady||!cloudUser)return;
+  clearTimeout(syncTimer);
+  pendingLocalWrite=true;
+  setSyncState(navigator.onLine?'Зберігаємо…':'Офлайн · зміни збережено','busy');
+
+  syncTimer=setTimeout(async()=>{
+    try{
+      const current=new Map(db.entries.map(e=>[String(e.id),e]));
+      const batch=writeBatch(firestore);
+      let operations=0;
+
+      // Create/update only changed words.
+      for(const [id,e] of current){
+        const serialized=stableEntry(e);
+        if(cloudMirror.get(id)!==serialized){
+          batch.set(wordRef(id),entryForCloud(e));
+          operations++;
+        }
+      }
+
+      // Delete words that disappeared locally.
+      for(const id of cloudMirror.keys()){
+        if(!current.has(id)){
+          batch.delete(wordRef(id));
+          operations++;
+        }
+      }
+
+      const themes=[...new Set(db.categories)];
+      if(JSON.stringify(themes)!==JSON.stringify(cloudThemes)){
+        batch.set(settingsRef(),{
+          themes,
+          initialized:true,
+          schemaVersion:2,
+          notebookSeedVersion:NOTEBOOK_SEED_VERSION,
+          updatedAt:serverTimestamp()
+        },{merge:true});
+        operations++;
+      }
+
+      if(operations>0)await batch.commit();
+      pendingLocalWrite=false;
+      if(navigator.onLine)setSyncState('Синхронізовано','ok');
+    }catch(err){
+      console.error('WordFlow cloud save:',err);
+      setSyncState(navigator.onLine?'Помилка синхронізації':'Офлайн · очікує синхронізації','error');
+    }
+  },180);
+}
+
+async function googleLogin(){
+  try{
+    setSyncState('Вхід…','busy');
+    await signInWithPopup(firebaseAuth,googleProvider);
+  }catch(err){
+    if(['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment'].includes(err?.code)){
+      await signInWithRedirect(firebaseAuth,googleProvider);
+      return;
+    }
+    console.error(err);
+    setSyncState('Не вдалося увійти','error');
+    alert('Не вдалося увійти через Google. Перевір Authorized domains у Firebase Authentication.');
+  }
+}
+
+async function googleLogout(){
+  try{await signOut(firebaseAuth)}
+  catch(err){console.error(err)}
+}
+
 const TYPES=[['word','Слово'],['phrase','Фраза'],['phrasal','Фразове дієслово'],['idiom','Ідіома']];
 const NOTEBOOK_SEED = [{"en":"than","ua":"ніж","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"dry","ua":"сухий","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"raw","ua":"сирий","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"aunt","ua":"тітка","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"nephew","ua":"племінник","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"niece","ua":"племінниця","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepfather","ua":"вітчим","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepmother","ua":"мачуха","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepson","ua":"пасинок","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepdaughter","ua":"падчерка","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"half-brother","ua":"єдинокровний або єдиноутробний брат","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepbrother — зведений брат."},{"en":"half-sister","ua":"єдинокровна або єдиноутробна сестра","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepsister — зведена сестра."},{"en":"father-in-law","ua":"свекор / тесть","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"mother-in-law","ua":"свекруха / теща","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"brother-in-law","ua":"брат чоловіка/дружини; зять","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"sister-in-law","ua":"сестра чоловіка/дружини; невістка","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godfather","ua":"хрещений батько","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godmother","ua":"хрещена мати","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godson","ua":"хрещеник","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"goddaughter","ua":"хрещениця","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"relative","ua":"родич","transcription":"","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"expensive","ua":"дорогий","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"at the back","ua":"позаду; ззаду","transcription":"","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"belong","ua":"належати","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"enough","ua":"достатньо","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"decision","ua":"рішення","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"sold","ua":"продав; продано; проданий","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"we met","ua":"ми зустрілися","transcription":"","type":"phrase","categories":["Загальна лексика"],"status":"new","note":""},{"en":"invited","ua":"запросив; запрошений","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"noisy","ua":"галасливий","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"choose","ua":"вибирати; обирати","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"hat","ua":"капелюх","transcription":"","type":"word","categories":["Одяг"],"status":"new","note":""},{"en":"bought","ua":"купив; куплений","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"saw","ua":"бачив","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"mistake","ua":"помилка","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"under","ua":"під","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"above","ua":"над","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"below","ua":"нижче; під","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"between","ua":"між","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"behind","ua":"позаду","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"in front of","ua":"перед","transcription":"","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"onto","ua":"на; на поверхню","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"put","ua":"класти; ставити","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"far away","ua":"далеко","transcription":"","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"home-cooked food","ua":"домашня їжа","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"I'd rather eat","ua":"я б краще з’їв / з’їла","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm not keen on","ua":"я не дуже люблю; я не в захваті від","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I avoid","ua":"я уникаю","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I can't stand","ua":"я не можу терпіти","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I hate","ua":"я ненавиджу","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I usually eat","ua":"я зазвичай їм","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I always have","ua":"я завжди маю / беру","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I cook most of my meals","ua":"я готую більшість своїх страв","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I hardly ever eat","ua":"я майже ніколи не їм","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm hungry","ua":"я голодний / голодна","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm starving","ua":"я страшенно голодний / голодна","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm craving pizza","ua":"мені дуже хочеться піци","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm in the mood for","ua":"мені хочеться; я в настрої для","transcription":"","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"Either is fine","ua":"мені підходить будь-який варіант","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It doesn't matter to me","ua":"мені байдуже; для мене неважливо","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It depends","ua":"це залежить","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"Not really","ua":"не дуже; не зовсім","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"over there","ua":"там; он там","transcription":"","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"mountain","ua":"гора","transcription":"","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"across","ua":"через; поперек","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"through","ua":"через; крізь","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"next to","ua":"біля; поруч із","transcription":"","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"here","ua":"тут","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"ground","ua":"мелений; ґрунт; земля","transcription":"","type":"word","categories":["Їжа","Природа"],"status":"new","note":""},{"en":"minced","ua":"подрібнений; рублений; перемелений на фарш","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"prawn","ua":"креветка","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"shrimp","ua":"креветка","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour cream","ua":"сметана","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"wheat","ua":"пшениця","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"chewy","ua":"жувальний; тягучий; важко жувати","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crunchy","ua":"хрусткий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crispy","ua":"хрусткий; підсмажений","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"juicy","ua":"соковитий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bland","ua":"прісний; несмачний; безвиразний","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"overcooked","ua":"переготовлений; пересмажений; переварений","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"greasy","ua":"жирний; масний","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"stale","ua":"несвіжий; черствий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"spoiled","ua":"зіпсований","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"gone bad","ua":"зіпсований; зіпсувалося","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"rotten","ua":"гнилий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fattening","ua":"калорійний; той, від якого набирають вагу","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"I absolutely love","ua":"я просто обожнюю","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm a big fan of","ua":"я великий прихильник; мені дуже подобається","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm fond of","ua":"мені подобається; я люблю","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"ill","ua":"хворий / хвора","transcription":"","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"medicine","ua":"ліки","transcription":"","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"some","ua":"трохи; деякі","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"many","ua":"багато","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"fed","ua":"годував; нагодував","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"into","ua":"в; всередину","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"depend","ua":"залежати","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"it depends on","ua":"це залежить від","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"savory","ua":"пікантний; несолодкий; насичений смаком","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":"Американський варіант. Британський: savoury."},{"en":"prefer bigger","ua":"віддавати перевагу більшому","transcription":"","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"have a sweet tooth","ua":"бути ласуном; любити солодке","transcription":"","type":"idiom","categories":["Їжа","Ідіоми"],"status":"new","note":""},{"en":"junk","ua":"мотлох; непотріб; сміття","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"junk food","ua":"шкідлива їжа; фастфуд","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy food","ua":"нездорова їжа","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy","ua":"нездоровий; шкідливий для здоров’я","transcription":"","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"out","ua":"назовні; поза","transcription":"","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"eat out","ua":"їсти не вдома; їсти в кафе чи ресторані","transcription":"","type":"phrasal","categories":["Їжа"],"status":"new","note":""},{"en":"savour","ua":"насолоджуватися смаком або запахом","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":"Британський варіант. Американський: savor."},{"en":"for dessert","ua":"на десерт","transcription":"","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"desert","ua":"пустеля","transcription":"","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"I","ua":"я","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"me","ua":"мене; мені","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"my","ua":"мій; моя; моє; мої","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"mine","ua":"мій; моя; моє; мої","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"you","ua":"ти; ви; тебе; вас","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"your","ua":"твій; ваш","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"yours","ua":"твій; ваш","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"he","ua":"він","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"him","ua":"його; йому","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"his","ua":"його","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник або займенник"},{"en":"she","ua":"вона","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"her","ua":"її; їй","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник / присвійний прикметник"},{"en":"hers","ua":"її","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"it","ua":"воно; це","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"its","ua":"його; її (для неживого/тварини)","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"we","ua":"ми","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"us","ua":"нас; нам","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"our","ua":"наш; наша; наше; наші","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"ours","ua":"наш; наша; наше; наші","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"they","ua":"вони","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"them","ua":"їх; їм","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"their","ua":"їхній; їхня; їхнє; їхні","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"theirs","ua":"їхній; їхня; їхнє; їхні","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"this","ua":"цей; ця; це","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"that","ua":"той; та; те","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"these","ua":"ці","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"those","ua":"ті","transcription":"","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"ham","ua":"шинка","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"snack","ua":"перекус","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"meal","ua":"прийом їжі","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"plate","ua":"тарілка","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bowl","ua":"миска","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cook","ua":"готувати","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bake","ua":"пекти","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"boil","ua":"варити","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fry","ua":"смажити","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"thirsty","ua":"спраглий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"delicious","ua":"смачний","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salty","ua":"солоний","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour","ua":"кислий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bitter","ua":"гіркий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fresh","ua":"свіжий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"hot","ua":"гарячий","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cold","ua":"холодний","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"recipe","ua":"рецепт","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"foot","ua":"ступня; стопа","transcription":"","type":"word","categories":["Граматика"],"status":"new","note":"Множина: feet"},{"en":"ox","ua":"віл","transcription":"","type":"word","categories":["Граматика"],"status":"new","note":"Множина: oxen"},{"en":"dice","ua":"гральні кубики","transcription":"","type":"word","categories":["Граматика"],"status":"new","note":"Однина: die"},{"en":"louse","ua":"воша","transcription":"","type":"word","categories":["Граматика"],"status":"new","note":"Множина: lice"},{"en":"to enable","ua":"увімкнути; дозволити; активувати","transcription":"","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"received","ua":"отримав; отримано; отриманий","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to proceed","ua":"продовжити; перейти далі","transcription":"","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"reporting","ua":"звітування; подання звітності","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"quality","ua":"якість","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"deviations","ua":"відхилення","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"kind","ua":"добрий; вид; тип","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"examples","ua":"приклади","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"plum","ua":"слива","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cherry","ua":"вишня","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"carrot","ua":"морква","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"garlic","ua":"часник","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"lettuce","ua":"листя салату","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"peas","ua":"горох","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pepper","ua":"перець","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beans","ua":"квасоля","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"mushroom","ua":"гриб","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"eggplant","ua":"баклажан","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cream","ua":"вершки","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"noodles","ua":"локшина","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salt","ua":"сіль","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beef","ua":"яловичина","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pork","ua":"свинина","transcription":"","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"if","ua":"якщо","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"shrink wrap","ua":"термоусадочна плівка","transcription":"","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"whether","ua":"чи","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"should","ua":"слід; повинен","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"stack","ua":"складати в стопку; стос","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"applies to","ua":"стосується; застосовується до","transcription":"","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"quantity","ua":"кількість","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"sufficient","ua":"достатній","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"refresh","ua":"оновити","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"batch","ua":"партія; серія","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"search","ua":"пошук; шукати","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"waste","ua":"відходи; сміття","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"important","ua":"важливий; важливо","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"meaning","ua":"значення","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"already","ua":"вже","transcription":"","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"configure","ua":"налаштовувати","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"insert","ua":"вставити; вставка","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"reset","ua":"скинути; скинути налаштування","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"explanation","ua":"пояснення","transcription":"","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"set","ua":"встановити; задати","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"counter","ua":"лічильник","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"value","ua":"значення; ціна; цінність","transcription":"","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to produce","ua":"виробляти; створювати","transcription":"","type":"phrase","categories":["Робота"],"status":"new","note":""}];
 const NOTEBOOK_SEED_VERSION = 2;
@@ -116,62 +482,8 @@ let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let train
 function uid(){return 'w_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function norm(s=''){return String(s).trim().toLocaleLowerCase('en')}
-function loadDB(){
-  try{
-    const raw=localStorage.getItem(DB_KEY);
-    if(raw!==null){
-      const x=JSON.parse(raw);
-      if(x&&Array.isArray(x.entries)){
-        const allowedTypes=new Set(['word','phrase','phrasal','idiom']);
-        const allowedStatuses=new Set(['new','learning','learned']);
-        const now=new Date().toISOString();
-        const entries=x.entries.map((e,i)=>({
-          ...e,
-          id:e.id||uid(),
-          en:String(e.en||'').trim(),
-          ua:String(e.ua||'').trim(),
-          transcription:String(e.transcription||'').trim(),
-          type:allowedTypes.has(e.type)?e.type:guessType(e.en||''),
-          categories:Array.isArray(e.categories)?[...new Set(e.categories.map(String).map(v=>v.trim()).filter(Boolean))]:[],
-          status:allowedStatuses.has(e.status)?e.status:'new',
-          note:String(e.note||'').trim(),
-          createdAt:e.createdAt||now,
-          updatedAt:e.updatedAt||now
-        })).filter(e=>e.en&&e.ua);
-        const data={version:1,entries,categories:Array.isArray(x.categories)?x.categories.map(String).map(v=>v.trim()).filter(Boolean):[],notebookSeedVersion:Number(x.notebookSeedVersion)||0};
-        // v6 language corrections. Change only untouched notebook defaults so user edits are preserved.
-        if(data.notebookSeedVersion<2){
-          const patch=(id,oldEn,oldUa,changes)=>{const e=data.entries.find(v=>v.id===id&&norm(v.en)===norm(oldEn)&&v.ua===oldUa);if(e)Object.assign(e,changes,{updatedAt:now})};
-          patch('notes_011','half-brother','зведений / єдинокровний брат',{ua:'єдинокровний або єдиноутробний брат',note:'Не те саме, що stepbrother — зведений брат.'});
-          patch('notes_012','half-sister','зведена / єдиноутробна сестра',{ua:'єдинокровна або єдиноутробна сестра',note:'Не те саме, що stepsister — зведена сестра.'});
-          patch('notes_027','sold','продано; проданий',{ua:'продав; продано; проданий'});
-          patch('notes_029','invited','запрошений',{ua:'запросив; запрошений'});
-          patch('notes_098','savory','пікантний; несолодкий; насичений смаком',{note:'Американський варіант. Британський: savoury.'});
-          patch('notes_107','savour','насолоджуватися смаком або запахом',{note:'Британський варіант. Американський: savor.'});
-          patch('notes_157','die','гральний кубик',{en:'dice',ua:'гральні кубики',note:'Однина: die'});
-          patch('notes_160','received','отримано; отриманий',{ua:'отримав; отримано; отриманий'});
-        }
-        // v3 introduced the notebook vocabulary. Merge it exactly once into older databases,
-        // but never overwrite an existing English entry and never restore deleted seed words later.
-        if(data.notebookSeedVersion<NOTEBOOK_SEED_VERSION){
-          const existingEnglish=new Set(data.entries.map(e=>norm(e.en)));
-          NOTEBOOK_SEED.forEach((e,i)=>{
-            if(existingEnglish.has(norm(e.en)))return;
-            data.entries.push({...e,id:'notes_'+String(i+1).padStart(3,'0'),createdAt:now,updatedAt:now});
-            existingEnglish.add(norm(e.en));
-          });
-          data.categories=[...new Set([...data.categories,...NOTEBOOK_TOPICS])];
-          data.notebookSeedVersion=NOTEBOOK_SEED_VERSION;
-          try{localStorage.setItem(DB_KEY,JSON.stringify(data))}catch(err){}
-        }
-        return data;
-      }
-    }
-  }catch(e){}
-  const now=new Date().toISOString();
-  return {version:1,entries:NOTEBOOK_SEED.map((e,i)=>({...e,id:'notes_'+String(i+1).padStart(3,'0'),createdAt:now,updatedAt:now})),categories:[...NOTEBOOK_TOPICS],notebookSeedVersion:NOTEBOOK_SEED_VERSION}
-}
-function saveDB(){try{localStorage.setItem(DB_KEY,JSON.stringify(db))}catch(e){alert('Не вдалося зберегти дані в браузері. Експортуй JSON, щоб не втратити зміни.');return false}renderAll();return true}
+function loadDB(){return seedDB()}
+function saveDB(){renderAll();queueCloudSave();return true}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
 function allCategories(){return [...new Set([...db.categories,...db.entries.flatMap(x=>x.categories||[])])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'uk'))}
 function typeLabel(v){return TYPES.find(x=>x[0]===v)?.[1]||'Слово'}
@@ -218,8 +530,35 @@ function deleteEntry(id){const x=db.entries.find(e=>e.id===id);if(!x||!confirm(`
 function parseLine(line){line=line.trim();if(!line)return null;let parts=line.includes('\t')?line.split('\t'):line.split(/\s+[—–]\s+|\s+=\s+/);if(parts.length<2&&line.includes(',')){const csv=line.match(/(?:"([^"]*(?:""[^"]*)*)"|([^,]*))(?:,|$)/g)?.map(s=>s.replace(/,$/,'').replace(/^"|"$/g,'').replace(/""/g,'"').trim()).filter((_,i,a)=>i<a.length-1||a[i]);if(csv&&csv.length>=2)parts=csv}if(parts.length<2)return null;let transcription='',cats=[];const en=parts[0]?.trim(),ua=parts[1]?.trim();for(const p of parts.slice(2)){const v=(p||'').trim();if(!v)continue;if(/^\/.*\/$/.test(v))transcription=v;else cats.push(...v.split(/[,;]+/).map(x=>x.trim()).filter(Boolean))}return en&&ua?{en,ua,transcription,categories:[...new Set(cats)],type:guessType(en),status:'new'}:null}
 function bulkAddText(text){let added=0,merged=0;String(text||'').split(/\r?\n/).forEach(line=>{const x=parseLine(line);if(!x)return;const r=upsertEntry(x);if(r.ok){added++;if(r.merged)merged++}});if(!added){alert('Не вдалося розпізнати записи.');return}saveDB();$('bulkInput').value='';toast(`Додано: ${added}${merged?` · об’єднано дублі: ${merged}`:''}`)}
 function exportJSON(){const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wordflow-dictionary-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importJSONFile(file){const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);const entries=Array.isArray(data)?data:Array.isArray(data.entries)?data.entries:null;if(!entries)throw 0;entries.forEach(x=>upsertEntry({...x,id:null}));if(Array.isArray(data.categories))data.categories.forEach(c=>{if(c&&!db.categories.includes(c))db.categories.push(c)});saveDB();toast('JSON імпортовано')}catch(e){alert('Це не схоже на резервну копію WordFlow.')}};r.readAsText(file)}
-function migrateOld(){let count=0;try{const sets=JSON.parse(localStorage.getItem('wordflow_sets')||'{}');Object.values(sets||{}).forEach(set=>{if(!set||!Array.isArray(set.words))return;set.words.forEach(w=>{const r=upsertEntry({en:w.en,ua:w.ua,transcription:w.transcription,categories:[set.name||'Старий WordFlow'],type:guessType(w.en),status:'new'});if(r.ok)count++})});const text=localStorage.getItem('wordflow_words')||'';text.split(/\r?\n/).forEach(line=>{const x=parseLine(line);if(x){x.categories=['Свій набір'];if(upsertEntry(x).ok)count++}})}catch(e){}if(!count){alert('Старих даних у localStorage не знайдено. Якщо старий сайт відкривався з іншого файлу/папки, браузер міг створити для нього окреме сховище.');return}saveDB();toast(`Перенесено записів: ${count}`)}
+function importJSONFile(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const data=JSON.parse(r.result);
+      const entriesRaw=Array.isArray(data)?data:Array.isArray(data.entries)?data.entries:null;
+      if(!entriesRaw)throw new Error('bad-format');
+      const entries=entriesRaw.map((e,i)=>cleanEntry(e,e.id||('import_'+String(i+1).padStart(3,'0')))).filter(Boolean);
+      const categories=Array.isArray(data.categories)
+        ? [...new Set(data.categories.map(String).map(v=>v.trim()).filter(Boolean))]
+        : [...new Set(entries.flatMap(e=>e.categories||[]))];
+
+      if(!confirm(`Відновити резервну копію?\n\nПоточний словник (${db.entries.length} записів) буде замінено на резервну копію (${entries.length} записів).`))return;
+
+      db={
+        version:2,
+        entries,
+        categories,
+        notebookSeedVersion:Number(data.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
+      };
+      saveDB();
+      toast('Резервну копію відновлено');
+    }catch(e){
+      alert('Це не схоже на резервну копію WordFlow.');
+    }
+  };
+  r.readAsText(file);
+}
+function migrateOld(){if(!cloudUser){alert('Спочатку увійди через Google, а потім перенось старі дані.');return}let count=0;try{const sets=JSON.parse(localStorage.getItem('wordflow_sets')||'{}');Object.values(sets||{}).forEach(set=>{if(!set||!Array.isArray(set.words))return;set.words.forEach(w=>{const r=upsertEntry({en:w.en,ua:w.ua,transcription:w.transcription,categories:[set.name||'Старий WordFlow'],type:guessType(w.en),status:'new'});if(r.ok)count++})});const text=localStorage.getItem('wordflow_words')||'';text.split(/\r?\n/).forEach(line=>{const x=parseLine(line);if(x){x.categories=['Свій набір'];if(upsertEntry(x).ok)count++}})}catch(e){}if(!count){alert('Старих даних у localStorage не знайдено. Якщо старий сайт відкривався з іншого файлу/папки, браузер міг створити для нього окреме сховище.');return}saveDB();toast(`Перенесено записів: ${count}`)}
 function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===id))}
 function clearFilters(){ $('search').value='';$('typeFilter').value='';$('statusFilter').value='';$('sort').value='az';document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));renderStats();renderList()}
 function startTrainer(){trainPool=filteredEntries();if(!trainPool.length){alert('За поточними фільтрами немає слів для повторення.');return}trainPool=[...trainPool].sort(()=>Math.random()-.5);trainIndex=0;showView('trainerView');renderTrain()}
@@ -227,7 +566,55 @@ function renderTrain(){if(trainIndex>=trainPool.length){$('trainCard').classList
 function gradeTrain(status){const x=trainPool[trainIndex];const real=db.entries.find(e=>e.id===x.id);if(real)real.status=status;trainIndex++;saveDB();renderTrain()}
 function setupSelects(){$('typeFilter').innerHTML='<option value="">Усі види записів</option>'+TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');$('typeInput').innerHTML=TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('')}
 setupSelects();renderAll();
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showView(t.dataset.view));['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{renderStats();renderList()}));$('clearFilters').onclick=clearFilters;$('saveEntry').onclick=saveEditor;$('cancelEdit').onclick=resetEditor;$('addCategoryInline').onclick=()=>{const c=addCategory($('newCategoryInput').value);if(c)$('newCategoryInput').value=''};$('bulkAdd').onclick=()=>bulkAddText($('bulkInput').value);$('exportBtn').onclick=exportJSON;$('importJson').onchange=e=>{if(e.target.files[0])importJSONFile(e.target.files[0]);e.target.value=''};$('bulkFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{if(f.name.toLowerCase().endsWith('.json')){try{const d=JSON.parse(r.result);const entries=Array.isArray(d)?d:d.entries;if(Array.isArray(entries)){entries.forEach(x=>upsertEntry({...x,id:null}));saveDB();toast('Файл імпортовано');return}}catch(err){}}$('bulkInput').value=r.result};r.readAsText(f);e.target.value=''};$('migrateOld').onclick=migrateOld;$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=startTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=()=>{$('trainCard').classList.remove('active');$('grading').classList.remove('show');$('trainSourceInfo').textContent='Використовуються поточні фільтри словника.'};$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
+$('googleLoginBtn').onclick=googleLogin;$('logoutBtn').onclick=googleLogout;
+
+function setManageMenu(open){
+  $('manageMenu').classList.toggle('open',open);
+  $('manageMenu').setAttribute('aria-hidden',open?'false':'true');
+  $('manageBtn').setAttribute('aria-expanded',open?'true':'false');
+}
+$('manageBtn').onclick=e=>{
+  e.stopPropagation();
+  setManageMenu(!$('manageMenu').classList.contains('open'));
+};
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.manage-wrap'))setManageMenu(false);
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')setManageMenu(false);
+});
+
+getRedirectResult(firebaseAuth).catch(err=>console.error(err));
+onAuthStateChanged(firebaseAuth,async user=>{
+  cloudUser=user||null;
+
+  if(!user){
+    stopCloudListeners();
+    db=seedDB();
+    selectedCategories.clear();
+    renderAll();
+
+    $('googleLoginBtn').style.display='inline-flex';
+    $('logoutBtn').style.display='none';
+    $('authUser').classList.remove('show');
+    setSyncState('Увійдіть для синхронізації');
+    return;
+  }
+
+  $('googleLoginBtn').style.display='none';
+  $('logoutBtn').style.display='inline-flex';
+  $('authUser').classList.add('show');
+  $('authName').textContent=user.displayName||user.email||'Google користувач';
+  $('authAvatar').src=user.photoURL||'';
+  $('authAvatar').style.display=user.photoURL?'block':'none';
+
+  await connectUserCloud(user);
+});
+window.addEventListener('online',()=>{if(cloudUser)setSyncState(pendingLocalWrite?'Зберігаємо…':'Синхронізовано',pendingLocalWrite?'busy':'ok')});
+window.addEventListener('offline',()=>{if(cloudUser)setSyncState('Офлайн','busy')});
+
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showView(t.dataset.view));['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{renderStats();renderList()}));$('clearFilters').onclick=clearFilters;$('saveEntry').onclick=saveEditor;$('cancelEdit').onclick=resetEditor;$('addCategoryInline').onclick=()=>{const c=addCategory($('newCategoryInput').value);if(c)$('newCategoryInput').value=''};$('bulkAdd').onclick=()=>bulkAddText($('bulkInput').value);$('exportBtn').onclick=()=>{setManageMenu(false);exportJSON()};$('importJson').onchange=e=>{setManageMenu(false);if(e.target.files[0])importJSONFile(e.target.files[0]);e.target.value=''};$('bulkFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{if(f.name.toLowerCase().endsWith('.json')){try{const d=JSON.parse(r.result);const entries=Array.isArray(d)?d:d.entries;if(Array.isArray(entries)){entries.forEach(x=>upsertEntry({...x,id:null}));saveDB();toast('Файл імпортовано');return}}catch(err){}}$('bulkInput').value=r.result};r.readAsText(f);e.target.value=''};$('migrateOld').onclick=migrateOld;$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=startTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=()=>{$('trainCard').classList.remove('active');$('grading').classList.remove('show');$('trainSourceInfo').textContent='Використовуються поточні фільтри словника.'};$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
 $('loveBtn').onclick=()=>{const m=['Я тебе люблю.','Ти молодець. Навіть коли якесь слово думає інакше.','Словник росте. Моя любов до тебе теж, але вона вже не влазить у статистику.','Правильна відповідь дня: ти неймовірна.','Ще одне слово — ще один маленький крок. Я бачу, як ти стараєшся.'];toast(m[Math.floor(Math.random()*m.length)])};
 })();
 </script>
