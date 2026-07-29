@@ -195,6 +195,43 @@ body.training-active .grading .grade{
   body.training-active .love-easter-egg{display:block}
 }
 
+
+.alphabet-wrap{
+  display:flex;align-items:center;gap:10px;margin:8px 0 14px;
+  padding:8px 10px;border:1px solid var(--line);border-radius:14px;
+  background:#fafbfe
+}
+.alphabet-label{font-size:12px;font-weight:850;color:#586174;flex:0 0 auto}
+.alphabet-nav{display:flex;gap:3px;flex-wrap:wrap;min-width:0}
+.alpha-btn{
+  width:30px;height:30px;padding:0;border:0;border-radius:8px;
+  background:transparent;color:#4f596c;font-size:12px;font-weight:900;
+  transition:.14s;touch-action:manipulation
+}
+.alpha-btn:not(:disabled):hover{background:#eef0ff;color:#4d57ce;transform:translateY(-1px)}
+.alpha-btn:disabled{opacity:.25;cursor:default}
+.word-row{scroll-margin-top:76px}
+.alpha-flash{animation:alphaFlash .7s ease}
+@keyframes alphaFlash{
+  0%{box-shadow:0 0 0 0 rgba(98,107,232,.25);border-color:#bfc4ff}
+  100%{box-shadow:0 0 0 8px rgba(98,107,232,0);border-color:var(--line)}
+}
+@media(max-width:700px){
+  .alphabet-wrap{
+    display:block;margin:7px 0 11px;padding:7px 8px;
+    position:sticky;top:53px;z-index:18;
+    background:rgba(250,251,254,.96);backdrop-filter:blur(10px)
+  }
+  .alphabet-label{display:none}
+  .alphabet-nav{
+    flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
+    scrollbar-width:none;gap:2px;padding:1px 0
+  }
+  .alphabet-nav::-webkit-scrollbar{display:none}
+  .alpha-btn{flex:0 0 32px;width:32px;height:34px;font-size:12px}
+  .word-row{scroll-margin-top:104px}
+}
+
 </style>
 </head>
 <body>
@@ -246,6 +283,10 @@ body.training-active .grading .grade{
         <div class="field"><label for="sort">Сортування</label><select id="sort"><option value="az">A → Z</option><option value="za">Z → A</option><option value="recent">Останні додані</option></select></div>
       </div>
       <div class="small-note" style="margin:14px 0 7px"><b>Теми</b> — можна вибрати кілька одночасно</div><div class="chip-row" id="categoryFilters"></div>
+      <div class="alphabet-wrap" aria-label="Навігація за алфавітом">
+        <div class="alphabet-label">Алфавіт</div>
+        <div class="alphabet-nav" id="alphabetNav"></div>
+      </div>
       <div class="list-head"><span id="listInfo">0 записів</span><div><button class="btn" id="clearFilters">Скинути фільтри</button> <button class="btn primary" id="trainFiltered">Тренувати відфільтровані</button></div></div>
       <div class="word-list" id="wordList"></div>
     </div>
@@ -624,13 +665,38 @@ function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setT
 function allCategories(){return [...new Set([...db.categories,...db.entries.flatMap(x=>x.categories||[])])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'uk'))}
 function typeLabel(v){return TYPES.find(x=>x[0]===v)?.[1]||'Слово'}
 function statusLabel(v){return v==='learned'?'Вивчено':v==='learning'?'Вчу':'Нове'}
+const ALPHABET='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+function initialLetter(s=''){
+  const ch=String(s).trim().charAt(0).toUpperCase();
+  return /^[A-Z]$/.test(ch)?ch:'#';
+}
+function renderAlphabet(arr=filteredEntries()){
+  const present=new Set(arr.map(x=>initialLetter(x.en)).filter(x=>x!=='#'));
+  $('alphabetNav').innerHTML=ALPHABET.map(letter=>
+    `<button class="alpha-btn" type="button" data-letter="${letter}" ${present.has(letter)?'':"disabled"} aria-label="До слів на ${letter}">${letter}</button>`
+  ).join('');
+  document.querySelectorAll('.alpha-btn:not(:disabled)').forEach(btn=>{
+    btn.onclick=()=>scrollToLetter(btn.dataset.letter);
+  });
+}
+function scrollToLetter(letter){
+  const rows=[...document.querySelectorAll('#wordList .word-row')];
+  const target=rows.find(row=>row.dataset.letter===letter);
+  if(!target)return;
+  target.scrollIntoView({behavior:'smooth',block:'start'});
+  target.classList.remove('alpha-flash');
+  void target.offsetWidth;
+  target.classList.add('alpha-flash');
+  setTimeout(()=>target.classList.remove('alpha-flash'),750);
+}
+
 function quickSetStatus(id,status){if(!['new','learning','learned'].includes(status))return;const x=db.entries.find(e=>String(e.id)===String(id));if(!x||x.status===status)return;x.status=status;x.updatedAt=new Date().toISOString();saveDB()}
 function currentFilters(){return {q:norm($('search').value),type:$('typeFilter').value,status:$('statusFilter').value,sort:$('sort').value,cats:[...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat)}}
 function filteredEntries(){const f=currentFilters();let out=db.entries.filter(x=>{const hay=norm([x.en,x.ua,x.transcription,x.note,(x.categories||[]).join(' ')].join(' '));return(!f.q||hay.includes(f.q))&&(!f.type||x.type===f.type)&&(!f.status||x.status===f.status)&&(!f.cats.length||f.cats.some(c=>(x.categories||[]).includes(c)))});out.sort((a,b)=>f.sort==='za'?b.en.localeCompare(a.en,'en',{sensitivity:'base'}):f.sort==='recent'?String(b.createdAt||'').localeCompare(String(a.createdAt||'')):a.en.localeCompare(b.en,'en',{sensitivity:'base'}));return out}
 function renderAll(){renderStats();renderCategories();renderList();renderEditorCats();renderCategoryManage()}
 function renderStats(){const f=filteredEntries();$('statAll').textContent=db.entries.length;$('statLearned').textContent=db.entries.filter(x=>x.status==='learned').length;$('statLearning').textContent=db.entries.filter(x=>x.status==='learning').length;$('statFiltered').textContent=f.length}
 function renderCategories(){const active=new Set([...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat));$('categoryFilters').innerHTML=allCategories().map(c=>`<button class="chip ${active.has(c)?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')||'<span class="small-note">Тем ще немає.</span>';document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{b.classList.toggle('active');renderStats();renderList()})}
-function renderList(){const arr=filteredEntries();$('listInfo').textContent=`${arr.length} ${arr.length===1?'запис':'записів'}`;$('wordList').innerHTML=arr.length?arr.map(x=>`<div class="word-row"><div><div class="en">${esc(x.en)}</div>${x.transcription?`<div class="ipa">${esc(x.transcription)}</div>`:''}<div class="tags">${(x.categories||[]).map(c=>`<span class="tag">${esc(c)}</span>`).join('')}</div></div><div class="ua">${esc(x.ua)}${x.note?`<div class="small-note" style="margin-top:5px">${esc(x.note)}</div>`:''}</div><div class="meta"><div class="type">${typeLabel(x.type)}</div><div class="quick-status" aria-label="Швидка зміна статусу"><button class="quick-status-btn ${x.status==='new'?'active new':''}" data-id="${x.id}" data-status="new" title="Позначити як нове">Нове</button><button class="quick-status-btn ${x.status==='learning'?'active learning':''}" data-id="${x.id}" data-status="learning" title="Позначити: вчу">Вчу</button><button class="quick-status-btn ${x.status==='learned'?'active learned':''}" data-id="${x.id}" data-status="learned" title="Позначити як вивчене">Вивчено</button></div></div><div class="row-actions"><button class="icon-btn edit" data-id="${x.id}" title="Редагувати" aria-label="Редагувати «${esc(x.en)}»">✎</button><button class="icon-btn del" data-id="${x.id}" title="Видалити" aria-label="Видалити «${esc(x.en)}»">×</button></div></div>`).join(''):'<div class="empty">Нічого не знайдено. Зміни фільтри або додай нові слова.</div>';document.querySelectorAll('.quick-status-btn').forEach(b=>b.onclick=()=>quickSetStatus(b.dataset.id,b.dataset.status));document.querySelectorAll('.edit').forEach(b=>b.onclick=()=>editEntry(b.dataset.id));document.querySelectorAll('.del').forEach(b=>b.onclick=()=>deleteEntry(b.dataset.id))}
+function renderList(){const arr=filteredEntries();renderAlphabet(arr);$('listInfo').textContent=`${arr.length} ${arr.length===1?'запис':'записів'}`;$('wordList').innerHTML=arr.length?arr.map(x=>`<div class="word-row" data-letter="${initialLetter(x.en)}"><div><div class="en">${esc(x.en)}</div>${x.transcription?`<div class="ipa">${esc(x.transcription)}</div>`:''}<div class="tags">${(x.categories||[]).map(c=>`<span class="tag">${esc(c)}</span>`).join('')}</div></div><div class="ua">${esc(x.ua)}${x.note?`<div class="small-note" style="margin-top:5px">${esc(x.note)}</div>`:''}</div><div class="meta"><div class="type">${typeLabel(x.type)}</div><div class="quick-status" aria-label="Швидка зміна статусу"><button class="quick-status-btn ${x.status==='new'?'active new':''}" data-id="${x.id}" data-status="new" title="Позначити як нове">Нове</button><button class="quick-status-btn ${x.status==='learning'?'active learning':''}" data-id="${x.id}" data-status="learning" title="Позначити: вчу">Вчу</button><button class="quick-status-btn ${x.status==='learned'?'active learned':''}" data-id="${x.id}" data-status="learned" title="Позначити як вивчене">Вивчено</button></div></div><div class="row-actions"><button class="icon-btn edit" data-id="${x.id}" title="Редагувати" aria-label="Редагувати «${esc(x.en)}»">✎</button><button class="icon-btn del" data-id="${x.id}" title="Видалити" aria-label="Видалити «${esc(x.en)}»">×</button></div></div>`).join(''):'<div class="empty">Нічого не знайдено. Зміни фільтри або додай нові слова.</div>';document.querySelectorAll('.quick-status-btn').forEach(b=>b.onclick=()=>quickSetStatus(b.dataset.id,b.dataset.status));document.querySelectorAll('.edit').forEach(b=>b.onclick=()=>editEntry(b.dataset.id));document.querySelectorAll('.del').forEach(b=>b.onclick=()=>deleteEntry(b.dataset.id))}
 function renderEditorCats(){const cats=allCategories();$('categoryPicks').innerHTML=cats.map(c=>`<button type="button" class="cat-pick ${selectedCategories.has(c)?'selected':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')||'<span class="small-note">Додай першу тему нижче.</span>';document.querySelectorAll('.cat-pick').forEach(b=>b.onclick=()=>{selectedCategories.has(b.dataset.cat)?selectedCategories.delete(b.dataset.cat):selectedCategories.add(b.dataset.cat);renderEditorCats()})}
 function renderCategoryManage(){const cats=allCategories();$('categoryManage').innerHTML=cats.map(c=>`<div class="category-item"><span>${esc(c)} <span class="small-note">· ${db.entries.filter(x=>(x.categories||[]).includes(c)).length}</span></span><button data-cat="${esc(c)}">Видалити</button></div>`).join('')||'<div class="empty">Тем немає.</div>';document.querySelectorAll('#categoryManage button').forEach(b=>b.onclick=()=>removeCategory(b.dataset.cat))}
 function addCategory(name,selectForEditor=true){name=String(name||'').trim();if(!name)return;const exists=allCategories().find(c=>norm(c)===norm(name));const final=exists||name;if(!exists)db.categories.push(final);if(selectForEditor)selectedCategories.add(final);saveDB();return final}
