@@ -232,6 +232,54 @@ body.training-active .grading .grade{
   .word-row{scroll-margin-top:104px}
 }
 
+
+.bulk-preview{
+  margin-top:14px;padding:14px;border:1px solid var(--line);
+  border-radius:16px;background:#fbfcfe
+}
+.bulk-preview-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;margin-bottom:12px
+}
+.bulk-preview-table-wrap{
+  overflow:auto;border:1px solid var(--line);
+  border-radius:13px;background:#fff
+}
+.bulk-preview-table{
+  width:100%;border-collapse:collapse;min-width:760px
+}
+.bulk-preview-table th,
+.bulk-preview-table td{
+  padding:10px 11px;border-bottom:1px solid var(--line);
+  text-align:left;vertical-align:top;font-size:12px
+}
+.bulk-preview-table th{
+  position:sticky;top:0;background:#f6f7fb;z-index:1;
+  color:#596273;font-size:11px;text-transform:uppercase;letter-spacing:.03em
+}
+.bulk-preview-table tr:last-child td{border-bottom:0}
+.bulk-row-error{background:#fff6f7}
+.bulk-row-duplicate{background:#fffaf0}
+.bulk-row-new{background:#f8fcfa}
+.bulk-status{
+  display:inline-flex;padding:5px 7px;border-radius:999px;
+  font-size:10px;font-weight:900;white-space:nowrap
+}
+.bulk-status.new{background:#eaf8f2;color:#16815c}
+.bulk-status.duplicate{background:#fff4df;color:#9c6200}
+.bulk-status.error{background:#fff0f2;color:#d94a5b}
+.bulk-preview-actions{
+  display:flex;justify-content:flex-end;gap:8px;margin-top:12px
+}
+.bulk-cell-error{color:#d94a5b;font-weight:800}
+@media(max-width:700px){
+  .bulk-preview{padding:10px}
+  .bulk-preview-head{display:grid;grid-template-columns:1fr}
+  .bulk-preview-head .btn{width:100%}
+  .bulk-preview-actions{display:grid;grid-template-columns:1fr}
+  .bulk-preview-actions .btn{width:100%;min-height:44px}
+}
+
 </style>
 </head>
 <body>
@@ -310,7 +358,38 @@ body.training-active .grading .grade{
         <h3>Масове додавання</h3>
         <p class="small-note">По одному запису на рядок: <b>English — переклад — /транскрипція/ — тема1, тема2</b>. Теми та транскрипцію можна не вказувати. Для одного слова автоматично ставиться «Слово», для запису з кількох слів — «Фраза»; фразові дієслова та ідіоми після імпорту можна уточнити вручну. Також можна завантажити TXT, CSV або JSON.</p>
         <div class="field"><textarea id="bulkInput" placeholder="ground — земля — /ɡraʊnd/ — Природа\nground meat — фарш — — Їжа, Робота"></textarea></div>
-        <div class="editor-actions"><label class="btn file-label">Завантажити файл<input id="bulkFile" type="file" accept=".txt,.csv,.json,text/plain,text/csv,application/json"></label><button class="btn primary" id="bulkAdd">Додати розпізнані записи</button></div>
+        <div class="editor-actions">
+          <label class="btn file-label">Завантажити файл<input id="bulkFile" type="file" accept=".txt,.csv,.json,text/plain,text/csv,application/json"></label>
+          <button class="btn primary" id="bulkPreviewBtn">Розпізнати й перевірити</button>
+        </div>
+        <div class="bulk-preview" id="bulkPreview" style="display:none">
+          <div class="bulk-preview-head">
+            <div>
+              <h4 style="margin:0 0 4px">Прев’ю імпорту</h4>
+              <div class="small-note" id="bulkPreviewSummary"></div>
+            </div>
+            <button class="btn" id="bulkPreviewClose" type="button">Закрити</button>
+          </div>
+          <div class="bulk-preview-table-wrap">
+            <table class="bulk-preview-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>English</th>
+                  <th>Переклад</th>
+                  <th>Транскрипція</th>
+                  <th>Теми</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody id="bulkPreviewRows"></tbody>
+            </table>
+          </div>
+          <div class="bulk-preview-actions">
+            <button class="btn" id="bulkPreviewCancel" type="button">Скасувати</button>
+            <button class="btn primary" id="bulkConfirmImport" type="button">Підтвердити імпорт</button>
+          </div>
+        </div>
       </div>
       <div class="import-box"><h3>Перенести слова зі старого WordFlow</h3><p class="small-note"><b>Потрібен вхід через Google.</b> Перенесені записи одразу підуть у словник цього акаунта.</p><p class="small-note">Кнопка шукає старі ключі <code>wordflow_sets</code> і <code>wordflow_words</code> у цьому браузері. Повторні слова не дублюються: категорії об’єднуються.</p><button class="btn" id="migrateOld">Імпортувати старі дані</button></div>
     </div>
@@ -720,7 +799,7 @@ const TYPES=[['word','Слово'],['phrase','Фраза'],['phrasal','Фраз�
 const NOTEBOOK_SEED = [{"en":"than","ua":"ніж","transcription":"/ðˈɐn/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"dry","ua":"сухий","transcription":"/dɹˈaɪ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"raw","ua":"сирий","transcription":"/ɹˈɔː/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"aunt","ua":"тітка","transcription":"/ˈant/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"nephew","ua":"племінник","transcription":"/nˈɛfjuː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"niece","ua":"племінниця","transcription":"/nˈiːs/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepfather","ua":"вітчим","transcription":"/stˈɛpfɑːðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepmother","ua":"мачуха","transcription":"/stˈɛpmʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepson","ua":"пасинок","transcription":"/stˈɛpsʌn/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepdaughter","ua":"падчерка","transcription":"/stˈɛpdɔːtə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"half-brother","ua":"єдинокровний або єдиноутробний брат","transcription":"/hˈɑːfbɹˈʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepbrother — зведений брат."},{"en":"half-sister","ua":"єдинокровна або єдиноутробна сестра","transcription":"/hˈɑːfsˈɪstə/","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepsister — зведена сестра."},{"en":"father-in-law","ua":"свекор / тесть","transcription":"/fˈɑːðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"mother-in-law","ua":"свекруха / теща","transcription":"/mˈʌðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"brother-in-law","ua":"брат чоловіка/дружини; зять","transcription":"/bɹˈʌðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"sister-in-law","ua":"сестра чоловіка/дружини; невістка","transcription":"/sˈɪstəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godfather","ua":"хрещений батько","transcription":"/ɡˈɒdfɑːðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godmother","ua":"хрещена мати","transcription":"/ɡˈɒdmʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godson","ua":"хрещеник","transcription":"/ɡˈɒdsən/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"goddaughter","ua":"хрещениця","transcription":"/ɡˈɒdɔːtə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"relative","ua":"родич","transcription":"/ɹˈɛlətˌɪv/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"expensive","ua":"дорогий","transcription":"/ɛkspˈɛnsɪv/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"at the back","ua":"позаду; ззаду","transcription":"/at ðə bˈak/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"belong","ua":"належати","transcription":"/bɪlˈɒŋ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"enough","ua":"достатньо","transcription":"/ɪnˈʌf/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"decision","ua":"рішення","transcription":"/dɪsˈɪʒən/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"sold","ua":"продав; продано; проданий","transcription":"/sˈəʊld/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"we met","ua":"ми зустрілися","transcription":"/wiː mˈɛt/","type":"phrase","categories":["Загальна лексика"],"status":"new","note":""},{"en":"invited","ua":"запросив; запрошений","transcription":"/ɪnvˈaɪtɪd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"noisy","ua":"галасливий","transcription":"/nˈɔɪzi/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"choose","ua":"вибирати; обирати","transcription":"/tʃˈuːz/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"hat","ua":"капелюх","transcription":"/hˈat/","type":"word","categories":["Одяг"],"status":"new","note":""},{"en":"bought","ua":"купив; куплений","transcription":"/bˈɔːt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"saw","ua":"бачив","transcription":"/sˈɔː/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"mistake","ua":"помилка","transcription":"/mɪstˈeɪk/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"under","ua":"під","transcription":"/ˈʌndə/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"above","ua":"над","transcription":"/əbˈʌv/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"below","ua":"нижче; під","transcription":"/bɪlˈəʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"between","ua":"між","transcription":"/bɪtwˈiːn/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"behind","ua":"позаду","transcription":"/bɪhˈaɪnd/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"in front of","ua":"перед","transcription":"/ɪn fɹˈʌnt ɒv/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"onto","ua":"на; на поверхню","transcription":"/ˈɒntʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"put","ua":"класти; ставити","transcription":"/pˈʊt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"far away","ua":"далеко","transcription":"/fˈɑːɹ ɐwˈeɪ/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"home-cooked food","ua":"домашня їжа","transcription":"/hˈəʊmkˈʊkt fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"I'd rather eat","ua":"я б краще з’їв / з’їла","transcription":"/aɪd ɹˈɑːðəɹ ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm not keen on","ua":"я не дуже люблю; я не в захваті від","transcription":"/aɪm nˌɒt kˈiːn ˈɒn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I avoid","ua":"я уникаю","transcription":"/aɪ ɐvˈɔɪd/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I can't stand","ua":"я не можу терпіти","transcription":"/aɪ kˈɑːnt stˈand/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I hate","ua":"я ненавиджу","transcription":"/aɪ hˈeɪt/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I usually eat","ua":"я зазвичай їм","transcription":"/aɪ jˈuːʒuːəli ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I always have","ua":"я завжди маю / беру","transcription":"/aɪ ˈɔːlweɪz hˈav/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I cook most of my meals","ua":"я готую більшість своїх страв","transcription":"/aɪ kˈʊk mˈəʊst əv maɪ mˈiːlz/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I hardly ever eat","ua":"я майже ніколи не їм","transcription":"/aɪ hˈɑːdli ˈɛvəɹ ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm hungry","ua":"я голодний / голодна","transcription":"/aɪm hˈʌŋɡɹi/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm starving","ua":"я страшенно голодний / голодна","transcription":"/aɪm stˈɑːvɪŋ/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm craving pizza","ua":"мені дуже хочеться піци","transcription":"/aɪm kɹˈeɪvɪŋ pˈiːtsə/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm in the mood for","ua":"мені хочеться; я в настрої для","transcription":"/aɪm ɪnðə mˈuːd fɔː/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"Either is fine","ua":"мені підходить будь-який варіант","transcription":"/ˈaɪðəɹ ɪz fˈaɪn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It doesn't matter to me","ua":"мені байдуже; для мене неважливо","transcription":"/ɪt dˈʌzənt mˈatə tə mˌiː/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It depends","ua":"це залежить","transcription":"/ɪt dɪpˈɛndz/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"Not really","ua":"не дуже; не зовсім","transcription":"/nˌɒt ɹˈiəlɪ/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"over there","ua":"там; он там","transcription":"/ˌəʊvə ðˈeə/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"mountain","ua":"гора","transcription":"/mˈaʊntɪn/","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"across","ua":"через; поперек","transcription":"/əkɹˈɒs/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"through","ua":"через; крізь","transcription":"/θɹˈuː/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"next to","ua":"біля; поруч із","transcription":"/nˈɛkst tuː/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"here","ua":"тут","transcription":"/hˈiə/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"ground","ua":"мелений; ґрунт; земля","transcription":"/ɡɹˈaʊnd/","type":"word","categories":["Їжа","Природа"],"status":"new","note":""},{"en":"minced","ua":"подрібнений; рублений; перемелений на фарш","transcription":"/mˈɪnst/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"prawn","ua":"креветка","transcription":"/pɹˈɔːn/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"shrimp","ua":"креветка","transcription":"/ʃɹˈɪmp/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour cream","ua":"сметана","transcription":"/sˈaʊə kɹˈiːm/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"wheat","ua":"пшениця","transcription":"/wˈiːt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"chewy","ua":"жувальний; тягучий; важко жувати","transcription":"/tʃjˈuːi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crunchy","ua":"хрусткий","transcription":"/kɹˈʌntʃi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crispy","ua":"хрусткий; підсмажений","transcription":"/kɹˈɪspi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"juicy","ua":"соковитий","transcription":"/dʒˈuːsi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bland","ua":"прісний; несмачний; безвиразний","transcription":"/blˈand/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"overcooked","ua":"переготовлений; пересмажений; переварений","transcription":"/ˌəʊvəkˈʊkt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"greasy","ua":"жирний; масний","transcription":"/ɡɹˈiːzi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"stale","ua":"несвіжий; черствий","transcription":"/stˈeɪl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"spoiled","ua":"зіпсований","transcription":"/spˈɔɪld/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"gone bad","ua":"зіпсований; зіпсувалося","transcription":"/ɡɒn bˈad/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"rotten","ua":"гнилий","transcription":"/ɹˈɒtən/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fattening","ua":"калорійний; той, від якого набирають вагу","transcription":"/fˈatənɪŋ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"I absolutely love","ua":"я просто обожнюю","transcription":"/aɪ ˌabsəlˈuːtli lˈʌv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm a big fan of","ua":"я великий прихильник; мені дуже подобається","transcription":"/aɪm ɐ bˈɪɡ fˈan ɒv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm fond of","ua":"мені подобається; я люблю","transcription":"/aɪm fˈɒnd ɒv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"ill","ua":"хворий / хвора","transcription":"/ˈɪl/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"medicine","ua":"ліки","transcription":"/mˈɛdsən/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"some","ua":"трохи; деякі","transcription":"/sˈʌm/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"many","ua":"багато","transcription":"/mˈɛni/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"fed","ua":"годував; нагодував","transcription":"/fˈɛd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"into","ua":"в; всередину","transcription":"/ˈɪntʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"depend","ua":"залежати","transcription":"/dɪpˈɛnd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"it depends on","ua":"це залежить від","transcription":"/ɪt dɪpˈɛndz ˈɒn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"savory","ua":"пікантний; несолодкий; насичений смаком","transcription":"/sˈeɪvəɹi/","type":"word","categories":["Їжа"],"status":"new","note":"Американський варіант. Британський: savoury."},{"en":"prefer bigger","ua":"віддавати перевагу більшому","transcription":"/pɹɪfˈɜː bˈɪɡə/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"have a sweet tooth","ua":"бути ласуном; любити солодке","transcription":"/hav ɐ swˈiːt tˈuːθ/","type":"idiom","categories":["Їжа","Ідіоми"],"status":"new","note":""},{"en":"junk","ua":"мотлох; непотріб; сміття","transcription":"/dʒˈʌŋk/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"junk food","ua":"шкідлива їжа; фастфуд","transcription":"/dʒˈʌŋk fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy food","ua":"нездорова їжа","transcription":"/ʌnhˈɛlθi fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy","ua":"нездоровий; шкідливий для здоров’я","transcription":"/ʌnhˈɛlθi/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"out","ua":"назовні; поза","transcription":"/ˈaʊt/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"eat out","ua":"їсти не вдома; їсти в кафе чи ресторані","transcription":"/ˈiːt ˈaʊt/","type":"phrasal","categories":["Їжа"],"status":"new","note":""},{"en":"savour","ua":"насолоджуватися смаком або запахом","transcription":"/sˈeɪvə/","type":"word","categories":["Їжа"],"status":"new","note":"Британський варіант. Американський: savor."},{"en":"for dessert","ua":"на десерт","transcription":"/fɔː dɪzˈɜːt/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"desert","ua":"пустеля","transcription":"/dˈɛsət/","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"I","ua":"я","transcription":"/ˈaɪ/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"me","ua":"мене; мені","transcription":"/mˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"my","ua":"мій; моя; моє; мої","transcription":"/mˈaɪ/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"mine","ua":"мій; моя; моє; мої","transcription":"/mˈaɪn/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"you","ua":"ти; ви; тебе; вас","transcription":"/jˈuː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"your","ua":"твій; ваш","transcription":"/jˈɔː/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"yours","ua":"твій; ваш","transcription":"/jˈɔːz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"he","ua":"він","transcription":"/hˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"him","ua":"його; йому","transcription":"/hˈɪm/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"his","ua":"його","transcription":"/hˈɪz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник або займенник"},{"en":"she","ua":"вона","transcription":"/ʃˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"her","ua":"її; їй","transcription":"/hˈɜː/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник / присвійний прикметник"},{"en":"hers","ua":"її","transcription":"/hˈɜːz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"it","ua":"воно; це","transcription":"/ˈɪt/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"its","ua":"його; її (для неживого/тварини)","transcription":"/ˈɪts/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"we","ua":"ми","transcription":"/wˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"us","ua":"нас; нам","transcription":"/ˈʌs/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"our","ua":"наш; наша; наше; наші","transcription":"/ˈaʊə/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"ours","ua":"наш; наша; наше; наші","transcription":"/ˈaʊəz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"they","ua":"вони","transcription":"/ðˈeɪ/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"them","ua":"їх; їм","transcription":"/ðˈɛm/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"their","ua":"їхній; їхня; їхнє; їхні","transcription":"/ðˈeə/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"theirs","ua":"їхній; їхня; їхнє; їхні","transcription":"/ðˈeəz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"this","ua":"цей; ця; це","transcription":"/ðˈɪs/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"that","ua":"той; та; те","transcription":"/ðˈat/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"these","ua":"ці","transcription":"/ðˈiːz/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"those","ua":"ті","transcription":"/ðˈəʊz/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"ham","ua":"шинка","transcription":"/hˈam/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"snack","ua":"перекус","transcription":"/snˈak/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"meal","ua":"прийом їжі","transcription":"/mˈiːl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"plate","ua":"тарілка","transcription":"/plˈeɪt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bowl","ua":"миска","transcription":"/bˈəʊl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cook","ua":"готувати","transcription":"/kˈʊk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bake","ua":"пекти","transcription":"/bˈeɪk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"boil","ua":"варити","transcription":"/bˈɔɪl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fry","ua":"смажити","transcription":"/fɹˈaɪ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"thirsty","ua":"спраглий","transcription":"/θˈɜːsti/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"delicious","ua":"смачний","transcription":"/dɪlˈɪʃəs/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salty","ua":"солоний","transcription":"/sˈɒlti/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour","ua":"кислий","transcription":"/sˈaʊə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bitter","ua":"гіркий","transcription":"/bˈɪtə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fresh","ua":"свіжий","transcription":"/fɹˈɛʃ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"hot","ua":"гарячий","transcription":"/hˈɒt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cold","ua":"холодний","transcription":"/kˈəʊld/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"recipe","ua":"рецепт","transcription":"/ɹˈɛsɪpˌiː/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"foot","ua":"ступня; стопа","transcription":"/fˈʊt/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: feet"},{"en":"ox","ua":"віл","transcription":"/ˈɒks/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: oxen"},{"en":"dice","ua":"гральні кубики","transcription":"/dˈaɪs/","type":"word","categories":["Граматика"],"status":"new","note":"Однина: die"},{"en":"louse","ua":"воша","transcription":"/lˈaʊs/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: lice"},{"en":"to enable","ua":"увімкнути; дозволити; активувати","transcription":"/tʊ ɛnˈeɪbəl/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"received","ua":"отримав; отримано; отриманий","transcription":"/ɹɪsˈiːvd/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to proceed","ua":"продовжити; перейти далі","transcription":"/tə pɹəsˈiːd/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"reporting","ua":"звітування; подання звітності","transcription":"/ɹɪpˈɔːtɪŋ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"quality","ua":"якість","transcription":"/kwˈɒlɪti/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"deviations","ua":"відхилення","transcription":"/dˌiːvɪˈeɪʃənz/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"kind","ua":"добрий; вид; тип","transcription":"/kˈaɪnd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"examples","ua":"приклади","transcription":"/ɛɡzˈampəlz/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"plum","ua":"слива","transcription":"/plˈʌm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cherry","ua":"вишня","transcription":"/tʃˈɛɹi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"carrot","ua":"морква","transcription":"/kˈaɹət/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"garlic","ua":"часник","transcription":"/ɡˈɑːlɪk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"lettuce","ua":"листя салату","transcription":"/lˈɛtɪs/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"peas","ua":"горох","transcription":"/pˈiːz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pepper","ua":"перець","transcription":"/pˈɛpə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beans","ua":"квасоля","transcription":"/bˈiːnz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"mushroom","ua":"гриб","transcription":"/mˈʌʃɹuːm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"eggplant","ua":"баклажан","transcription":"/ˈɛɡplənt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cream","ua":"вершки","transcription":"/kɹˈiːm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"noodles","ua":"локшина","transcription":"/nˈuːdəlz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salt","ua":"сіль","transcription":"/sˈɒlt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beef","ua":"яловичина","transcription":"/bˈiːf/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pork","ua":"свинина","transcription":"/pˈɔːk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"if","ua":"якщо","transcription":"/ˈɪf/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"shrink wrap","ua":"термоусадочна плівка","transcription":"/ʃɹˈɪŋk ɹˈap/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"whether","ua":"чи","transcription":"/wˈɛðə/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"should","ua":"слід; повинен","transcription":"/ʃˈʊd/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"stack","ua":"складати в стопку; стос","transcription":"/stˈak/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"applies to","ua":"стосується; застосовується до","transcription":"/ɐplˈaɪz tuː/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"quantity","ua":"кількість","transcription":"/kwˈɒntɪti/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"sufficient","ua":"достатній","transcription":"/səfˈɪʃənt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"refresh","ua":"оновити","transcription":"/ɹɪfɹˈɛʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"batch","ua":"партія; серія","transcription":"/bˈatʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"search","ua":"пошук; шукати","transcription":"/sˈɜːtʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"waste","ua":"відходи; сміття","transcription":"/wˈeɪst/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"important","ua":"важливий; важливо","transcription":"/ɪmpˈɔːtənt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"meaning","ua":"значення","transcription":"/mˈiːnɪŋ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"already","ua":"вже","transcription":"/ɔːlɹˈɛdi/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"configure","ua":"налаштовувати","transcription":"/kənfˈɪɡə/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"insert","ua":"вставити; вставка","transcription":"/ˈɪnsɜːt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"reset","ua":"скинути; скинути налаштування","transcription":"/ɹɪsˈɛt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"explanation","ua":"пояснення","transcription":"/ɛksplɐnˈeɪʃən/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"set","ua":"встановити; задати","transcription":"/sˈɛt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"counter","ua":"лічильник","transcription":"/kˈaʊntə/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"value","ua":"значення; ціна; цінність","transcription":"/vˈaljuː/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to produce","ua":"виробляти; створювати","transcription":"/tə pɹədjˈuːs/","type":"phrase","categories":["Робота"],"status":"new","note":""}];
 const NOTEBOOK_SEED_VERSION = 3;
 const NOTEBOOK_TOPICS = ["Ідіоми","Їжа","Граматика","Загальна лексика","Займенники","Здоров’я","Одяг","Прийменники та напрямок","Природа","Робота","Розмовні фрази","Службові слова","Сім’я"];
-let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let trainPool=[]; let trainIndex=0; let trainDirections=[]; let trainPrepared=false;
+let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let trainPool=[]; let trainIndex=0; let trainDirections=[]; let trainPrepared=false; let bulkPreviewData=[];
 function uid(){return 'w_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function norm(s=''){return String(s).trim().toLocaleLowerCase('en')}
@@ -795,7 +874,122 @@ function guessType(en){return /\s/.test(en.trim())?'phrase':'word'}
 function saveEditor(){const raw={id:editingId,en:$('enInput').value,ua:$('uaInput').value,transcription:$('ipaInput').value,type:$('typeInput').value,categories:[...selectedCategories],status:$('statusInput').value,note:$('noteInput').value};if(!raw.en.trim()||!raw.ua.trim()){alert('Заповни англійське слово/фразу та переклад.');return}const conflict=db.entries.find(x=>x.id!==editingId&&norm(x.en)===norm(raw.en)&&norm(x.ua)===norm(raw.ua));if(conflict){alert('Такий запис уже є у словнику. Відредагуй існуючий запис замість створення дубля.');return}upsertEntry(raw);if(!saveDB())return;resetEditor();toast('Збережено')}
 function deleteEntry(id){const x=db.entries.find(e=>e.id===id);if(!x||!confirm(`Видалити «${x.en}»?`))return;db.entries=db.entries.filter(e=>e.id!==id);saveDB()}
 function parseLine(line){line=line.trim();if(!line)return null;let parts=line.includes('\t')?line.split('\t'):line.split(/\s+[—–]\s+|\s+=\s+/);if(parts.length<2&&line.includes(',')){const csv=line.match(/(?:"([^"]*(?:""[^"]*)*)"|([^,]*))(?:,|$)/g)?.map(s=>s.replace(/,$/,'').replace(/^"|"$/g,'').replace(/""/g,'"').trim()).filter((_,i,a)=>i<a.length-1||a[i]);if(csv&&csv.length>=2)parts=csv}if(parts.length<2)return null;let transcription='',cats=[];const en=parts[0]?.trim(),ua=parts[1]?.trim();for(const p of parts.slice(2)){const v=(p||'').trim();if(!v)continue;if(/^\/.*\/$/.test(v))transcription=v;else cats.push(...v.split(/[,;]+/).map(x=>x.trim()).filter(Boolean))}return en&&ua?{en,ua,transcription,categories:[...new Set(cats)],type:guessType(en),status:'new'}:null}
-function bulkAddText(text){let added=0,merged=0;String(text||'').split(/\r?\n/).forEach(line=>{const x=parseLine(line);if(!x)return;const r=upsertEntry(x);if(r.ok){added++;if(r.merged)merged++}});if(!added){alert('Не вдалося розпізнати записи.');return}saveDB();$('bulkInput').value='';toast(`Додано: ${added}${merged?` · об’єднано дублі: ${merged}`:''}`)}
+function inspectBulkText(text){
+  const lines=String(text||'').split(/\r?\n/);
+  return lines.map((original,index)=>{
+    const raw=original.trim();
+    if(!raw)return null;
+
+    const parsed=parseLine(raw);
+    if(!parsed){
+      return {
+        index:index+1,
+        original,
+        valid:false,
+        status:'error',
+        error:'Не вдалося розпізнати рядок'
+      };
+    }
+
+    const duplicate=db.entries.find(x=>
+      norm(x.en)===norm(parsed.en)&&norm(x.ua)===norm(parsed.ua)
+    );
+
+    return {
+      index:index+1,
+      original,
+      valid:true,
+      status:duplicate?'duplicate':'new',
+      parsed,
+      duplicateId:duplicate?.id||null
+    };
+  }).filter(Boolean);
+}
+
+function renderBulkPreview(items){
+  bulkPreviewData=items;
+  const valid=items.filter(x=>x.valid);
+  const fresh=items.filter(x=>x.status==='new').length;
+  const duplicates=items.filter(x=>x.status==='duplicate').length;
+  const errors=items.filter(x=>x.status==='error').length;
+
+  $('bulkPreviewSummary').textContent=
+    `Рядків: ${items.length} · нових: ${fresh} · дублікатів: ${duplicates} · помилок: ${errors}`;
+
+  $('bulkPreviewRows').innerHTML=items.map(item=>{
+    if(!item.valid){
+      return `<tr class="bulk-row-error">
+        <td>${item.index}</td>
+        <td colspan="4" class="bulk-cell-error">${esc(item.original)}</td>
+        <td><span class="bulk-status error">Помилка</span></td>
+      </tr>`;
+    }
+
+    const x=item.parsed;
+    const rowClass=item.status==='duplicate'?'bulk-row-duplicate':'bulk-row-new';
+    const badge=item.status==='duplicate'
+      ? '<span class="bulk-status duplicate">Дублікат</span>'
+      : '<span class="bulk-status new">Новий</span>';
+
+    return `<tr class="${rowClass}">
+      <td>${item.index}</td>
+      <td>${esc(x.en)}</td>
+      <td>${esc(x.ua)}</td>
+      <td>${esc(x.transcription||'—')}</td>
+      <td>${esc((x.categories||[]).join(', ')||'—')}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('');
+
+  $('bulkPreview').style.display='block';
+  $('bulkConfirmImport').disabled=!valid.length;
+  $('bulkConfirmImport').textContent=`Підтвердити імпорт (${valid.length})`;
+  $('bulkPreview').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openBulkPreview(){
+  const text=$('bulkInput').value;
+  if(!String(text||'').trim()){
+    alert('Встав слова або завантаж файл перед розпізнаванням.');
+    return;
+  }
+
+  const items=inspectBulkText(text);
+  if(!items.length){
+    alert('Немає рядків для перевірки.');
+    return;
+  }
+  renderBulkPreview(items);
+}
+
+function closeBulkPreview(){
+  bulkPreviewData=[];
+  $('bulkPreview').style.display='none';
+  $('bulkPreviewRows').innerHTML='';
+}
+
+function confirmBulkImport(){
+  const valid=bulkPreviewData.filter(x=>x.valid);
+  if(!valid.length){
+    alert('Немає коректних записів для імпорту.');
+    return;
+  }
+
+  let added=0,merged=0;
+  valid.forEach(item=>{
+    const result=upsertEntry(item.parsed);
+    if(result.ok){
+      added++;
+      if(result.merged)merged++;
+    }
+  });
+
+  saveDB();
+  $('bulkInput').value='';
+  closeBulkPreview();
+  toast(`Імпортовано: ${added}${merged?` · об’єднано дублі: ${merged}`:''}`);
+}
+
 function exportJSON(){const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wordflow-dictionary-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSONFile(file){
   const r=new FileReader();
@@ -987,7 +1181,32 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
     trainPrepared=false;
     showTrainSetup();
   }
-});['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{renderStats();renderList()}));$('clearFilters').onclick=clearFilters;$('saveEntry').onclick=saveEditor;$('cancelEdit').onclick=resetEditor;$('addCategoryInline').onclick=()=>{const c=addCategory($('newCategoryInput').value);if(c)$('newCategoryInput').value=''};$('bulkAdd').onclick=()=>bulkAddText($('bulkInput').value);$('exportBtn').onclick=()=>{setManageMenu(false);exportJSON()};$('importJson').onchange=e=>{setManageMenu(false);if(e.target.files[0])importJSONFile(e.target.files[0]);e.target.value=''};$('bulkFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{if(f.name.toLowerCase().endsWith('.json')){try{const d=JSON.parse(r.result);const entries=Array.isArray(d)?d:d.entries;if(Array.isArray(entries)){entries.forEach(x=>upsertEntry({...x,id:null}));saveDB();toast('Файл імпортовано');return}}catch(err){}}$('bulkInput').value=r.result};r.readAsText(f);e.target.value=''};$('migrateOld').onclick=migrateOld;$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=prepareTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
+});['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{renderStats();renderList()}));$('clearFilters').onclick=clearFilters;$('saveEntry').onclick=saveEditor;$('cancelEdit').onclick=resetEditor;$('addCategoryInline').onclick=()=>{const c=addCategory($('newCategoryInput').value);if(c)$('newCategoryInput').value=''};$('bulkPreviewBtn').onclick=openBulkPreview;$('bulkPreviewClose').onclick=closeBulkPreview;$('bulkPreviewCancel').onclick=closeBulkPreview;$('bulkConfirmImport').onclick=confirmBulkImport;$('exportBtn').onclick=()=>{setManageMenu(false);exportJSON()};$('importJson').onchange=e=>{setManageMenu(false);if(e.target.files[0])importJSONFile(e.target.files[0]);e.target.value=''};$('bulkFile').onchange=e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    closeBulkPreview();
+    if(f.name.toLowerCase().endsWith('.json')){
+      try{
+        const d=JSON.parse(r.result);
+        const entries=Array.isArray(d)?d:d.entries;
+        if(Array.isArray(entries)){
+          $('bulkInput').value=entries.map(x=>{
+            const cats=Array.isArray(x.categories)?x.categories.join(', '):'';
+            return `${x.en||''} — ${x.ua||''} — ${x.transcription||''} — ${cats}`;
+          }).join('\n');
+          toast('JSON завантажено для перевірки');
+          return;
+        }
+      }catch(err){}
+    }
+    $('bulkInput').value=r.result;
+    toast('Файл завантажено для перевірки');
+  };
+  r.readAsText(f);
+  e.target.value='';
+};$('migrateOld').onclick=migrateOld;$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=prepareTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
 $('loveBtn').onclick=()=>{const m=['Я тебе люблю.','Ти молодець. Навіть коли якесь слово думає інакше.','Словник росте. Моя любов до тебе теж, але вона вже не влазить у статистику.','Правильна відповідь дня: ти неймовірна.','Ще одне слово — ще один маленький крок. Я бачу, як ти стараєшся.'];toast(m[Math.floor(Math.random()*m.length)])};
 })();
 </script>
