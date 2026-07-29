@@ -116,11 +116,90 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 .train-session-head{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
 .train-controls>.btn{min-height:44px}
 @media(max-width:700px){.train-session-head{display:grid;grid-template-columns:1fr}.train-session-head .btn{width:100%;min-height:44px}}
+
+/* Mobile focus mode during an active training session */
+body.training-active{overflow:hidden}
+body.training-active .love-easter-egg{display:none}
+body.training-active #mainTopbar,
+body.training-active #mainTabs{display:none}
+body.training-active .app{margin:0 auto;padding:0;width:100%;max-width:none}
+body.training-active #trainerView{display:block;height:100dvh}
+body.training-active #trainerView>.trainer{
+  height:100dvh;border:0;border-radius:0;box-shadow:none;
+  display:flex;flex-direction:column;
+  padding:10px 12px calc(12px + env(safe-area-inset-bottom));
+  background:var(--bg)
+}
+body.training-active .train-session-head{
+  flex:0 0 auto;display:flex!important;align-items:center;justify-content:space-between;
+  gap:8px;margin-bottom:6px;min-height:40px
+}
+body.training-active .train-session-meta{min-width:0}
+body.training-active #trainSessionInfo{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.train-exit{padding:8px 10px;font-size:12px;white-space:nowrap}
+body.training-active .train-card{
+  flex:1 1 auto;min-height:0;margin:0;
+  padding:16px 12px 94px;border-radius:18px;
+  overflow:auto;justify-content:center
+}
+body.training-active .train-word{
+  font-size:clamp(32px,10vw,54px);line-height:1.08
+}
+body.training-active .train-answer{
+  font-size:clamp(20px,5.6vw,28px);line-height:1.28;margin-top:16px
+}
+body.training-active .train-direction-label{margin:5px 0 10px}
+body.training-active .train-transcription{margin-top:7px;font-size:13px}
+body.training-active .train-reveal{
+  position:fixed;left:12px;right:12px;
+  bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:80;width:calc(100% - 24px);
+  min-height:54px;margin:0!important;border-radius:15px;font-size:16px
+}
+body.training-active .grading{
+  position:fixed;left:12px;right:12px;
+  bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:81;width:calc(100% - 24px);
+  grid-template-columns:repeat(3,1fr);gap:7px;margin:0;padding:7px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 14px 40px rgba(31,39,70,.16)
+}
+body.training-active .grading .grade{
+  min-height:52px;padding:8px 4px;font-size:12px;border-radius:11px
+}
+
+@media(min-width:701px){
+  body.training-active{overflow:auto}
+  body.training-active #mainTopbar{display:flex}
+  body.training-active #mainTabs{display:flex}
+  body.training-active .app{
+    width:min(1240px,calc(100% - 28px));
+    margin:24px auto 50px;padding:0
+  }
+  body.training-active #trainerView{height:auto}
+  body.training-active #trainerView>.trainer{
+    height:auto;border:1px solid rgba(232,234,240,.95);
+    border-radius:24px;padding:22px;background:rgba(255,255,255,.94)
+  }
+  body.training-active .train-card{
+    min-height:350px;margin-top:18px;padding:30px;overflow:visible
+  }
+  body.training-active .train-reveal{
+    position:static;width:auto;min-height:auto;margin-top:24px!important
+  }
+  body.training-active .grading{
+    position:static;width:auto;padding:0;background:transparent;
+    border:0;box-shadow:none;backdrop-filter:none;margin-top:12px
+  }
+  body.training-active .love-easter-egg{display:block}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="topbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення</p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення</p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -150,7 +229,7 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
       </div>
     </div>
   </div></div>
-  <div class="panel tabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button></div>
+  <div class="panel tabs" id="mainTabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button></div>
 
   <section class="view active" id="dictionaryView">
     <div class="stats">
@@ -210,15 +289,15 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
   </div>
 </div>
 <div class="train-session-head" id="trainSessionHead" style="display:none">
-  <div><h2 style="margin:0 0 5px">Повторення</h2><div class="small-note" id="trainSessionInfo"></div></div>
-  <button class="btn" id="stopTrain">Завершити повторення</button>
+  <div class="train-session-meta"><div class="small-note" id="trainSessionInfo"></div></div>
+  <button class="btn train-exit" id="stopTrain" type="button">✕ Завершити</button>
 </div><div class="train-card" id="trainCard">
 <div class="small-note" id="trainProgress"></div>
 <div class="small-note train-direction-label" id="trainDirectionLabel"></div>
 <div class="train-word" id="trainWord"></div>
 <div class="train-answer" id="trainAnswer"></div>
 <div class="small-note train-transcription" id="trainTranscription"></div>
-<button class="btn" id="revealAnswer" style="margin-top:24px">Показати відповідь</button>
+<button class="btn primary train-reveal" id="revealAnswer">Показати відповідь</button>
 </div><div class="grading" id="grading"><button class="grade bad" data-grade="new">Не знаю</button><button class="grade learning" data-grade="learning">Ще вчу</button><button class="grade learned" data-grade="learned">Знаю</button></div></div>
   </section>
 </div>
@@ -618,6 +697,11 @@ function importJSONFile(file){
 function migrateOld(){if(!cloudUser){alert('Спочатку увійди через Google, а потім перенось старі дані.');return}let count=0;try{const sets=JSON.parse(localStorage.getItem('wordflow_sets')||'{}');Object.values(sets||{}).forEach(set=>{if(!set||!Array.isArray(set.words))return;set.words.forEach(w=>{const r=upsertEntry({en:w.en,ua:w.ua,transcription:w.transcription,categories:[set.name||'Старий WordFlow'],type:guessType(w.en),status:'new'});if(r.ok)count++})});const text=localStorage.getItem('wordflow_words')||'';text.split(/\r?\n/).forEach(line=>{const x=parseLine(line);if(x){x.categories=['Свій набір'];if(upsertEntry(x).ok)count++}})}catch(e){}if(!count){alert('Старих даних у localStorage не знайдено. Якщо старий сайт відкривався з іншого файлу/папки, браузер міг створити для нього окреме сховище.');return}saveDB();toast(`Перенесено записів: ${count}`)}
 function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===id))}
 function clearFilters(){ $('search').value='';$('typeFilter').value='';$('statusFilter').value='';$('sort').value='az';document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));renderStats();renderList()}
+function setTrainingActive(active){
+  document.body.classList.toggle('training-active',!!active);
+  if(active)window.scrollTo(0,0);
+}
+
 function prepareTrainer(){
   trainPool=filteredEntries();
   trainIndex=0;
@@ -669,6 +753,7 @@ function startTrainer(){
   $('trainSetup').style.display='none';
   $('trainSessionHead').style.display='flex';
   $('trainSessionInfo').textContent=`${trainPool.length} записів · ${mode==='en-ua'?'English → Українська':mode==='ua-en'?'Українська → English':'Змішаний режим'}`;
+  setTrainingActive(true);
   renderTrain();
 }
 
@@ -677,6 +762,7 @@ function stopTrainer(){
   trainDirections=[];
   trainIndex=0;
   trainPrepared=false;
+  setTrainingActive(false);
   showTrainSetup();
 }
 
@@ -684,6 +770,7 @@ function renderTrain(){
   if(trainIndex>=trainPool.length){
     $('trainCard').classList.remove('active');
     $('grading').classList.remove('show');
+    setTrainingActive(false);
     $('trainSessionHead').style.display='none';
     $('trainSetup').style.display='flex';
     $('trainSourceInfo').textContent=`Готово — повторено ${trainPool.length} записів. Можеш почати ще раз або змінити фільтри у словнику.`;
