@@ -370,7 +370,7 @@ const firestore = initializeFirestore(firebaseApp,{
 const googleProvider = new GoogleAuthProvider();
 
 (()=>{
-const $=id=>document.getElementById(id); const DB_KEY='wordflow_dictionary_v1';
+const $=id=>document.getElementById(id); const GUEST_DB_KEY='wordflow_guest_v1';
 
 let cloudUser=null;
 let cloudReady=false;
@@ -401,6 +401,37 @@ function seedDB(){
     categories:[...NOTEBOOK_TOPICS],
     notebookSeedVersion:NOTEBOOK_SEED_VERSION
   };
+}
+
+function localKey(){
+  return cloudUser ? `wordflow_user_${cloudUser.uid}` : GUEST_DB_KEY;
+}
+function readLocalByKey(key){
+  try{
+    const raw=localStorage.getItem(key);
+    if(!raw)return null;
+    const data=JSON.parse(raw);
+    if(!data||!Array.isArray(data.entries))return null;
+    return {
+      version:2,
+      entries:data.entries,
+      categories:Array.isArray(data.categories)?data.categories:[...NOTEBOOK_TOPICS],
+      notebookSeedVersion:Number(data.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
+    };
+  }catch(err){
+    console.error('WordFlow local load:',err);
+    return null;
+  }
+}
+function loadLocalDB(){
+  return readLocalByKey(localKey());
+}
+function loadGuestDB(){
+  return readLocalByKey(GUEST_DB_KEY);
+}
+function saveLocalDB(){
+  try{localStorage.setItem(localKey(),JSON.stringify(db))}
+  catch(err){console.error('WordFlow local save:',err)}
 }
 
 function wordsRef(user=cloudUser){return user?collection(firestore,'users',user.uid,'words'):null}
@@ -467,28 +498,55 @@ function applyRemoteState(entries,themes){
   };
   selectedCategories=new Set([...selectedCategories].filter(c=>allCategories().includes(c)));
   renderAll();
+  saveLocalDB();
 }
 
-async function seedOrMigrateCloud(user){
+async function seedOrMigrateCloud(user,localDB=null){
   const sref=settingsRef(user);
   const settingsSnap=await getDoc(sref);
-  if(settingsSnap.exists())return;
 
-  // Migration from the previous Firebase version, if it was ever used.
+  // Existing account: never overwrite cloud data with a browser-local snapshot.
+  if(settingsSnap.exists())return {created:false};
+
+  // First-ever login for this Google account.
+  // Priority:
+  // 1) previous Firebase v1 data, if it exists;
+  // 2) the complete local guest dictionary from this browser;
+  // 3) built-in seed.
   const legacySnap=await getDoc(legacyMainRef(user));
   let initial=seedDB();
+
   if(legacySnap.exists()){
     const data=legacySnap.data()||{};
     const legacyEntries=Array.isArray(data.entries)
-      ? data.entries.map((e,i)=>cleanEntry(e,e.id||('migrated_'+String(i+1).padStart(3,'0')))).filter(Boolean)
+      ? data.entries
+          .map((e,i)=>cleanEntry(e,e.id||('migrated_'+String(i+1).padStart(3,'0'))))
+          .filter(Boolean)
       : [];
+
     if(legacyEntries.length){
       initial.entries=legacyEntries;
-      initial.categories=Array.isArray(data.categories)?data.categories:[...NOTEBOOK_TOPICS];
+      initial.categories=Array.isArray(data.categories)&&data.categories.length
+        ? data.categories
+        : [...NOTEBOOK_TOPICS];
     }
+  }else if(localDB && Array.isArray(localDB.entries)){
+    const localEntries=localDB.entries
+      .map((e,i)=>cleanEntry(e,e.id||('local_'+String(i+1).padStart(3,'0'))))
+      .filter(Boolean);
+
+    // Even an intentionally empty local dictionary is valid:
+    // deleted built-in words must stay deleted after first login.
+    initial={
+      version:2,
+      entries:localEntries,
+      categories:Array.isArray(localDB.categories)
+        ? [...new Set(localDB.categories.map(String).map(v=>v.trim()).filter(Boolean))]
+        : [...new Set(localEntries.flatMap(e=>e.categories||[]))],
+      notebookSeedVersion:Number(localDB.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
+    };
   }
 
-  // Seed in batches so each word becomes its own Firestore document.
   const chunkSize=400;
   for(let offset=0;offset<initial.entries.length;offset+=chunkSize){
     const batch=writeBatch(firestore);
@@ -497,13 +555,18 @@ async function seedOrMigrateCloud(user){
     });
     await batch.commit();
   }
+
   await setDoc(sref,{
-    themes:[...new Set(initial.categories)],
+    themes:[...new Set(initial.categories||[])],
     initialized:true,
     schemaVersion:2,
     notebookSeedVersion:NOTEBOOK_SEED_VERSION,
+    importedFromLocal:!!(localDB && !legacySnap.exists()),
+    initializedAt:serverTimestamp(),
     updatedAt:serverTimestamp()
   });
+
+  return {created:true};
 }
 
 function stopCloudListeners(){
@@ -514,12 +577,12 @@ function stopCloudListeners(){
   cloudReady=false;
 }
 
-async function connectUserCloud(user){
+async function connectUserCloud(user,localDBSnapshot=null){
   stopCloudListeners();
   setSyncState('Завантажуємо словник…','busy');
 
   try{
-    await seedOrMigrateCloud(user);
+    const initResult=await seedOrMigrateCloud(user,localDBSnapshot);
     await upgradeBuiltinTranscriptions(user);
 
     let remoteThemes=[];
@@ -529,7 +592,7 @@ async function connectUserCloud(user){
     }
 
     const initialWords=await getDocs(wordsRef(user));
-    const initialEntries=initialWords.docs
+    let initialEntries=initialWords.docs
       .map(d=>cleanEntry(d.data(),d.id))
       .filter(Boolean);
 
@@ -548,6 +611,7 @@ async function connectUserCloud(user){
         cloudMirror=new Map(entries.map(e=>[e.id,stableEntry(e)]));
         db.entries=entries;
         renderAll();
+        saveLocalDB();
 
         const pending=snap.metadata.hasPendingWrites;
         const cached=snap.metadata.fromCache;
@@ -570,6 +634,7 @@ async function connectUserCloud(user){
         cloudThemes=[...new Set(themes)];
         db.categories=cloudThemes;
         renderAll();
+        saveLocalDB();
       },
       err=>console.error('WordFlow settings listener:',err)
     );
@@ -659,8 +724,8 @@ let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let train
 function uid(){return 'w_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function norm(s=''){return String(s).trim().toLocaleLowerCase('en')}
-function loadDB(){return seedDB()}
-function saveDB(){renderAll();queueCloudSave();return true}
+function loadDB(){return loadLocalDB()||seedDB()}
+function saveDB(){renderAll();saveLocalDB();queueCloudSave();return true}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
 function allCategories(){return [...new Set([...db.categories,...db.entries.flatMap(x=>x.categories||[])])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'uk'))}
 function typeLabel(v){return TYPES.find(x=>x[0]===v)?.[1]||'Слово'}
@@ -883,7 +948,7 @@ onAuthStateChanged(firebaseAuth,async user=>{
 
   if(!user){
     stopCloudListeners();
-    db=seedDB();
+    db=loadGuestDB()||seedDB();
     selectedCategories.clear();
     renderAll();
 
@@ -901,7 +966,16 @@ onAuthStateChanged(firebaseAuth,async user=>{
   $('authAvatar').src=user.photoURL||'';
   $('authAvatar').style.display=user.photoURL?'block':'none';
 
-  await connectUserCloud(user);
+  const guestBeforeLogin=loadGuestDB()||db||seedDB();
+  const localDBSnapshot={
+    version:2,
+    entries:Array.isArray(guestBeforeLogin?.entries)
+      ? guestBeforeLogin.entries.map(e=>({...e,categories:[...(e.categories||[])]}))
+      : [],
+    categories:Array.isArray(guestBeforeLogin?.categories)?[...guestBeforeLogin.categories]:[],
+    notebookSeedVersion:Number(guestBeforeLogin?.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
+  };
+  await connectUserCloud(user,localDBSnapshot);
 });
 window.addEventListener('online',()=>{if(cloudUser)setSyncState(pendingLocalWrite?'Зберігаємо…':'Синхронізовано',pendingLocalWrite?'busy':'ok')});
 window.addEventListener('offline',()=>{if(cloudUser)setSyncState('Офлайн','busy')});
