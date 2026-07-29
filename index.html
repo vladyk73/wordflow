@@ -303,12 +303,18 @@ function entryForCloud(e){
   return {...rest};
 }
 
-const BUILTIN_IPA_BY_ID=new Map(NOTEBOOK_SEED.map((e,i)=>['notes_'+String(i+1).padStart(3,'0'),{en:norm(e.en),transcription:e.transcription}]));
+function builtinIpaById(){
+  return new Map(NOTEBOOK_SEED.map((e,i)=>[
+    'notes_'+String(i+1).padStart(3,'0'),
+    {en:norm(e.en),transcription:e.transcription}
+  ]));
+}
 async function upgradeBuiltinTranscriptions(user){
+  const ipaMap=builtinIpaById();
   const snap=await getDocs(wordsRef(user));
   const batch=writeBatch(firestore);let changed=0;
   snap.docs.forEach(d=>{
-    const builtin=BUILTIN_IPA_BY_ID.get(d.id);if(!builtin)return;
+    const builtin=ipaMap.get(d.id);if(!builtin)return;
     const data=d.data()||{};
     if(!String(data.transcription||'').trim()&&norm(data.en||'')===builtin.en&&builtin.transcription){
       batch.set(d.ref,{transcription:builtin.transcription,updatedAt:new Date().toISOString()},{merge:true});changed++;
