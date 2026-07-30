@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WordFlow — особистий словник</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#626be8">
+<meta name="theme-color" content="#626be8" id="themeColorMeta">
+<script>
+(() => {
+  try {
+    const saved = localStorage.getItem('wordflow_theme_v1');
+    const theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  } catch (_) {}
+})();
+</script>
 <meta name="application-name" content="WordFlow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -635,6 +644,312 @@ body.training-active .scroll-love-btn{display:none!important}
   .train-grade-hint{font-size:9px}
 }
 
+
+/* ===== WordFlow dark theme ===== */
+html{color-scheme:light}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#11131a;
+  --panel:#191c25;
+  --text:#f1f3f8;
+  --muted:#a4acbd;
+  --line:#2b3040;
+  --accent:#8c95ff;
+  --accent2:#a99af7;
+  --rose:#f08aa8;
+  --green:#58c99d;
+  --amber:#e7ad52;
+  --red:#ef7180;
+  --shadow:0 18px 50px rgba(0,0,0,.28)
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(circle at 18% 0%,rgba(98,107,232,.11),transparent 28%),
+    radial-gradient(circle at 90% 10%,rgba(233,121,152,.07),transparent 22%),
+    var(--bg);
+  color:var(--text)
+}
+.theme-toggle{
+  min-width:104px;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px
+}
+.theme-toggle-icon{font-size:17px;line-height:1}
+html[data-theme="dark"] .theme-toggle{
+  background:#252a39;
+  border-color:#394056;
+  color:#f4f5fb
+}
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .dictionary,
+html[data-theme="dark"] .stat,
+html[data-theme="dark"] .trainer,
+html[data-theme="dark"] .import-box,
+html[data-theme="dark"] .modal-card,
+html[data-theme="dark"] .manage-menu{
+  background:var(--panel);
+  border-color:var(--line);
+  box-shadow:var(--shadow)
+}
+html[data-theme="dark"] .topbar{
+  color:var(--text)
+}
+html[data-theme="dark"] .brand p,
+html[data-theme="dark"] .small-note,
+html[data-theme="dark"] .sync-state,
+html[data-theme="dark"] label,
+html[data-theme="dark"] .srs-review-meta{
+  color:var(--muted)
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea{
+  background:#141720;
+  color:var(--text);
+  border-color:#343a4d
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#7f889c}
+html[data-theme="dark"] .btn{
+  background:#242936;
+  color:#edf0f8;
+  border-color:#353c50
+}
+html[data-theme="dark"] .btn:hover{background:#2b3141}
+html[data-theme="dark"] .btn.primary{
+  background:var(--accent);
+  color:#10121a;
+  border-color:transparent
+}
+html[data-theme="dark"] .tabs{background:#191c25}
+html[data-theme="dark"] .tab{color:#b8c0d1}
+html[data-theme="dark"] .tab.active{
+  background:#282d3d;
+  color:#fff
+}
+html[data-theme="dark"] .dictionary .toolbar,
+html[data-theme="dark"] .alphabet-wrap{
+  border-color:var(--line)
+}
+html[data-theme="dark"] .chip{
+  background:#222735;
+  color:#cbd1df;
+  border-color:#343b50
+}
+html[data-theme="dark"] .chip.active{
+  background:#30375c;
+  color:#fff;
+  border-color:#5f69c8
+}
+html[data-theme="dark"] .letter-btn{
+  background:#222735;
+  color:#c4cad8;
+  border-color:#333a4e
+}
+html[data-theme="dark"] .letter-btn:hover:not(:disabled){
+  background:#303754;
+  color:#fff
+}
+html[data-theme="dark"] .letter-btn:disabled{opacity:.28}
+html[data-theme="dark"] .word-row,
+html[data-theme="dark"] .word-card{
+  background:#171a22;
+  border-color:#2a2f3e
+}
+html[data-theme="dark"] .word-row:hover,
+html[data-theme="dark"] .word-card:hover{background:#1d212c}
+html[data-theme="dark"] .word-en,
+html[data-theme="dark"] .word-ua{color:var(--text)}
+html[data-theme="dark"] .word-note{color:#aab1c0}
+html[data-theme="dark"] .tag{
+  background:#252b3a;
+  color:#ccd2df;
+  border-color:#373e52
+}
+html[data-theme="dark"] .status-new{background:#39252b;color:#ff9aaa}
+html[data-theme="dark"] .status-learning{background:#3c3221;color:#f3bf68}
+html[data-theme="dark"] .status-learned{background:#20382f;color:#78d7b2}
+html[data-theme="dark"] .grade.bad{background:#39252b;color:#ff8998}
+html[data-theme="dark"] .grade.learning{background:#3c3221;color:#f2bd62}
+html[data-theme="dark"] .grade.learned{background:#20382f;color:#70d2ac}
+html[data-theme="dark"] .train-card{
+  background:
+    radial-gradient(circle at 50% 0,rgba(140,149,255,.12),transparent 38%),
+    #171a22;
+  border-color:#303647
+}
+html[data-theme="dark"] .train-answer{color:#e9ecf5}
+html[data-theme="dark"] .grading{
+  background:rgba(24,27,36,.96);
+  border-color:#343a4d;
+  box-shadow:0 14px 40px rgba(0,0,0,.32)
+}
+html[data-theme="dark"] .srs-review-card{
+  background:linear-gradient(135deg,#1b1f2b,#1a1d26);
+  border-color:#303649;
+  box-shadow:0 8px 24px rgba(0,0,0,.18)
+}
+html[data-theme="dark"] .srs-review-icon{
+  background:#292f4a;
+  color:#aab1ff
+}
+html[data-theme="dark"] .srs-review-btn{
+  background:#858fff;
+  color:#11131a
+}
+html[data-theme="dark"] .progress-stat-card:hover{background:#202532}
+html[data-theme="dark"] .progress-row,
+html[data-theme="dark"] .category-manage-row,
+html[data-theme="dark"] .bulk-preview-wrap{
+  border-color:#303647
+}
+html[data-theme="dark"] .progress-bar{
+  background:#2a2f3e
+}
+html[data-theme="dark"] .manage-menu{
+  background:#1b1f29;
+  border-color:#343a4c
+}
+html[data-theme="dark"] .manage-item{
+  color:#eef1f7
+}
+html[data-theme="dark"] .manage-item:hover{background:#262c3b}
+html[data-theme="dark"] .manage-item small{color:#9da6b8}
+html[data-theme="dark"] table{
+  background:#171a22;
+  color:var(--text)
+}
+html[data-theme="dark"] th{
+  background:#20242f;
+  color:#c5ccda
+}
+html[data-theme="dark"] td,
+html[data-theme="dark"] th{
+  border-color:#303647
+}
+html[data-theme="dark"] .bulk-row-new{background:#1e332b}
+html[data-theme="dark"] .bulk-row-duplicate{background:#382f20}
+html[data-theme="dark"] .bulk-row-error{background:#3a2429}
+html[data-theme="dark"] .scroll-love-btn{
+  background:rgba(29,33,44,.97);
+  color:#aab1ff;
+  border-color:#394159;
+  box-shadow:0 12px 35px rgba(0,0,0,.30)
+}
+html[data-theme="dark"] .toast{
+  background:#20242f;
+  color:#f4f6fb;
+  border-color:#343b4e;
+  box-shadow:0 14px 40px rgba(0,0,0,.34)
+}
+html[data-theme="dark"] .toast-sub{color:#aab2c2}
+html[data-theme="dark"] .auth-avatar{border-color:#454c60}
+html[data-theme="dark"] code{
+  background:#222735;
+  color:#d8dded
+}
+/* Love modal intentionally keeps its pink/red identity in both themes. */
+
+@media(max-width:700px){
+  .theme-toggle{
+    min-width:44px;
+    width:44px;height:44px;
+    padding:0;border-radius:12px
+  }
+  .theme-toggle-text{display:none}
+  .theme-toggle-icon{font-size:20px}
+}
+
+
+/* v10.1 — category picker dark-mode fix */
+html[data-theme="dark"] .cat-picks{
+  background:#151820;
+  border-color:#343a4d;
+}
+html[data-theme="dark"] .cat-pick{
+  background:#222735;
+  color:#d7dceb;
+  border-color:#3a4154;
+}
+html[data-theme="dark"] .cat-pick:hover{
+  background:#2a3040;
+}
+html[data-theme="dark"] .cat-pick.selected{
+  background:#343b63;
+  color:#ffffff;
+  border-color:#6671d5;
+}
+
+
+/* v10.2 — dark controls polish */
+
+/* Alphabet */
+html[data-theme="dark"] .alphabet-wrap{
+  background:#171a22;
+  border-color:#2f3546;
+}
+html[data-theme="dark"] .letter-btn{
+  background:#222735;
+  color:#cbd2e1;
+  border-color:#394155;
+}
+html[data-theme="dark"] .letter-btn:hover:not(:disabled){
+  background:#2d3448;
+  color:#ffffff;
+  border-color:#4d5878;
+}
+html[data-theme="dark"] .letter-btn:disabled{
+  background:#1b1f29;
+  color:#626b7e;
+  border-color:#2b3140;
+  opacity:.62;
+}
+
+/* Edit / delete icon buttons */
+html[data-theme="dark"] .icon-btn{
+  background:#222735;
+  color:#d7ddeb;
+  border-color:#394155;
+}
+html[data-theme="dark"] .icon-btn:hover{
+  background:#2d3448;
+  color:#ffffff;
+  border-color:#4d5878;
+}
+
+/* Quick status buttons — neutral by default */
+html[data-theme="dark"] .quick-status-btn{
+  background:#222735;
+  color:#cbd2e1;
+  border-color:#394155;
+}
+html[data-theme="dark"] .quick-status-btn:hover{
+  background:#2d3448;
+  color:#ffffff;
+  border-color:#4d5878;
+}
+
+/* Preserve meaning of the selected status */
+html[data-theme="dark"] .quick-status-btn.active.new{
+  background:#4a2a31;
+  color:#ff9dab;
+  border-color:#7a3a47;
+}
+html[data-theme="dark"] .quick-status-btn.active.learning{
+  background:#4a3a24;
+  color:#f3c06f;
+  border-color:#765a2c;
+}
+html[data-theme="dark"] .quick-status-btn.active.learned{
+  background:#244238;
+  color:#7ed9b6;
+  border-color:#376656;
+}
+
+/* Slightly clearer type label in dark mode */
+html[data-theme="dark"] .word-type{
+  color:#98a2b7;
+}
+
 </style>
 </head>
 <body>
@@ -651,6 +966,11 @@ body.training-active .scroll-love-btn{display:none!important}
       </div>
       <button class="btn" id="logoutBtn" type="button" style="display:none">Вийти</button>
     </div>
+
+    <button class="btn theme-toggle" id="themeToggle" type="button" aria-label="Увімкнути нічний режим" title="Нічний режим">
+      <span class="theme-toggle-icon" id="themeToggleIcon" aria-hidden="true">☾</span>
+      <span class="theme-toggle-text" id="themeToggleText">Нічний</span>
+    </button>
 
     <button class="btn" id="categoryBtn" type="button">Теми</button>
 
@@ -1220,6 +1540,46 @@ const NOTEBOOK_SEED = [{"en":"than","ua":"ніж","transcription":"/ðˈɐn/","t
 const NOTEBOOK_SEED_VERSION = 3;
 const NOTEBOOK_TOPICS = ["Ідіоми","Їжа","Граматика","Загальна лексика","Займенники","Здоров’я","Одяг","Прийменники та напрямок","Природа","Робота","Розмовні фрази","Службові слова","Сім’я"];
 let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let trainPool=[]; let trainIndex=0; let trainDirections=[]; let trainPrepared=false; let trainPreparedShuffle=true; let trainPreparedLabel=''; let bulkPreviewData=[]; let toastTimer=null; let undoAction=null;
+
+const THEME_STORAGE_KEY='wordflow_theme_v1';
+
+function getWordFlowTheme(){
+  return document.documentElement.dataset.theme==='dark'?'dark':'light';
+}
+function applyWordFlowTheme(theme,{persist=true}={}){
+  const next=theme==='dark'?'dark':'light';
+  document.documentElement.dataset.theme=next;
+
+  const dark=next==='dark';
+  const toggle=$('themeToggle');
+  const icon=$('themeToggleIcon');
+  const text=$('themeToggleText');
+  const meta=document.getElementById('themeColorMeta');
+
+  if(toggle){
+    toggle.setAttribute('aria-label',dark?'Увімкнути світлий режим':'Увімкнути нічний режим');
+    toggle.title=dark?'Світлий режим':'Нічний режим';
+    toggle.setAttribute('aria-pressed',dark?'true':'false');
+  }
+  if(icon)icon.textContent=dark?'☀':'☾';
+  if(text)text.textContent=dark?'Світлий':'Нічний';
+  if(meta)meta.setAttribute('content',dark?'#11131a':'#626be8');
+
+  if(persist){
+    try{localStorage.setItem(THEME_STORAGE_KEY,next)}catch(_){}
+  }
+}
+function initWordFlowTheme(){
+  let saved=null;
+  try{saved=localStorage.getItem(THEME_STORAGE_KEY)}catch(_){}
+  if(saved==='dark'||saved==='light'){
+    applyWordFlowTheme(saved,{persist:false});
+    return;
+  }
+  const preferred=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  applyWordFlowTheme(preferred,{persist:false});
+}
+
 function uid(){return 'w_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function norm(s=''){return String(s).trim().toLocaleLowerCase('en')}
@@ -1905,6 +2265,7 @@ function gradeTrain(status){
   renderTrain();
 }
 function setupSelects(){$('typeFilter').innerHTML='<option value="">Усі види записів</option>'+TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');$('typeInput').innerHTML=TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('')}
+initWordFlowTheme();
 setupSelects();renderAll();
 showTrainSetup();
 updateSRSReviewCard();
@@ -1928,6 +2289,7 @@ window.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&$('loveModal').classList.contains('open'))closeLoveModal();
 });
 
+$('themeToggle').onclick=()=>applyWordFlowTheme(getWordFlowTheme()==='dark'?'light':'dark');
 $('googleLoginBtn').onclick=googleLogin;$('logoutBtn').onclick=googleLogout;$('toastAction').onclick=runUndo;
 
 function setManageMenu(open){
