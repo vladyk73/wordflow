@@ -22,7 +22,6 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 .editor{padding:22px}.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.editor .full{grid-column:1/-1}.cat-picks{display:flex;gap:7px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:13px;background:#fafbfe;min-height:48px}.cat-pick{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}.cat-pick.selected{background:#eef0ff;color:#4d57ce;border-color:#cfd4ff}.editor-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px}.small-note{font-size:12px;color:var(--muted);line-height:1.5}.import-box{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}textarea{min-height:170px;resize:vertical}.file-label{display:inline-flex;align-items:center}.file-label input{display:none}
 .trainer{padding:22px}.train-setup{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.train-card{min-height:350px;margin-top:18px;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(98,107,232,.08),transparent 38%),#fff;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}.train-card.active{display:flex}.train-word{font-size:clamp(36px,6vw,68px);font-weight:900;letter-spacing:-.04em}.train-answer{display:none;margin-top:22px;font-size:25px;font-weight:800;color:#4e586b}.train-answer.show{display:block}.grading{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.grading.show{display:grid}.grade{border:0;border-radius:13px;padding:13px;font-weight:850}.grade.bad{background:#fff0f2;color:var(--red)}.grade.learning{background:#fff4df;color:var(--amber)}.grade.learned{background:#eaf8f2;color:var(--green)}
 .modal{position:fixed;inset:0;background:rgba(24,31,48,.48);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.open{display:flex}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;padding:22px;box-shadow:0 25px 80px rgba(20,28,50,.28)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.modal-head h3{margin:0}.category-manage{display:grid;gap:8px}.category-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}.category-item button{border:0;background:#fff0f2;color:var(--red);border-radius:9px;padding:7px 9px;font-weight:800}
-.love-easter-egg{position:fixed;right:18px;bottom:18px;z-index:70;width:48px;height:48px;border:1px solid rgba(223,93,103,.2);border-radius:50%;background:rgba(255,255,255,.93);color:#df5d67;font-size:21px;box-shadow:0 12px 35px rgba(25,35,58,.15)}
 .toast{
   position:fixed;left:50%;bottom:24px;
   transform:translate(-50%,20px) scale(.98);
@@ -113,7 +112,6 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
   textarea{min-height:150px}.import-box .btn,.import-box .file-label{width:100%;justify-content:center;min-height:44px;margin-top:6px}
   .train-setup{display:grid;grid-template-columns:1fr;gap:10px}.train-setup .btn{width:100%;min-height:44px}.train-card{min-height:300px;margin-top:12px;padding:24px 14px;border-radius:18px}.train-word{font-size:clamp(34px,12vw,54px);line-height:1.08;word-break:break-word}.train-answer{font-size:23px;line-height:1.3}.grading{grid-template-columns:1fr;gap:8px}.grade{min-height:48px;font-size:15px}
   .modal{padding:0;align-items:flex-end}.modal-card{width:100%;max-height:88dvh;border-radius:22px 22px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom));overscroll-behavior:contain}.category-item{padding:11px 10px;align-items:center}.category-item button{min-width:42px;min-height:38px}
-  .love-easter-egg{right:12px;bottom:calc(12px + env(safe-area-inset-bottom));width:46px;height:46px}
 }
 @media (max-width:380px){
   .app{padding-left:8px;padding-right:8px}.actions{grid-template-columns:1fr}.actions>:last-child:nth-child(odd){grid-column:auto}.stats{grid-template-columns:1fr 1fr}.stat{padding:10px}.stat strong{font-size:20px}.tab{font-size:12px;padding:8px 9px}.en{font-size:18px}.quick-status-btn{font-size:11px;padding-left:3px;padding-right:3px}.dictionary,.editor,.trainer{padding:10px}
@@ -191,7 +189,6 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 
 /* Mobile focus mode during an active training session */
 body.training-active{overflow:hidden}
-body.training-active .love-easter-egg{display:none}
 body.training-active #mainTopbar,
 body.training-active #mainTabs{display:none}
 body.training-active .app{margin:0 auto;padding:0;width:100%;max-width:none}
@@ -264,7 +261,6 @@ body.training-active .grading .grade{
     position:static;width:auto;padding:0;background:transparent;
     border:0;box-shadow:none;backdrop-filter:none;margin-top:12px
   }
-  body.training-active .love-easter-egg{display:block}
 }
 
 
@@ -424,6 +420,98 @@ body.training-active .grading .grade{
   .progress-stat-card{grid-column:span 2}
 }
 
+
+.scroll-love-btn{
+  position:fixed;right:18px;bottom:18px;z-index:72;
+  width:50px;height:50px;border:1px solid rgba(98,107,232,.18);
+  border-radius:50%;background:rgba(255,255,255,.96);
+  color:#4d57ce;font-size:22px;font-weight:900;
+  box-shadow:0 12px 35px rgba(25,35,58,.16);
+  display:grid;place-items:center;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(10px) scale(.92);
+  transition:opacity .18s ease,transform .18s ease,box-shadow .18s ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none
+}
+.scroll-love-btn.show{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.scroll-love-btn:hover{box-shadow:0 14px 38px rgba(25,35,58,.22)}
+.scroll-love-btn.charging{transform:translateY(0) scale(1.04)}
+.scroll-love-fill{
+  position:absolute;inset:auto 0 0 0;height:0%;
+  background:linear-gradient(180deg,#ff8fa3,#ef5d78);
+  transition:height .08s linear;z-index:0
+}
+.scroll-love-icon{
+  position:relative;z-index:1;line-height:1;
+  transition:transform .16s ease,color .16s ease
+}
+.scroll-love-btn.charged .scroll-love-icon{color:#fff;transform:scale(1.12)}
+body.training-active .scroll-love-btn{display:none!important}
+@media(max-width:700px){
+  .scroll-love-btn{
+    right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+    width:48px;height:48px
+  }
+}
+
+
+.love-modal-card{
+  position:relative;
+  width:min(520px,calc(100% - 24px));
+  padding:32px 24px 24px;
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(255,255,255,.35),transparent 35%),
+    linear-gradient(145deg,#ff8fa3 0%,#ef5d78 55%,#d94867 100%);
+  color:#fff;
+  box-shadow:0 26px 70px rgba(180,50,80,.30);
+  border:1px solid rgba(255,255,255,.28);
+  overflow:hidden;
+  text-align:center
+}
+.love-modal-card::before,
+.love-modal-card::after{
+  content:"♥";position:absolute;color:rgba(255,255,255,.13);font-size:96px;line-height:1
+}
+.love-modal-card::before{left:-12px;top:-18px;transform:rotate(-14deg)}
+.love-modal-card::after{right:-12px;bottom:-24px;transform:rotate(16deg)}
+.love-modal-close{
+  position:absolute;right:14px;top:14px;z-index:2;
+  width:36px;height:36px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.18);color:#fff;font-size:23px;line-height:1
+}
+.love-modal-heart{
+  width:64px;height:64px;margin:0 auto 10px;
+  display:grid;place-items:center;border-radius:50%;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.30);
+  font-size:32px
+}
+.love-modal-kicker{
+  font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  opacity:.86;margin-bottom:12px
+}
+.love-modal-message{
+  position:relative;z-index:1;
+  min-height:72px;
+  display:grid;place-items:center;
+  font-size:22px;font-weight:900;line-height:1.35;
+  text-wrap:balance;
+  margin:0 auto 22px;
+  max-width:420px
+}
+.love-modal-more{
+  position:relative;z-index:1;
+  border:0;border-radius:14px;background:#fff;color:#d94867;
+  padding:12px 16px;font-weight:900;font-size:14px;
+  box-shadow:0 8px 24px rgba(122,24,49,.18)
+}
+.love-modal-more:hover{transform:translateY(-1px)}
+@media(max-width:560px){
+  .love-modal-card{padding:28px 18px 20px;border-radius:24px}
+  .love-modal-message{font-size:20px;min-height:96px}
+  .love-modal-more{width:100%;min-height:46px}
+}
+
 </style>
 </head>
 <body>
@@ -473,7 +561,7 @@ body.training-active .grading .grade{
     </div>
     <div class="panel dictionary">
       <div class="toolbar">
-        <div class="field"><label for="search">Пошук</label><input id="search" placeholder="ground, фарш, природа..."></div>
+        <div class="field"><label for="search">Пошук</label><input id="search" placeholder="Пошук навіть із помилкою: ground, фарш, природа..."></div>
         <div class="field"><label for="typeFilter">Що шукаємо?</label><select id="typeFilter"><option value="">Усі види записів</option></select></div>
         <div class="field"><label for="statusFilter">Статус</label><select id="statusFilter"><option value="">Усі статуси</option><option value="new">Нове</option><option value="learning">Вчу</option><option value="learned">Вивчено</option></select></div>
         <div class="field"><label for="sort">Сортування</label><select id="sort"><option value="az">A → Z</option><option value="za">Z → A</option><option value="recent">Останні додані</option></select></div>
@@ -583,7 +671,21 @@ body.training-active .grading .grade{
   </div>
 </div>
 <div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">Видалення теми не видаляє слова — лише прибирає цю тему з них.</p></div></div>
-<button class="love-easter-egg" id="loveBtn" title="♥" aria-label="Сюрприз">♥</button>
+<button class="scroll-love-btn" id="scrollTopBtn" type="button" aria-label="Нагору" title="Нагору">
+  <span class="scroll-love-fill" id="scrollLoveFill"></span>
+  <span class="scroll-love-icon" id="scrollLoveIcon">↑</span>
+</button>
+
+<div class="modal" id="loveModal">
+  <div class="love-modal-card">
+    <button class="love-modal-close" id="loveModalClose" type="button" aria-label="Закрити">×</button>
+    <div class="love-modal-heart">♥</div>
+    <div class="love-modal-kicker">Для тебе</div>
+    <div class="love-modal-message" id="loveModalMessage"></div>
+    <button class="love-modal-more" id="loveModalMore" type="button">Ще одну фразу</button>
+  </div>
+</div>
+
 <div class="toast" id="toast">
   <div class="toast-icon" id="toastIcon" aria-hidden="true">↶</div>
   <div class="toast-copy">
@@ -1055,8 +1157,55 @@ function scrollToLetter(letter){
 }
 
 function quickSetStatus(id,status){if(!['new','learning','learned'].includes(status))return;const x=db.entries.find(e=>String(e.id)===String(id));if(!x||x.status===status)return;x.status=status;x.updatedAt=new Date().toISOString();saveDB()}
+
+function normalizeSearchText(value=''){
+  return String(value)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[’']/g,"'")
+    .replace(/[^a-zа-яіїєґ0-9' -]/giu,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function levenshteinDistance(a,b){
+  a=normalizeSearchText(a);
+  b=normalizeSearchText(b);
+  if(a===b)return 0;
+  if(!a.length)return b.length;
+  if(!b.length)return a.length;
+  const prev=Array.from({length:b.length+1},(_,i)=>i);
+  const curr=new Array(b.length+1);
+  for(let i=1;i<=a.length;i++){
+    curr[0]=i;
+    for(let j=1;j<=b.length;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      curr[j]=Math.min(curr[j-1]+1,prev[j]+1,prev[j-1]+cost);
+    }
+    for(let j=0;j<=b.length;j++)prev[j]=curr[j];
+  }
+  return prev[b.length];
+}
+function fuzzyTextMatch(query,text){
+  const q=normalizeSearchText(query);
+  const t=normalizeSearchText(text);
+  if(!q)return true;
+  if(!t)return false;
+  if(t.includes(q))return true;
+  const qWords=q.split(' ').filter(Boolean);
+  const tWords=t.split(' ').filter(Boolean);
+  return qWords.every(qw=>{
+    if(tWords.some(tw=>tw.includes(qw)||qw.includes(tw)))return true;
+    const maxDistance=qw.length<=4?1:qw.length<=8?2:3;
+    return tWords.some(tw=>{
+      if(Math.abs(tw.length-qw.length)>maxDistance)return false;
+      return levenshteinDistance(qw,tw)<=maxDistance;
+    });
+  });
+}
+
 function currentFilters(){return {q:norm($('search').value),type:$('typeFilter').value,status:$('statusFilter').value,sort:$('sort').value,cats:[...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat)}}
-function filteredEntries(){const f=currentFilters();let out=db.entries.filter(x=>{const hay=norm([x.en,x.ua,x.transcription,x.note,(x.categories||[]).join(' ')].join(' '));return(!f.q||hay.includes(f.q))&&(!f.type||x.type===f.type)&&(!f.status||x.status===f.status)&&(!f.cats.length||f.cats.some(c=>(x.categories||[]).includes(c)))});out.sort((a,b)=>f.sort==='za'?b.en.localeCompare(a.en,'en',{sensitivity:'base'}):f.sort==='recent'?String(b.createdAt||'').localeCompare(String(a.createdAt||'')):a.en.localeCompare(b.en,'en',{sensitivity:'base'}));return out}
+function filteredEntries(){const f=currentFilters();let out=db.entries.filter(x=>{const hay=norm([x.en,x.ua,x.transcription,x.note,(x.categories||[]).join(' ')].join(' '));return(!f.q||fuzzyTextMatch(f.q,hay))&&(!f.type||x.type===f.type)&&(!f.status||x.status===f.status)&&(!f.cats.length||f.cats.some(c=>(x.categories||[]).includes(c)))});out.sort((a,b)=>f.sort==='za'?b.en.localeCompare(a.en,'en',{sensitivity:'base'}):f.sort==='recent'?String(b.createdAt||'').localeCompare(String(a.createdAt||'')):a.en.localeCompare(b.en,'en',{sensitivity:'base'}));return out}
 function renderAll(){renderStats();renderCategories();renderList();renderEditorCats();renderCategoryManage()}
 function renderStats(){
   const f=filteredEntries();
@@ -1459,6 +1608,26 @@ function gradeTrain(status){const x=trainPool[trainIndex];const real=db.entries.
 function setupSelects(){$('typeFilter').innerHTML='<option value="">Усі види записів</option>'+TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');$('typeInput').innerHTML=TYPES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('')}
 setupSelects();renderAll();
 showTrainSetup();
+
+$('loveModalClose').onclick=e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  closeLoveModal();
+};
+$('loveModalMore').onclick=e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  $('loveModalMessage').textContent=nextLoveMessage();
+};
+$('loveModal').addEventListener('click',e=>{
+  if(e.target===$('loveModal'))closeLoveModal();
+});
+
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('loveModal').classList.contains('open'))closeLoveModal();
+});
+
 $('googleLoginBtn').onclick=googleLogin;$('logoutBtn').onclick=googleLogout;$('toastAction').onclick=runUndo;
 
 function setManageMenu(open){
@@ -1555,7 +1724,326 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 $('closeProgressModal').onclick=()=>$('progressModal').classList.remove('open');
 $('progressModal').onclick=e=>{if(e.target===$('progressModal'))$('progressModal').classList.remove('open')};
 $('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=prepareTrainer;$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
-$('loveBtn').onclick=()=>{const m=['Я тебе люблю.','Ти молодець. Навіть коли якесь слово думає інакше.','Словник росте. Моя любов до тебе теж, але вона вже не влазить у статистику.','Правильна відповідь дня: ти неймовірна.','Ще одне слово — ще один маленький крок. Я бачу, як ти стараєшся.'];toast(m[Math.floor(Math.random()*m.length)])};
+
+const loveMessages=[
+  "Я тебе люблю.",
+  "Ти дуже красива.",
+  "У тебе все вийде. Я в тебе вірю.",
+  "Я бачу, як сильно ти стараєшся.",
+  "Я пишаюся тобою.",
+  "Ти сильніша, ніж сама про себе думаєш.",
+  "Мені з тобою неймовірно пощастило.",
+  "Ти — моя найулюбленіша людина.",
+  "Твоя усмішка робить мій день кращим.",
+  "Ти заслуговуєш на все хороше, що з тобою станеться.",
+  "Навіть коли ти втомилася — ти все одно неймовірна.",
+  "Не забувай: ти не сама. Я поруч.",
+  "Мені подобається слухати тебе, навіть коли ти просто розповідаєш дрібниці.",
+  "Я люблю тебе не тільки за те, яка ти, а й за те, який я поруч із тобою.",
+  "Ти можеш більше, ніж тобі іноді здається.",
+  "Твої старання не залишаються непоміченими.",
+  "Я завжди хочу бути на твоєму боці.",
+  "Ти моя маленька гордість.",
+  "Ти гарна навіть тоді, коли сама цього зовсім не бачиш.",
+  "Мені подобається твій голос.",
+  "Мені подобається твій сміх.",
+  "Мені подобається, як ти думаєш.",
+  "Мені подобається твоя дивність. Особливо твоя дивність.",
+  "Я люблю твої обійми. І дуже за ними сумую.",
+  "З тобою навіть звичайні речі стають особливими.",
+  "Ти робиш моє життя теплішим.",
+  "Я хочу бачити, як здійснюються твої мрії.",
+  "Ти маєш право втомитися. Це не робить тебе слабкою.",
+  "Ти маєш право не бути сильною щодня.",
+  "Навіть у поганий день ти для мене все одно найкраща.",
+  "Я вибрав би тебе ще раз.",
+  "Я люблю твій ніс.",
+  "Ти — моє улюблене «добрий ранок» і моє улюблене «на добраніч».",
+  "Я дуже ціную все, що ти робиш.",
+  "Мені важливо, що ти відчуваєш.",
+  "Твої почуття для мене важливі.",
+  "Ти можеш розповісти мені все.",
+  "Я нікуди не діваюсь.",
+  "Я хочу тебе.",
+  "Дуже хочу тебе.",
+  "Ти небезпечно сексуальна.",
+  "Я досі закохуюсь у тебе знову.",
+  "Ти моя найкрасивіша слабкість.",
+  "Мені тебе завжди мало.",
+  "Я хочу цілувати тебе довше, ніж це взагалі пристойно.",
+  "Ти виглядаєш так, що в мене інколи зникають усі розумні думки.",
+  "Ти моя.",
+  "Я твій.",
+  "Мені подобається наше «ми».",
+  "Я хочу з тобою ще дуже багато спогадів.",
+  "Колись ми будемо згадувати цей період і дивуватися, скільки всього витримали.",
+  "У тебе прекрасне майбутнє. І я хочу бачити його поруч із тобою.",
+  "Сьогодні теж хороший день нагадати: я тебе люблю.",
+  "Ти впораєшся. А якщо буде важко — будемо справлятися разом.",
+  "Ти не зобов’язана всім подобатися.",
+  "Будь собою. Саме таку тебе я і люблю.",
+  "Твоя ніжність — одна з моїх улюблених речей у світі.",
+  "Твій характер іноді доводить мене до сказу. Але я все одно його люблю.",
+  "Ти дуже важлива для мене.",
+  "Дякую, що ти є.",
+  "Мій найкращий фінансовий актив — це ти. Але витрачати тебе я не дам.",
+  "Це сердечко тут тільки тому, що одне справжнє вже давно в тебе.",
+  "Перевірка балансу: любові до тебе — безліміт.",
+  "Бюджет на поцілунки перевищено. І я не планую його скорочувати.",
+  "Категорія витрат: «Вікторія». Ліміт: відсутній.",
+  "Фінансова порада дня: інвестуй час у себе. Ти того варта.",
+  "Секретний бонус: сьогодні ти офіційно найкраща дівчина у світі.",
+  "Ти — людина, до якої мені хочеться повертатися.",
+  "Мені спокійніше, коли я знаю, що ти є.",
+  "Ти робиш цей світ для мене трохи кращим.",
+  "Я люблю твої очі. Особливо коли вони дивляться на мене.",
+  "У тебе дуже красиве серце.",
+  "Ти не повинна бути ідеальною, щоб я тебе любив.",
+  "Мені подобається навіть просто мовчати з тобою.",
+  "Ти можеш сумніватися в собі. Я все одно в тебе віритиму.",
+  "Я бачу твою втому. І бачу, як ти все одно не здаєшся.",
+  "Ти вже пройшла більше, ніж сама собі зараховуєш.",
+  "Ти прекрасна не тільки зовні.",
+  "Мені дуже подобається твоя щирість.",
+  "Ти не занадто складна. Ти просто справжня.",
+  "Я люблю тебе навіть у ті дні, коли ти сама себе не любиш.",
+  "Ти маєш право починати спочатку стільки разів, скільки потрібно.",
+  "Я завжди помічу, коли ти стараєшся.",
+  "Я знаю, скільки сил тобі іноді коштують звичайні речі.",
+  "Ти не лінива. Іноді ти просто виснажена.",
+  "Мені хочеться берегти тебе.",
+  "Я хочу, щоб поруч зі мною ти почувалася вдома.",
+  "Твій голос — один із моїх улюблених звуків.",
+  "Я сумую за тобою сильніше, ніж іноді кажу.",
+  "Мені тебе не вистачає навіть через п’ять хвилин після розмови.",
+  "Я хочу ще тисячу наших вечорів.",
+  "Я хочу прокидатися поруч із тобою.",
+  "Я хочу засинати поруч із тобою.",
+  "Я хочу бачити тебе сонну, смішну, сердиту і щасливу.",
+  "Ти дуже гарна, коли смієшся.",
+  "Ти дуже гарна, коли сердишся. Але краще не перевіряй це занадто часто.",
+  "Я люблю твої маленькі звички.",
+  "Я люблю речі в тобі, які ти навіть не помічаєш.",
+  "Ти моя улюблена випадковість.",
+  "З усіх людей я радий, що саме ти стала моєю людиною.",
+  "Я не завжди вмію правильно говорити, але люблю тебе дуже правильно.",
+  "Ти для мене важливіша, ніж я іноді вмію показати.",
+  "Я хочу знати, як пройшов твій день. Навіть якщо там нічого особливого.",
+  "Мені цікаве твоє життя, бо мені цікава ти.",
+  "Ти можеш бути собою зі мною.",
+  "Тобі не потрібно заслужити мою любов.",
+  "Я люблю тебе не за досягнення.",
+  "Ти достатня вже зараз.",
+  "Ти не зобов’язана весь час триматися.",
+  "Можеш спертися на мене.",
+  "Я хочу радіти твоїм перемогам разом із тобою.",
+  "Я бачу в тобі більше, ніж твої невдачі.",
+  "Одна погана доба нічого не говорить про тебе.",
+  "У тебе ще буде дуже багато хороших днів.",
+  "Я хочу бачити тебе щасливою. По-справжньому.",
+  "Ти варта ніжності.",
+  "Ти варта турботи.",
+  "Ти варта спокою.",
+  "Ти варта любові без умов.",
+  "Ти моє найприємніше повідомлення.",
+  "Ти причина, через яку я частіше дивлюся на телефон.",
+  "Ти неймовірно приваблива.",
+  "У тебе є талант відволікати мене від усіх нормальних думок.",
+  "Коли я думаю про тебе, думки не завжди пристойні.",
+  "Ти провокуєш у мені дуже не фінансові бажання.",
+  "На тебе в мене завжди перевитрата бюджету уваги.",
+  "Хочу тебе обійняти. А потім уже як піде.",
+  "Ти виглядаєш як людина, яку треба цілувати частіше.",
+  "Я б зараз із задоволенням порушив твою особисту дистанцію.",
+  "Ти небезпечно гарна для мого самоконтролю.",
+  "Я дуже люблю, коли ти моя.",
+  "Ти мій улюблений привід втратити голову.",
+  "Я б витратив на тебе весь свій вільний час.",
+  "У моєму бюджеті ти проходиш як безцінна.",
+  "Рівень ризику: закохатися в тебе ще сильніше.",
+  "Прогноз на місяць: ще більше любові до тебе.",
+  "Твоя рентабельність для мого настрою — безмежна.",
+  "Актив №1 у моєму житті: ти.",
+  "Дохід дня: твоя усмішка.",
+  "Витрата дня: нерви, коли ти сумуєш.",
+  "Мета накопичення: більше спільних моментів.",
+  "Кредит довіри до тебе — безстроковий.",
+  "Мій улюблений курс — курс у твої обійми.",
+  "Інфляція любові до тебе: щодня більше.",
+  "Фінансовий звіт: ти все ще моє найкраще рішення.",
+  "Секретний фонд: на наші майбутні пригоди.",
+  "Найкраща інвестиція — час, проведений із тобою.",
+  "Я не знаю, що буде далі. Але хочу, щоб там була ти.",
+  "Мені подобається уявляти наше майбутнє.",
+  "Я хочу разом із тобою прожити дуже багато звичайних днів.",
+  "Не тільки свята. Саме звичайні дні теж.",
+  "Я хочу бути поруч не тільки коли легко.",
+  "Я хочу бути твоєю підтримкою, а не ще однією проблемою.",
+  "Ти можеш не мати відповіді на все прямо зараз.",
+  "Тобі не потрібно поспішати, щоб бути молодцем.",
+  "Я вірю, що ти знайдеш свій шлях.",
+  "Навіть маленький крок — це все одно крок.",
+  "Я бачу твій прогрес, навіть коли ти його не бачиш.",
+  "Я радий кожному твоєму маленькому успіху.",
+  "Ти вже молодець. Не «коли-небудь потім». Уже.",
+  "Я люблю тебе сьогоднішню.",
+  "Ти особлива для мене без жодних умов.",
+  "Просто нагадування: ти моя найкраща дівчинка.",
+  "Мені дуже подобається, що саме ти — це ти.",
+  "Я б усе одно знайшов тебе серед тисячі людей.",
+  "Ти мій комфорт і мій хаос одночасно.",
+  "З тобою ніколи не буває просто. І мені це чомусь подобається.",
+  "Ти вмієш бути моєю слабкістю і моєю силою одночасно.",
+  "Ти дуже, дуже важлива для мене.",
+  "Я тебе люблю. Так, знову це кажу.",
+  "Навіть якщо сьогодні запам’яталося одне слово — це вже плюс одне слово, якого вчора не було.",
+  "Не бійся помилятися. Я все одно тобою пишаюся.",
+  "Кожне «не знав(ла)» сьогодні може стати «правильно» завтра.",
+  "Ти не повинна знати все одразу. Головне — що ти продовжуєш.",
+  "Я бачу, як ти стараєшся. Навіть коли ти сама цього не помічаєш.",
+  "Ще одне слово вивчено. Ще один маленький крок до твоєї мети.",
+  "Твій English стає кращим. А ти все така ж красива.",
+  "Помилка — це не провал. Це слово, яке просто треба зустріти ще раз.",
+  "Навіть якщо зараз сумніваєшся — одного дня відповідь вилетить автоматично.",
+  "Я вірю в тебе більше, ніж ти іноді віриш у правильну відповідь.",
+  "Ти можеш натиснути «Не знав(ла)». Я все одно натиснув би «Пишаюся».",
+  "Правильна відповідь: ти молодець. І тут без варіантів.",
+  "Слово забулося? Нічого. Головне, щоб ти не забувала, яка ти крута.",
+  "Транскрипція може бути складною. Ти — ні. Тебе я давно вивчив напам’ять.",
+  "Якщо англійська вирішила тебе помучити — я все одно на твоєму боці.",
+  "Ти вже знаєш більше, ніж на початку. Не знецінюй це.",
+  "Одне складне слово не визначає, наскільки добре ти вчишся.",
+  "Не поспішай. Мозку теж потрібен час, щоб усе розкласти по поличках.",
+  "Повторювати — не означає не знати. Це означає запам’ятовувати надовго.",
+  "Я хочу одного дня почути, як ти говориш англійською, і сказати: я знав, що ти зможеш.",
+  "Твій прогрес складається саме з таких маленьких спроб.",
+  "Сьогодні «banana», завтра вже ціла розмова англійською.",
+  "Не вгадуй — думай. У тебе гарна голова не тільки для краси.",
+  "Якщо відповідь неправильна — сердечко все одно правильне. ♥",
+  "Ти можеш не знати це слово. Але я точно знаю, що ти впораєшся.",
+  "Ще кілька повторень — і це слово саме буде боятися тебе.",
+  "English level: росте. Рівень моєї любові до тебе: давно максимальний.",
+  "Vocabulary update: +1 слово. Love update: без змін, усе ще безліміт.",
+  "Нові слова додаються. Моя улюблена людина не змінюється.",
+  "Статистика може бути будь-якою. Для мене ти все одно на 100%.",
+  "Ти можеш помилитися сто разів. На сто перший уже знатимеш.",
+  "Не знаєш переклад? Натискай чесно. Тут ніхто тебе не оцінює.",
+  "Найкращий спосіб запам’ятати слово — забути його кілька разів і все одно повернутися.",
+  "Ти не здаєш тест. Ти вчишся. Це різні речі.",
+  "Я сподіваюся, одного дня цей сайт стане для тебе занадто легким.",
+  "Сумнівалася, але відповіла правильно? Значить, мозок уже десь це зберіг.",
+  "Проблемні слова — це просто слова, які ще не зрозуміли, з ким зв’язалися.",
+  "Ти вчиш англійську, а я потроху вчуся ще більше тобою пишатися.",
+  "П’ять хвилин навчання теж рахуються. Не обов’язково щоразу робити подвиг.",
+  "Закрий сайт тільки після того, як похвалиш себе хоча б за одну правильну відповідь."
+];
+
+let loveBag=[];
+let lastLoveMessage='';
+
+function refillLoveBag(){
+  loveBag=[...loveMessages];
+  for(let i=loveBag.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [loveBag[i],loveBag[j]]=[loveBag[j],loveBag[i]];
+  }
+  if(loveBag.length>1 && loveBag[loveBag.length-1]===lastLoveMessage){
+    const swapIndex=Math.floor(Math.random()*(loveBag.length-1));
+    [loveBag[swapIndex],loveBag[loveBag.length-1]]=[loveBag[loveBag.length-1],loveBag[swapIndex]];
+  }
+}
+function nextLoveMessage(){
+  if(!loveBag.length)refillLoveBag();
+  const message=loveBag.pop();
+  lastLoveMessage=message;
+  return message;
+}
+function openLoveModal(){
+  $('loveModalMessage').textContent=nextLoveMessage();
+  $('loveModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLoveModal(){
+  $('loveModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function showLoveMessage(){
+  openLoveModal();
+}
+
+let scrollLovePressTimer=null;
+let scrollLoveProgressTimer=null;
+let scrollLoveStart=0;
+let scrollLoveTriggered=false;
+
+function updateScrollTopButton(){
+  const btn=$('scrollTopBtn');
+  if(!btn)return;
+  btn.classList.toggle('show',window.scrollY>360&&!document.body.classList.contains('training-active'));
+}
+function resetScrollLoveButton(){
+  clearTimeout(scrollLovePressTimer);
+  clearInterval(scrollLoveProgressTimer);
+  scrollLovePressTimer=null;
+  scrollLoveProgressTimer=null;
+  scrollLoveStart=0;
+  scrollLoveTriggered=false;
+  $('scrollTopBtn').classList.remove('charging','charged');
+  $('scrollLoveFill').style.height='0%';
+  $('scrollLoveIcon').textContent='↑';
+}
+function startScrollLovePress(ev){
+  if(ev.button!==undefined&&ev.button!==0)return;
+  if(!$('scrollTopBtn').classList.contains('show'))return;
+
+  scrollLoveStart=performance.now();
+  scrollLoveTriggered=false;
+  $('scrollTopBtn').classList.add('charging');
+
+  clearInterval(scrollLoveProgressTimer);
+  scrollLoveProgressTimer=setInterval(()=>{
+    const pct=Math.min(100,((performance.now()-scrollLoveStart)/900)*100);
+    $('scrollLoveFill').style.height=pct+'%';
+  },30);
+
+  clearTimeout(scrollLovePressTimer);
+  scrollLovePressTimer=setTimeout(()=>{
+    scrollLoveTriggered=true;
+    clearInterval(scrollLoveProgressTimer);
+    $('scrollLoveFill').style.height='100%';
+    $('scrollTopBtn').classList.add('charged');
+    $('scrollLoveIcon').textContent='♥';
+    if(navigator.vibrate)navigator.vibrate(45);
+    setTimeout(()=>{
+      showLoveMessage();
+      resetScrollLoveButton();
+      updateScrollTopButton();
+    },180);
+  },900);
+}
+function endScrollLovePress(){
+  if(scrollLoveTriggered)return;
+  const held=scrollLoveStart?performance.now()-scrollLoveStart:0;
+  clearTimeout(scrollLovePressTimer);
+  clearInterval(scrollLoveProgressTimer);
+  if(scrollLoveStart&&held<900)window.scrollTo({top:0,behavior:'smooth'});
+  resetScrollLoveButton();
+}
+function cancelScrollLovePress(){
+  if(scrollLoveTriggered)return;
+  resetScrollLoveButton();
+}
+
+window.addEventListener('scroll',updateScrollTopButton,{passive:true});
+window.addEventListener('resize',updateScrollTopButton);
+$('scrollTopBtn').addEventListener('pointerdown',startScrollLovePress);
+$('scrollTopBtn').addEventListener('pointerup',endScrollLovePress);
+$('scrollTopBtn').addEventListener('pointercancel',cancelScrollLovePress);
+$('scrollTopBtn').addEventListener('pointerleave',e=>{if(e.buttons)cancelScrollLovePress()});
+$('scrollTopBtn').addEventListener('contextmenu',e=>e.preventDefault());
+updateScrollTopButton();
+
 })();
 </script>
 
