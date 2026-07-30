@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WordFlow — особистий словник</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#626be8">
+<meta name="application-name" content="WordFlow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="WordFlow">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
 <style>
 :root{--bg:#f7f7fb;--panel:#fff;--text:#1d2330;--muted:#737d91;--line:#e8eaf0;--accent:#626be8;--accent2:#8b78ef;--rose:#e97998;--green:#16996b;--amber:#c77a0a;--red:#d94a5b;--shadow:0 18px 50px rgba(31,39,70,.10)}
 *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 5% 0,rgba(98,107,232,.11),transparent 25%),radial-gradient(circle at 100% 20%,rgba(233,121,152,.09),transparent 22%),var(--bg);min-height:100vh}
@@ -1550,5 +1558,16 @@ $('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCat
 $('loveBtn').onclick=()=>{const m=['Я тебе люблю.','Ти молодець. Навіть коли якесь слово думає інакше.','Словник росте. Моя любов до тебе теж, але вона вже не влазить у статистику.','Правильна відповідь дня: ти неймовірна.','Ще одне слово — ще один маленький крок. Я бачу, як ти стараєшся.'];toast(m[Math.floor(Math.random()*m.length)])};
 })();
 </script>
+
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope: './'})
+      .then(reg => reg.update())
+      .catch(err => console.error('WordFlow service worker:', err));
+  });
+}
+</script>
+
 </body>
 </html>
