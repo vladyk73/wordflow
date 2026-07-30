@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordflow-shell-v5';
+const CACHE_NAME = 'wordflow-shell-v7';
 const APP_SHELL = [
   './',
   './index.html',
