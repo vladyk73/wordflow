@@ -973,6 +973,162 @@ html[data-theme="dark"] .auth-box{
   color:var(--text);
 }
 
+
+/* v10.4 — compact mobile header menu */
+.mobile-more-btn{display:none}
+.mobile-actions-sheet{display:none}
+
+@media(max-width:700px){
+  .topbar{
+    grid-template-columns:1fr auto;
+    align-items:center;
+    gap:10px;
+  }
+  .topbar .brand{
+    grid-column:1/-1;
+  }
+
+  /* Keep only account card + one Menu button in the mobile header */
+  .actions{
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    align-items:stretch;
+  }
+  .auth-box{
+    grid-column:1;
+    min-width:0;
+    display:block;
+  }
+  .auth-box .auth-user{
+    width:100%;
+    min-height:48px;
+    justify-content:flex-start;
+    padding:7px 11px;
+  }
+  .auth-box #googleLoginBtn{
+    width:100%;
+    min-height:48px;
+  }
+  .auth-box #logoutBtn,
+  .actions > #themeToggle,
+  .actions > #categoryBtn,
+  .actions > .manage-wrap{
+    display:none !important;
+  }
+  .mobile-more-btn{
+    display:inline-flex;
+    grid-column:2;
+    width:auto !important;
+    min-width:92px;
+    min-height:48px !important;
+    padding:0 14px !important;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+  }
+
+  .mobile-actions-sheet{
+    position:fixed;
+    inset:0;
+    z-index:150;
+    display:block;
+    pointer-events:none;
+    visibility:hidden;
+  }
+  .mobile-actions-sheet.open{
+    pointer-events:auto;
+    visibility:visible;
+  }
+  .mobile-actions-backdrop{
+    position:absolute;
+    inset:0;
+    width:100%;height:100%;
+    border:0;
+    background:rgba(10,12,18,.48);
+    opacity:0;
+    transition:opacity .18s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mobile-actions-sheet.open .mobile-actions-backdrop{opacity:1}
+  .mobile-actions-card{
+    position:absolute;
+    left:10px;right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom));
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:var(--panel);
+    box-shadow:0 24px 70px rgba(0,0,0,.30);
+    transform:translateY(calc(100% + 24px));
+    transition:transform .22s ease;
+  }
+  .mobile-actions-sheet.open .mobile-actions-card{transform:none}
+  .mobile-actions-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:2px 2px 10px 6px;
+  }
+  .mobile-actions-title{font-size:17px;font-weight:900}
+  .mobile-actions-list{display:grid;gap:7px}
+  .mobile-action-row{
+    width:100%;
+    min-height:58px;
+    display:grid;
+    grid-template-columns:40px 1fr;
+    align-items:center;
+    gap:10px;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:8px 11px;
+    background:#fff;
+    color:var(--text);
+    text-align:left;
+  }
+  .mobile-action-icon{
+    width:38px;height:38px;
+    display:grid;place-items:center;
+    border-radius:11px;
+    background:#eef0ff;
+    color:#4d57ce;
+    font-size:18px;
+    font-weight:900;
+  }
+  .mobile-action-row b{display:block;font-size:13px}
+  .mobile-action-row small{display:block;margin-top:2px;color:var(--muted);font-size:10.5px}
+  .mobile-action-danger .mobile-action-icon{background:#fff0f2;color:var(--red)}
+
+  html[data-theme="dark"] .mobile-action-row{
+    background:#1b1f29;
+    border-color:#343a4c;
+  }
+  html[data-theme="dark"] .mobile-action-icon{
+    background:#2a3044;
+    color:#b5bcff;
+  }
+  html[data-theme="dark"] .mobile-action-danger .mobile-action-icon{
+    background:#43272d;
+    color:#ff93a2;
+  }
+
+  /* iPhone: do not select/copy the arrow on a long press */
+  .scroll-love-btn,
+  .scroll-love-btn *,
+  .scroll-love-icon{
+    -webkit-user-select:none !important;
+    user-select:none !important;
+    -webkit-touch-callout:none !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+  .scroll-love-btn{
+    touch-action:none;
+    cursor:pointer;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1011,6 +1167,9 @@ html[data-theme="dark"] .auth-box{
         </label>
       </div>
     </div>
+    <button class="btn mobile-more-btn" id="mobileMoreBtn" type="button" aria-haspopup="dialog" aria-expanded="false">
+      <span aria-hidden="true">☰</span><span>Меню</span>
+    </button>
   </div></div>
   <div class="panel tabs" id="mainTabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button></div>
 
@@ -1160,6 +1319,38 @@ html[data-theme="dark"] .auth-box{
     <div class="love-modal-kicker">Для тебе</div>
     <div class="love-modal-message" id="loveModalMessage"></div>
     <button class="love-modal-more" id="loveModalMore" type="button">Ще одну фразу</button>
+  </div>
+</div>
+
+
+<div class="mobile-actions-sheet" id="mobileActionsSheet" aria-hidden="true">
+  <button class="mobile-actions-backdrop" id="mobileActionsBackdrop" type="button" aria-label="Закрити меню"></button>
+  <div class="mobile-actions-card" role="dialog" aria-modal="true" aria-labelledby="mobileActionsTitle">
+    <div class="mobile-actions-head">
+      <div>
+        <div class="mobile-actions-title" id="mobileActionsTitle">Меню</div>
+        <div class="small-note">Налаштування та керування словником</div>
+      </div>
+      <button class="icon-btn" id="mobileActionsClose" type="button" aria-label="Закрити">×</button>
+    </div>
+    <div class="mobile-actions-list">
+      <button class="mobile-action-row" id="mobileThemeBtn" type="button">
+        <span class="mobile-action-icon" id="mobileThemeIcon">☾</span>
+        <span><b id="mobileThemeText">Нічний режим</b><small>Змінити оформлення</small></span>
+      </button>
+      <button class="mobile-action-row" id="mobileTopicsBtn" type="button">
+        <span class="mobile-action-icon">#</span>
+        <span><b>Теми</b><small>Додати або видалити теми</small></span>
+      </button>
+      <button class="mobile-action-row" id="mobileBackupBtn" type="button">
+        <span class="mobile-action-icon">⋯</span>
+        <span><b>Резервна копія</b><small>Експорт або імпорт JSON</small></span>
+      </button>
+      <button class="mobile-action-row mobile-action-danger" id="mobileLogoutBtn" type="button">
+        <span class="mobile-action-icon">↪</span>
+        <span><b>Вийти</b><small>Вийти з Google-акаунта</small></span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1587,6 +1778,7 @@ function applyWordFlowTheme(theme,{persist=true}={}){
   if(icon)icon.textContent=dark?'☀':'☾';
   if(text)text.textContent=dark?'Світлий':'Нічний';
   if(meta)meta.setAttribute('content',dark?'#11131a':'#626be8');
+  if(typeof syncMobileMenuTheme==='function')syncMobileMenuTheme();
 
   if(persist){
     try{localStorage.setItem(THEME_STORAGE_KEY,next)}catch(_){}
@@ -2312,6 +2504,48 @@ window.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&$('loveModal').classList.contains('open'))closeLoveModal();
 });
 
+
+function syncMobileMenuTheme(){
+  const dark=getWordFlowTheme()==='dark';
+  const icon=$('mobileThemeIcon');
+  const text=$('mobileThemeText');
+  if(icon)icon.textContent=dark?'☀':'☾';
+  if(text)text.textContent=dark?'Світлий режим':'Нічний режим';
+}
+function setMobileActionsMenu(open){
+  const sheet=$('mobileActionsSheet');
+  if(!sheet)return;
+  sheet.classList.toggle('open',!!open);
+  sheet.setAttribute('aria-hidden',open?'false':'true');
+  $('mobileMoreBtn').setAttribute('aria-expanded',open?'true':'false');
+  if(open){
+    syncMobileMenuTheme();
+    document.body.classList.add('mobile-menu-open');
+  }else{
+    document.body.classList.remove('mobile-menu-open');
+  }
+}
+$('mobileMoreBtn').onclick=()=>setMobileActionsMenu(true);
+$('mobileActionsClose').onclick=()=>setMobileActionsMenu(false);
+$('mobileActionsBackdrop').onclick=()=>setMobileActionsMenu(false);
+
+$('mobileThemeBtn').onclick=()=>{
+  applyWordFlowTheme(getWordFlowTheme()==='dark'?'light':'dark');
+  syncMobileMenuTheme();
+};
+$('mobileTopicsBtn').onclick=()=>{
+  setMobileActionsMenu(false);
+  $('categoryBtn').click();
+};
+$('mobileBackupBtn').onclick=()=>{
+  setMobileActionsMenu(false);
+  setTimeout(()=>$('manageBtn').click(),0);
+};
+$('mobileLogoutBtn').onclick=()=>{
+  setMobileActionsMenu(false);
+  $('logoutBtn').click();
+};
+
 $('themeToggle').onclick=()=>applyWordFlowTheme(getWordFlowTheme()==='dark'?'light':'dark');
 $('googleLoginBtn').onclick=googleLogin;$('logoutBtn').onclick=googleLogout;$('toastAction').onclick=runUndo;
 
@@ -2329,6 +2563,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
+    setMobileActionsMenu(false);
     setManageMenu(false);
     $('progressModal').classList.remove('open');
     $('categoryModal').classList.remove('open');
@@ -2347,6 +2582,7 @@ onAuthStateChanged(firebaseAuth,async user=>{
 
     $('googleLoginBtn').style.display='inline-flex';
     $('logoutBtn').style.display='none';
+    $('mobileLogoutBtn').style.display='none';
     $('authUser').classList.remove('show');
     setSyncState('Увійдіть для синхронізації');
     return;
@@ -2354,6 +2590,7 @@ onAuthStateChanged(firebaseAuth,async user=>{
 
   $('googleLoginBtn').style.display='none';
   $('logoutBtn').style.display='inline-flex';
+  $('mobileLogoutBtn').style.display='grid';
   $('authUser').classList.add('show');
   $('authName').textContent=user.displayName||user.email||'Google користувач';
   $('authAvatar').src=user.photoURL||'';
@@ -2728,11 +2965,51 @@ function cancelScrollLovePress(){
 
 window.addEventListener('scroll',updateScrollTopButton,{passive:true});
 window.addEventListener('resize',updateScrollTopButton);
-$('scrollTopBtn').addEventListener('pointerdown',startScrollLovePress);
-$('scrollTopBtn').addEventListener('pointerup',endScrollLovePress);
-$('scrollTopBtn').addEventListener('pointercancel',cancelScrollLovePress);
-$('scrollTopBtn').addEventListener('pointerleave',e=>{if(e.buttons)cancelScrollLovePress()});
-$('scrollTopBtn').addEventListener('contextmenu',e=>e.preventDefault());
+
+const scrollTopButton=$('scrollTopBtn');
+let scrollLoveTouchActive=false;
+
+scrollTopButton.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='touch')return;
+  startScrollLovePress(e);
+});
+scrollTopButton.addEventListener('pointerup',e=>{
+  if(e.pointerType==='touch')return;
+  endScrollLovePress(e);
+});
+scrollTopButton.addEventListener('pointercancel',e=>{
+  if(e.pointerType==='touch')return;
+  cancelScrollLovePress(e);
+});
+scrollTopButton.addEventListener('pointerleave',e=>{
+  if(e.pointerType!=='touch'&&e.buttons)cancelScrollLovePress(e);
+});
+
+/* iOS Safari: explicit touch handling prevents text selection / callout on long press */
+scrollTopButton.addEventListener('touchstart',e=>{
+  if(e.touches.length!==1)return;
+  e.preventDefault();
+  scrollLoveTouchActive=true;
+  startScrollLovePress({button:0});
+},{passive:false});
+
+scrollTopButton.addEventListener('touchend',e=>{
+  if(!scrollLoveTouchActive)return;
+  e.preventDefault();
+  scrollLoveTouchActive=false;
+  endScrollLovePress();
+},{passive:false});
+
+scrollTopButton.addEventListener('touchcancel',e=>{
+  if(!scrollLoveTouchActive)return;
+  e.preventDefault();
+  scrollLoveTouchActive=false;
+  cancelScrollLovePress();
+},{passive:false});
+
+scrollTopButton.addEventListener('contextmenu',e=>e.preventDefault());
+scrollTopButton.addEventListener('selectstart',e=>e.preventDefault());
+scrollTopButton.addEventListener('dragstart',e=>e.preventDefault());
 updateScrollTopButton();
 
 })();
