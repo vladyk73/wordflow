@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordflow-shell-v12';
+const CACHE_NAME = 'wordflow-shell-v14';
 const APP_SHELL = [
   './',
   './index.html',
@@ -19,8 +19,9 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
-        keys.filter(key => key.startsWith('wordflow-shell-') && key !== CACHE_NAME)
-            .map(key => caches.delete(key))
+        keys
+          .filter(key => key.startsWith('wordflow-shell-') && key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
@@ -28,17 +29,13 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const request = event.request;
-  if (request.method !== 'GET') return;
+  if(request.method !== 'GET') return;
 
   const url = new URL(request.url);
-  const isLocalAsset = url.origin === self.location.origin;
-  const isFirebaseModule = url.origin === 'https://www.gstatic.com'
-    && url.pathname.includes('/firebasejs/');
+  const sameOrigin = url.origin === self.location.origin;
+  const firebaseModule = url.hostname === 'www.gstatic.com' && url.pathname.includes('/firebasejs/');
 
-  // Never intercept Firebase/Firestore API traffic.
-  if (!isLocalAsset && !isFirebaseModule) return;
-
-  if (request.mode === 'navigate') {
+  if(request.mode === 'navigate'){
     event.respondWith(
       fetch(request)
         .then(response => {
@@ -51,17 +48,19 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then(cached => {
-      const network = fetch(request).then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-        }
-        return response;
-      }).catch(() => cached);
+  if(sameOrigin || firebaseModule){
+    event.respondWith(
+      caches.match(request).then(cached => {
+        const network = fetch(request).then(response => {
+          if(response && response.ok){
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+          }
+          return response;
+        }).catch(() => cached);
 
-      return cached || network;
-    })
-  );
+        return cached || network;
+      })
+    );
+  }
 });

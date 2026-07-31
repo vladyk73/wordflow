@@ -1129,6 +1129,102 @@ html[data-theme="dark"] .auth-box{
   }
 }
 
+
+/* v10.5 — robust dark form controls */
+html[data-theme="dark"] input:not([type="file"]),
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select{
+  background:#141720 !important;
+  color:#eef1f8 !important;
+  border-color:#343a4d !important;
+  caret-color:#eef1f8;
+  -webkit-text-fill-color:#eef1f8;
+  color-scheme:dark;
+}
+
+html[data-theme="dark"] input:not([type="file"]):focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] select:focus{
+  background:#171b25 !important;
+  color:#ffffff !important;
+  border-color:#737cff !important;
+  box-shadow:0 0 0 4px rgba(115,124,255,.14) !important;
+  -webkit-text-fill-color:#ffffff;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{
+  color:#7f889c !important;
+  -webkit-text-fill-color:#7f889c;
+  opacity:1;
+}
+
+html[data-theme="dark"] select option{
+  background:#171b25;
+  color:#eef1f8;
+}
+
+html[data-theme="dark"] input::selection,
+html[data-theme="dark"] textarea::selection{
+  background:#5964c9;
+  color:#ffffff;
+}
+
+/* Chromium autofill / saved values */
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] input:-webkit-autofill:hover,
+html[data-theme="dark"] input:-webkit-autofill:focus,
+html[data-theme="dark"] textarea:-webkit-autofill,
+html[data-theme="dark"] textarea:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 1000px #171b25 inset !important;
+  -webkit-text-fill-color:#ffffff !important;
+  caret-color:#ffffff !important;
+  border-color:#737cff !important;
+}
+
+/* Keep hidden upload inputs hidden */
+.file-label input[type="file"],
+.manage-label input[type="file"]{
+  display:none !important;
+}
+
+
+/* v10.6 audit fixes */
+html[data-theme="dark"] .alphabet-wrap{
+  background:#171a22;
+  border-color:#2f3546;
+}
+html[data-theme="dark"] .alpha-btn{
+  background:#222735;
+  color:#cbd2e1;
+  border:1px solid #394155;
+}
+html[data-theme="dark"] .alpha-btn:not(:disabled):hover{
+  background:#2d3448;
+  color:#ffffff;
+  border-color:#4d5878;
+}
+html[data-theme="dark"] .alpha-btn:disabled{
+  background:#1b1f29;
+  color:#626b7e;
+  border-color:#2b3140;
+  opacity:.62;
+}
+.mobile-backup-submenu{
+  display:none;
+  gap:7px;
+  padding-top:2px;
+}
+.mobile-backup-submenu.open{display:grid}
+.mobile-backup-submenu .mobile-action-row{
+  min-height:54px;
+  margin-left:20px;
+  width:calc(100% - 20px);
+}
+@media(max-width:700px){
+  body.mobile-menu-open{overflow:hidden}
+}
+
 </style>
 </head>
 <body>
@@ -1346,6 +1442,16 @@ html[data-theme="dark"] .auth-box{
         <span class="mobile-action-icon">⋯</span>
         <span><b>Резервна копія</b><small>Експорт або імпорт JSON</small></span>
       </button>
+      <div class="mobile-backup-submenu" id="mobileBackupSubmenu">
+        <button class="mobile-action-row" id="mobileExportBtn" type="button">
+          <span class="mobile-action-icon">↓</span>
+          <span><b>Експорт JSON</b><small>Зберегти резервну копію</small></span>
+        </button>
+        <button class="mobile-action-row" id="mobileImportBtn" type="button">
+          <span class="mobile-action-icon">↑</span>
+          <span><b>Імпорт JSON</b><small>Відновити резервну копію</small></span>
+        </button>
+      </div>
       <button class="mobile-action-row mobile-action-danger" id="mobileLogoutBtn" type="button">
         <span class="mobile-action-icon">↪</span>
         <span><b>Вийти</b><small>Вийти з Google-акаунта</small></span>
@@ -1687,39 +1793,39 @@ function queueCloudSave(){
   syncTimer=setTimeout(async()=>{
     try{
       const current=new Map(db.entries.map(e=>[String(e.id),e]));
-      const batch=writeBatch(firestore);
-      let operations=0;
+      const operations=[];
 
-      // Create/update only changed words.
       for(const [id,e] of current){
         const serialized=stableEntry(e);
         if(cloudMirror.get(id)!==serialized){
-          batch.set(wordRef(id),entryForCloud(e));
-          operations++;
+          operations.push(batch=>batch.set(wordRef(id),entryForCloud(e)));
         }
       }
 
-      // Delete words that disappeared locally.
       for(const id of cloudMirror.keys()){
         if(!current.has(id)){
-          batch.delete(wordRef(id));
-          operations++;
+          operations.push(batch=>batch.delete(wordRef(id)));
         }
       }
 
       const themes=[...new Set(db.categories)];
       if(JSON.stringify(themes)!==JSON.stringify(cloudThemes)){
-        batch.set(settingsRef(),{
+        operations.push(batch=>batch.set(settingsRef(),{
           themes,
           initialized:true,
           schemaVersion:2,
           notebookSeedVersion:NOTEBOOK_SEED_VERSION,
           updatedAt:serverTimestamp()
-        },{merge:true});
-        operations++;
+        },{merge:true}));
       }
 
-      if(operations>0)await batch.commit();
+      const CHUNK_SIZE=400;
+      for(let i=0;i<operations.length;i+=CHUNK_SIZE){
+        const batch=writeBatch(firestore);
+        operations.slice(i,i+CHUNK_SIZE).forEach(apply=>apply(batch));
+        await batch.commit();
+      }
+
       pendingLocalWrite=false;
       if(navigator.onLine)setSyncState('Синхронізовано','ok');
     }catch(err){
@@ -2523,6 +2629,8 @@ function setMobileActionsMenu(open){
     document.body.classList.add('mobile-menu-open');
   }else{
     document.body.classList.remove('mobile-menu-open');
+    const backupSubmenu=$('mobileBackupSubmenu');
+    if(backupSubmenu)backupSubmenu.classList.remove('open');
   }
 }
 $('mobileMoreBtn').onclick=()=>setMobileActionsMenu(true);
@@ -2538,8 +2646,14 @@ $('mobileTopicsBtn').onclick=()=>{
   $('categoryBtn').click();
 };
 $('mobileBackupBtn').onclick=()=>{
+  $('mobileBackupSubmenu').classList.toggle('open');
+};
+$('mobileExportBtn').onclick=()=>{
+  exportJSON();
   setMobileActionsMenu(false);
-  setTimeout(()=>$('manageBtn').click(),0);
+};
+$('mobileImportBtn').onclick=()=>{
+  $('importJson').click();
 };
 $('mobileLogoutBtn').onclick=()=>{
   setMobileActionsMenu(false);
