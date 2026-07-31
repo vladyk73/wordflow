@@ -1,8 +1,10 @@
-const CACHE_NAME = 'wordflow-shell-v18';
+const CACHE_NAME = 'wordflow-shell-v20';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
+  './favicon.ico',
+  './icons/favicon-32.png',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
@@ -33,7 +35,9 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
   const sameOrigin = url.origin === self.location.origin;
-  const firebaseModule = url.hostname === 'www.gstatic.com' && url.pathname.includes('/firebasejs/');
+  const firebaseModule =
+    url.hostname === 'www.gstatic.com' &&
+    url.pathname.includes('/firebasejs/');
 
   if(request.mode === 'navigate'){
     event.respondWith(

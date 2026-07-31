@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WordFlow — особистий словник</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="shortcut icon" href="./favicon.ico">
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#626be8" id="themeColorMeta">
 <script>
@@ -1255,6 +1258,63 @@ html[data-theme="dark"] .alpha-btn.active{
   background:#5964c9;
   color:#fff;
   border-color:#7580e9;
+}
+
+
+/* v11.4 — dark progress modal */
+html[data-theme="dark"] .topic-progress-item{
+  background:#1b1f29;
+  border-color:#343a4d;
+  color:#eef1f8;
+}
+html[data-theme="dark"] .topic-progress-name{
+  color:#f3f5fb;
+}
+html[data-theme="dark"] .topic-progress-count,
+html[data-theme="dark"] .topic-progress-meta{
+  color:#9da6b9;
+}
+html[data-theme="dark"] .topic-progress-bar{
+  background:#2b3140;
+}
+html[data-theme="dark"] .topic-progress-fill{
+  background:linear-gradient(90deg,#737cff,#a58cff);
+}
+html[data-theme="dark"] #topicProgressModal .modal-card{
+  background:#171a22;
+  border:1px solid #303646;
+}
+
+
+/* v11.5 — dark mode fix for training view */
+html[data-theme="dark"] #trainerView,
+html[data-theme="dark"] #trainerView .trainer,
+html[data-theme="dark"] #trainerView .panel.trainer{
+  background:#171a22 !important;
+  color:var(--text);
+  border-color:#303647 !important;
+}
+html[data-theme="dark"] #trainerView .train-setup,
+html[data-theme="dark"] #trainerView .train-session-head{
+  background:transparent;
+  color:var(--text);
+}
+html[data-theme="dark"] #trainerView .train-word{
+  color:#f3f5fb;
+}
+html[data-theme="dark"] #trainerView .train-direction-label,
+html[data-theme="dark"] #trainerView #trainProgress,
+html[data-theme="dark"] #trainerView #trainSessionInfo,
+html[data-theme="dark"] #trainerView .small-note{
+  color:#a4acbd;
+}
+html[data-theme="dark"] #trainerView .train-exit{
+  background:#242936;
+  color:#edf0f8;
+  border-color:#353c50;
+}
+html[data-theme="dark"] #trainerView .train-exit:hover{
+  background:#2b3141;
 }
 
 </style>
