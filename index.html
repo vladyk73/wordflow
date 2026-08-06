@@ -340,6 +340,7 @@ body.training-active .grading .grade{
 .bulk-preview-table tr:last-child td{border-bottom:0}
 .bulk-row-error{background:#fff6f7}
 .bulk-row-duplicate{background:#fffaf0}
+.bulk-row-possible{background:#fff8ea}
 .bulk-row-new{background:#f8fcfa}
 .bulk-status{
   display:inline-flex;padding:5px 7px;border-radius:999px;
@@ -347,6 +348,8 @@ body.training-active .grading .grade{
 }
 .bulk-status.new{background:#eaf8f2;color:#16815c}
 .bulk-status.duplicate{background:#fff4df;color:#9c6200}
+.bulk-status.possible{background:#fff0c7;color:#8a5a00}
+.bulk-import-action{min-width:150px;padding:6px 8px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);font:inherit;font-size:11px}
 .bulk-status.error{background:#fff0f2;color:#d94a5b}
 .bulk-preview-actions{
   display:flex;justify-content:flex-end;gap:8px;margin-top:12px
@@ -1431,6 +1434,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
                   <th>Транскрипція</th>
                   <th>Теми</th>
                   <th>Статус</th>
+                  <th>Дія</th>
                 </tr>
               </thead>
               <tbody id="bulkPreviewRows"></tbody>
@@ -2457,17 +2461,21 @@ function inspectBulkText(text){
       };
     }
 
-    const duplicate=db.entries.find(x=>
+    const exactDuplicate=db.entries.find(x=>
       norm(x.en)===norm(parsed.en)&&norm(x.ua)===norm(parsed.ua)
     );
+    const englishMatches=db.entries.filter(x=>norm(x.en)===norm(parsed.en));
+    const possibleDuplicate=!exactDuplicate&&englishMatches.length?englishMatches[0]:null;
 
     return {
       index:index+1,
       original,
       valid:true,
-      status:duplicate?'duplicate':'new',
+      status:exactDuplicate?'duplicate':possibleDuplicate?'possible':'new',
       parsed,
-      duplicateId:duplicate?.id||null
+      duplicateId:(exactDuplicate||possibleDuplicate)?.id||null,
+      existingUa:possibleDuplicate?.ua||exactDuplicate?.ua||'',
+      resolution:possibleDuplicate?'merge':'auto'
     };
   }).filter(Boolean);
 }
@@ -2477,33 +2485,44 @@ function renderBulkPreview(items){
   const valid=items.filter(x=>x.valid);
   const fresh=items.filter(x=>x.status==='new').length;
   const duplicates=items.filter(x=>x.status==='duplicate').length;
+  const possible=items.filter(x=>x.status==='possible').length;
   const errors=items.filter(x=>x.status==='error').length;
 
   $('bulkPreviewSummary').textContent=
-    `Рядків: ${items.length} · нових: ${fresh} · дублікатів: ${duplicates} · помилок: ${errors}`;
+    `Рядків: ${items.length} · нових: ${fresh} · точних дублів: ${duplicates} · можливих дублів: ${possible} · помилок: ${errors}`;
 
   $('bulkPreviewRows').innerHTML=items.map(item=>{
     if(!item.valid){
       return `<tr class="bulk-row-error">
         <td>${item.index}</td>
-        <td colspan="4" class="bulk-cell-error">${esc(item.original)}</td>
+        <td colspan="5" class="bulk-cell-error">${esc(item.original)}</td>
         <td><span class="bulk-status error">Помилка</span></td>
       </tr>`;
     }
 
     const x=item.parsed;
-    const rowClass=item.status==='duplicate'?'bulk-row-duplicate':'bulk-row-new';
+    const rowClass=item.status==='duplicate'?'bulk-row-duplicate':item.status==='possible'?'bulk-row-possible':'bulk-row-new';
     const badge=item.status==='duplicate'
-      ? '<span class="bulk-status duplicate">Дублікат</span>'
-      : '<span class="bulk-status new">Новий</span>';
+      ? '<span class="bulk-status duplicate">Точний дубль</span>'
+      : item.status==='possible'
+        ? `<span class="bulk-status possible" title="У словнику вже є: ${esc(x.en)} — ${esc(item.existingUa)}">Можливий дубль</span>`
+        : '<span class="bulk-status new">Новий</span>';
+    const action=item.status==='possible'
+      ? `<select class="bulk-import-action" onchange="setBulkResolution(${item.index},this.value)">
+          <option value="merge" ${item.resolution==='merge'?'selected':''}>Об’єднати</option>
+          <option value="separate" ${item.resolution==='separate'?'selected':''}>Створити окремо</option>
+          <option value="skip" ${item.resolution==='skip'?'selected':''}>Пропустити</option>
+        </select>`
+      : item.status==='duplicate'?'Об’єднається':'Додати';
 
     return `<tr class="${rowClass}">
       <td>${item.index}</td>
       <td>${esc(x.en)}</td>
-      <td>${esc(x.ua)}</td>
+      <td>${esc(x.ua)}${item.status==='possible'?`<div class="small-note">Вже є: ${esc(item.existingUa)}</div>`:''}</td>
       <td>${esc(x.transcription||'—')}</td>
       <td>${esc((x.categories||[]).join(', ')||'—')}</td>
       <td>${badge}</td>
+      <td>${action}</td>
     </tr>`;
   }).join('');
 
@@ -2511,6 +2530,26 @@ function renderBulkPreview(items){
   $('bulkConfirmImport').disabled=!valid.length;
   $('bulkConfirmImport').textContent=`Підтвердити імпорт (${valid.length})`;
   $('bulkPreview').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function setBulkResolution(lineIndex,value){
+  const item=bulkPreviewData.find(x=>x.index===Number(lineIndex));
+  if(!item||item.status!=='possible')return;
+  if(!['merge','separate','skip'].includes(value))return;
+  item.resolution=value;
+}
+
+window.setBulkResolution=setBulkResolution;
+
+function mergeBulkIntoExisting(item){
+  const existing=db.entries.find(x=>String(x.id)===String(item.duplicateId));
+  if(!existing)return false;
+  const incoming=item.parsed;
+  existing.categories=[...new Set([...(existing.categories||[]),...(incoming.categories||[])])];
+  if(!existing.transcription&&incoming.transcription)existing.transcription=incoming.transcription;
+  if(!existing.note&&incoming.note)existing.note=incoming.note;
+  existing.updatedAt=new Date().toISOString();
+  return true;
 }
 
 function openBulkPreview(){
@@ -2541,19 +2580,25 @@ function confirmBulkImport(){
     return;
   }
 
-  let added=0,merged=0;
+  let added=0,merged=0,skipped=0;
   valid.forEach(item=>{
+    if(item.status==='possible'){
+      if(item.resolution==='skip'){skipped++;return}
+      if(item.resolution!=='separate'){
+        if(mergeBulkIntoExisting(item)){merged++;return}
+      }
+    }
     const result=upsertEntry(item.parsed);
     if(result.ok){
-      added++;
       if(result.merged)merged++;
+      else added++;
     }
   });
 
   saveDB();
   $('bulkInput').value='';
   closeBulkPreview();
-  toast(`Імпортовано: ${added}${merged?` · об’єднано дублі: ${merged}`:''}`);
+  toast(`Додано: ${added}${merged?` · об’єднано: ${merged}`:''}${skipped?` · пропущено: ${skipped}`:''}`);
 }
 
 function exportJSON(){const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wordflow-dictionary-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
