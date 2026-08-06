@@ -651,6 +651,10 @@ body.training-active .scroll-love-btn{display:none!important}
 }
 
 
+
+.build-badge{display:inline-flex;align-items:center;margin-left:6px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;font-size:9px;font-weight:800;letter-spacing:.03em;color:var(--muted);vertical-align:middle}
+html[data-theme="dark"] .build-badge{border-color:#3a4154;color:#9fa8bc;background:#20242f}
+
 /* ===== WordFlow dark theme ===== */
 html{color-scheme:light}
 html[data-theme="dark"]{
@@ -832,9 +836,23 @@ html[data-theme="dark"] td,
 html[data-theme="dark"] th{
   border-color:#303647
 }
+html[data-theme="dark"] .bulk-preview{
+  background:#171a22;
+  border-color:#303647
+}
+html[data-theme="dark"] .bulk-preview-table-wrap{
+  background:#171a22;
+  border-color:#303647
+}
 html[data-theme="dark"] .bulk-row-new{background:#1e332b}
 html[data-theme="dark"] .bulk-row-duplicate{background:#382f20}
+html[data-theme="dark"] .bulk-row-possible{background:#40361f}
 html[data-theme="dark"] .bulk-row-error{background:#3a2429}
+html[data-theme="dark"] .bulk-status.new{background:#20382f;color:#78d7b2}
+html[data-theme="dark"] .bulk-status.duplicate{background:#4a3920;color:#ffd080}
+html[data-theme="dark"] .bulk-status.possible{background:#4a3d1d;color:#ffd98b}
+html[data-theme="dark"] .bulk-status.error{background:#45262e;color:#ff9aaa}
+html[data-theme="dark"] .bulk-import-action{background:#20242f;border-color:#3a4154;color:#eef1f7}
 html[data-theme="dark"] .scroll-love-btn{
   background:rgba(29,33,44,.97);
   color:#aab1ff;
@@ -1324,7 +1342,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення</p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.7.1</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
