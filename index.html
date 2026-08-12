@@ -34,6 +34,13 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 .editor{padding:22px}.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.editor .full{grid-column:1/-1}.cat-picks{display:flex;gap:7px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:13px;background:#fafbfe;min-height:48px}.cat-pick{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}.cat-pick.selected{background:#eef0ff;color:#4d57ce;border-color:#cfd4ff}.editor-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px}.small-note{font-size:12px;color:var(--muted);line-height:1.5}.import-box{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}textarea{min-height:170px;resize:vertical}.file-label{display:inline-flex;align-items:center}.file-label input{display:none}
 .trainer{padding:22px}.train-setup{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.train-card{min-height:350px;margin-top:18px;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(98,107,232,.08),transparent 38%),#fff;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}.train-card.active{display:flex}.train-word{font-size:clamp(36px,6vw,68px);font-weight:900;letter-spacing:-.04em}.train-answer{display:none;margin-top:22px;font-size:25px;font-weight:800;color:#4e586b}.train-answer.show{display:block}.train-answer .train-alt{display:inline-block;margin:3px 5px;padding:6px 10px;border-radius:10px;background:var(--soft,#f4f5f8);font-size:.78em;font-weight:750}.train-answer .train-alt.current{background:#eef0ff;color:#4d57ce;font-weight:900}.train-speak{display:none;margin-top:12px;min-width:44px;height:40px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:19px;align-items:center;justify-content:center;cursor:pointer}.train-speak.show{display:inline-flex}html[data-theme="dark"] .train-speak{background:#202633;color:#f2f4f8;border-color:#3a4252}html[data-theme="dark"] .train-answer .train-alt{background:#252c39;color:#e9ecf5}html[data-theme="dark"] .train-answer .train-alt.current{background:#343d75;color:#fff}.grading{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.grading.show{display:grid}.grade{border:0;border-radius:13px;padding:13px;font-weight:850}.grade.bad{background:#fff0f2;color:var(--red)}.grade.learning{background:#fff4df;color:var(--amber)}.grade.learned{background:#eaf8f2;color:var(--green)}
 .modal{position:fixed;inset:0;background:rgba(24,31,48,.48);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.open{display:flex}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;padding:22px;box-shadow:0 25px 80px rgba(20,28,50,.28)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.modal-head h3{margin:0}.category-manage{display:grid;gap:8px}.category-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}.category-item button{border:0;background:#fff0f2;color:var(--red);border-radius:9px;padding:7px 9px;font-weight:800}
+.category-delete-card{width:min(520px,100%)}
+.category-delete-summary{margin:0 0 14px;color:var(--muted);line-height:1.5}
+.category-delete-actions{display:grid;gap:10px}
+.category-delete-actions .btn{width:100%;justify-content:center;min-height:44px}
+.category-delete-danger{background:#fff0f2!important;color:var(--red)!important;border:1px solid #ffd5dc!important}
+html[data-theme="dark"] .category-delete-danger{background:rgba(217,74,91,.14)!important;border-color:rgba(217,74,91,.38)!important}
+.category-delete-note{margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.45}
 .toast{
   position:fixed;left:50%;bottom:24px;
   transform:translate(-50%,20px) scale(.98);
@@ -1342,7 +1349,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.1</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -1519,7 +1526,8 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
     <div class="topic-progress-list" id="topicProgressList"></div>
   </div>
 </div>
-<div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">Видалення теми не видаляє слова — лише прибирає цю тему з них.</p></div></div>
+<div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">При видаленні WordFlow запитає: прибрати тільки тему чи також видалити слова, що належать лише їй.</p></div></div>
+<div class="modal" id="categoryDeleteModal"><div class="modal-card category-delete-card"><div class="modal-head"><h3>Видалити тему?</h3><button class="icon-btn" id="closeCategoryDeleteModal" aria-label="Закрити">×</button></div><p class="category-delete-summary" id="categoryDeleteSummary"></p><div class="category-delete-actions"><button class="btn" id="deleteCategoryOnly">Видалити тільки тему</button><button class="btn category-delete-danger" id="deleteCategoryWithWords">Видалити тему і слова лише з неї</button><button class="btn ghost" id="cancelCategoryDelete">Скасувати</button></div><p class="category-delete-note" id="categoryDeleteNote"></p></div></div>
 <button class="scroll-love-btn" id="scrollTopBtn" type="button" aria-label="Нагору" title="Нагору">
   <span class="scroll-love-fill" id="scrollLoveFill"></span>
   <span class="scroll-love-icon" id="scrollLoveIcon">↑</span>
@@ -2331,44 +2339,86 @@ function renderList(){
   setupListObserver();
 }
 function renderEditorCats(){const cats=allCategories();$('categoryPicks').innerHTML=cats.map(c=>`<button type="button" class="cat-pick ${selectedCategories.has(c)?'selected':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')||'<span class="small-note">Додай першу тему нижче.</span>';document.querySelectorAll('.cat-pick').forEach(b=>b.onclick=()=>{selectedCategories.has(b.dataset.cat)?selectedCategories.delete(b.dataset.cat):selectedCategories.add(b.dataset.cat);renderEditorCats()})}
-function renderCategoryManage(){const cats=allCategories();$('categoryManage').innerHTML=cats.map(c=>`<div class="category-item"><span>${esc(c)} <span class="small-note">· ${db.entries.filter(x=>(x.categories||[]).includes(c)).length}</span></span><button data-cat="${esc(c)}">Видалити</button></div>`).join('')||'<div class="empty">Тем немає.</div>';document.querySelectorAll('#categoryManage button').forEach(b=>b.onclick=()=>removeCategory(b.dataset.cat))}
+function renderCategoryManage(){const cats=allCategories();$('categoryManage').innerHTML=cats.map(c=>`<div class="category-item"><span>${esc(c)} <span class="small-note">· ${db.entries.filter(x=>(x.categories||[]).includes(c)).length}</span></span><button data-cat="${esc(c)}">Видалити</button></div>`).join('')||'<div class="empty">Тем немає.</div>';document.querySelectorAll('#categoryManage button').forEach(b=>b.onclick=()=>openCategoryDeleteChoice(b.dataset.cat))}
 function addCategory(name,selectForEditor=true){name=String(name||'').trim();if(!name)return;const exists=allCategories().find(c=>norm(c)===norm(name));const final=exists||name;if(!exists)db.categories.push(final);if(selectForEditor)selectedCategories.add(final);saveDB();return final}
-function removeCategory(cat){
+let pendingCategoryDelete=null;
+function openCategoryDeleteChoice(cat){
+  const affected=db.entries.filter(x=>(x.categories||[]).includes(cat));
+  const exclusive=affected.filter(x=>(x.categories||[]).length<=1);
+  const shared=affected.length-exclusive.length;
+  pendingCategoryDelete=cat;
+  $('categoryDeleteSummary').innerHTML=`Тема <strong>${esc(cat)}</strong> містить <strong>${affected.length}</strong> ${plural(affected.length,'слово','слова','слів')}.`;
+  $('categoryDeleteNote').textContent=shared
+    ? `${shared} ${plural(shared,'слово є','слова є','слів є')} також в інших темах — вони не будуть видалені повністю, з них лише прибереться ця тема.`
+    : 'Якщо вибрати видалення зі словами, будуть видалені всі слова цієї теми.';
+  $('deleteCategoryWithWords').textContent=exclusive
+    ? `Видалити тему і ${exclusive.length} ${plural(exclusive.length,'слово','слова','слів')} лише з неї`
+    : 'Видалити тему (окремих слів немає)';
+  $('deleteCategoryWithWords').disabled=exclusive===0;
+  $('categoryDeleteModal').classList.add('open');
+}
+function closeCategoryDeleteChoice(){
+  $('categoryDeleteModal').classList.remove('open');
+  pendingCategoryDelete=null;
+}
+function removeCategory(cat,deleteExclusiveWords=false){
+  if(!cat)return;
   const categoryIndex=db.categories.indexOf(cat);
-  const affectedIds=db.entries
-    .filter(x=>(x.categories||[]).includes(cat))
-    .map(x=>String(x.id));
   const wasSelected=selectedCategories.has(cat);
+  const beforeEntries=db.entries.map((entry,index)=>({entry:JSON.parse(JSON.stringify(entry)),index}));
+  const affected=beforeEntries.filter(({entry})=>(entry.categories||[]).includes(cat));
+  const removed=deleteExclusiveWords?affected.filter(({entry})=>(entry.categories||[]).length<=1):[];
+  const removedIds=new Set(removed.map(({entry})=>String(entry.id)));
+  const affectedIds=new Set(affected.map(({entry})=>String(entry.id)));
 
   db.categories=db.categories.filter(c=>c!==cat);
-  db.entries.forEach(x=>{
-    x.categories=(x.categories||[]).filter(c=>c!==cat);
-    x.updatedAt=new Date().toISOString();
-  });
+  db.entries=db.entries
+    .filter(x=>!removedIds.has(String(x.id)))
+    .map(x=>{
+      if(affectedIds.has(String(x.id))){
+        x.categories=(x.categories||[]).filter(c=>c!==cat);
+        x.updatedAt=new Date().toISOString();
+      }
+      return x;
+    });
   selectedCategories.delete(cat);
   saveDB();
   $('categoryModal').classList.remove('open');
+  closeCategoryDeleteChoice();
 
-  toast('Тему видалено',{
-    subtitle:`${cat} · зі слів: ${affectedIds.length}`,
+  const subtitle=deleteExclusiveWords
+    ? `${cat} · видалено слів: ${removed.length}`
+    : `${cat} · зі слів прибрано тему: ${affected.length}`;
+  toast(deleteExclusiveWords?'Тему і слова видалено':'Тему видалено',{
+    subtitle,
     icon:'×',
     iconBg:'#fff0f2',
     iconColor:'#d94a5b',
-    duration:8000,
+    duration:10000,
     undo:()=>{
       if(!db.categories.includes(cat)){
         if(categoryIndex>=0&&categoryIndex<=db.categories.length)db.categories.splice(categoryIndex,0,cat);
         else db.categories.push(cat);
       }
-      db.entries.forEach(x=>{
-        if(affectedIds.includes(String(x.id))&&!(x.categories||[]).includes(cat)){
-          x.categories=[...(x.categories||[]),cat];
-          x.updatedAt=new Date().toISOString();
+      const currentById=new Map(db.entries.map(x=>[String(x.id),x]));
+      affected.forEach(({entry,index})=>{
+        const id=String(entry.id);
+        if(removedIds.has(id)){
+          if(!currentById.has(id)){
+            const insertAt=Math.min(index,db.entries.length);
+            db.entries.splice(insertAt,0,JSON.parse(JSON.stringify(entry)));
+          }
+        }else{
+          const x=currentById.get(id);
+          if(x&&!(x.categories||[]).includes(cat)){
+            x.categories=[...(x.categories||[]),cat];
+            x.updatedAt=new Date().toISOString();
+          }
         }
       });
       if(wasSelected)selectedCategories.add(cat);
       saveDB();
-      toast('Тему повернуто',{
+      toast('Видалення скасовано',{
         subtitle:cat,
         icon:'↶',
         iconBg:'#eaf8f2',
@@ -3153,7 +3203,7 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 };$('migrateOld').onclick=migrateOld;$('progressBtn').onclick=()=>{renderTopicProgress();$('progressModal').classList.add('open')};
 $('closeProgressModal').onclick=()=>$('progressModal').classList.remove('open');
 $('progressModal').onclick=e=>{if(e.target===$('progressModal'))$('progressModal').classList.remove('open')};
-$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('trainFiltered').onclick=()=>prepareTrainer();
+$('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('closeCategoryDeleteModal').onclick=closeCategoryDeleteChoice;$('cancelCategoryDelete').onclick=closeCategoryDeleteChoice;$('categoryDeleteModal').onclick=e=>{if(e.target===$('categoryDeleteModal'))closeCategoryDeleteChoice()};$('deleteCategoryOnly').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,false)};$('deleteCategoryWithWords').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,true)};$('trainFiltered').onclick=()=>prepareTrainer();
 $('startDueReview').onclick=()=>{
   const due=dueEntries();
   if(!due.length){updateSRSReviewCard();return;}
