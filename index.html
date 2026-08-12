@@ -857,6 +857,14 @@ html[data-theme="dark"] .bulk-row-possible{background:#40361f}
 html[data-theme="dark"] .bulk-row-error{background:#3a2429}
 html[data-theme="dark"] .bulk-status.new{background:#20382f;color:#78d7b2}
 html[data-theme="dark"] .bulk-status.duplicate{background:#4a3920;color:#ffd080}
+.duplicate-tool{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.duplicate-tool h3{margin:0 0 6px}.duplicate-tool-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.duplicate-list{display:grid;gap:12px}.duplicate-group{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel)}
+.duplicate-group-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}.duplicate-group-title{font-weight:900;font-size:18px}
+.duplicate-entry-list{display:grid;gap:7px}.duplicate-entry{padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.duplicate-entry strong{display:block}.duplicate-entry-meta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.duplicate-group-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.duplicate-empty{padding:18px;text-align:center;color:var(--muted)}
+html[data-theme="dark"] .duplicate-entry{background:#222a3a}
 html[data-theme="dark"] .bulk-status.possible{background:#4a3d1d;color:#ffd98b}
 html[data-theme="dark"] .bulk-status.error{background:#45262e;color:#ff9aaa}
 html[data-theme="dark"] .bulk-import-action{background:#20242f;border-color:#3a4154;color:#eef1f7}
@@ -1349,7 +1357,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.1</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.2</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -1472,6 +1480,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
         </div>
       </div>
       <div class="import-box"><h3>Перенести слова зі старого WordFlow</h3><p class="small-note"><b>Потрібен вхід через Google.</b> Перенесені записи одразу підуть у словник цього акаунта.</p><p class="small-note">Кнопка шукає старі ключі <code>wordflow_sets</code> і <code>wordflow_words</code> у цьому браузері. Повторні слова не дублюються: категорії об’єднуються.</p><button class="btn" id="migrateOld">Імпортувати старі дані</button></div>
+      <div class="duplicate-tool"><h3>Перевірка словника на дублікати</h3><p class="small-note">Знайде однакові англійські слова, які вже є у словнику кілька разів. Нічого не видаляється автоматично.</p><div class="duplicate-tool-actions"><button class="btn" id="findDuplicates" type="button">🔍 Знайти дублікати</button></div></div>
     </div>
   </section>
 
@@ -1528,6 +1537,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </div>
 <div class="modal" id="categoryModal"><div class="modal-card"><div class="modal-head"><h3>Теми</h3><button class="icon-btn" id="closeCategoryModal" aria-label="Закрити">×</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><input id="modalCategoryInput" placeholder="Нова тема" style="flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 11px"><button class="btn primary" id="modalAddCategory">Додати</button></div><div class="category-manage" id="categoryManage"></div><p class="small-note">При видаленні WordFlow запитає: прибрати тільки тему чи також видалити слова, що належать лише їй.</p></div></div>
 <div class="modal" id="categoryDeleteModal"><div class="modal-card category-delete-card"><div class="modal-head"><h3>Видалити тему?</h3><button class="icon-btn" id="closeCategoryDeleteModal" aria-label="Закрити">×</button></div><p class="category-delete-summary" id="categoryDeleteSummary"></p><div class="category-delete-actions"><button class="btn" id="deleteCategoryOnly">Видалити тільки тему</button><button class="btn category-delete-danger" id="deleteCategoryWithWords">Видалити тему і слова лише з неї</button><button class="btn ghost" id="cancelCategoryDelete">Скасувати</button></div><p class="category-delete-note" id="categoryDeleteNote"></p></div></div>
+<div class="modal" id="duplicateModal"><div class="modal-card" style="width:min(760px,100%)"><div class="modal-head"><div><h3>Дублікати у словнику</h3><div class="small-note" id="duplicateSummary"></div></div><button class="icon-btn" id="closeDuplicateModal" aria-label="Закрити">×</button></div><div class="duplicate-list" id="duplicateList"></div></div></div>
 <button class="scroll-love-btn" id="scrollTopBtn" type="button" aria-label="Нагору" title="Нагору">
   <span class="scroll-love-fill" id="scrollLoveFill"></span>
   <span class="scroll-love-icon" id="scrollLoveIcon">↑</span>
@@ -2512,6 +2522,105 @@ function deleteEntry(id){
     }
   });
 }
+function duplicateGroups(){
+  const groups=new Map();
+  for(const entry of db.entries){
+    const key=norm(entry.en);
+    if(!key)continue;
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(entry);
+  }
+  return [...groups.values()]
+    .filter(group=>group.length>1)
+    .sort((a,b)=>a[0].en.localeCompare(b[0].en,'en',{sensitivity:'base'}));
+}
+function srsProgressScore(entry){
+  const s=cleanSRS(entry?.srs);
+  if(!s)return -1;
+  return (s.reps||0)*100000+(s.intervalDays||0)*100+(s.ease||0)*10-(s.lapses||0);
+}
+function bestSRSFromGroup(group){
+  const best=[...group].sort((a,b)=>srsProgressScore(b)-srsProgressScore(a))[0];
+  return cleanSRS(best?.srs);
+}
+function mergeDuplicateGroup(group){
+  if(!Array.isArray(group)||group.length<2)return false;
+  const ids=new Set(group.map(x=>String(x.id)));
+  const current=group.map(g=>db.entries.find(x=>String(x.id)===String(g.id))).filter(Boolean);
+  if(current.length<2)return false;
+
+  const snapshot=current.map(x=>JSON.parse(JSON.stringify(x)));
+  const primary=[...current].sort((a,b)=>{
+    const ad=Date.parse(a.createdAt||'')||Infinity,bd=Date.parse(b.createdAt||'')||Infinity;
+    return ad-bd;
+  })[0];
+  const primaryIndex=db.entries.findIndex(x=>String(x.id)===String(primary.id));
+  const translations=[...new Set(current.map(x=>String(x.ua||'').trim()).filter(Boolean))];
+  const notes=[...new Set(current.map(x=>String(x.note||'').trim()).filter(Boolean))];
+  const transcriptions=current.map(x=>String(x.transcription||'').trim()).filter(Boolean);
+  const statusRank={new:0,learning:1,learned:2};
+  const bestStatus=[...current].sort((a,b)=>(statusRank[b.status]||0)-(statusRank[a.status]||0))[0]?.status||'new';
+  const bestSRS=bestSRSFromGroup(current);
+
+  primary.ua=translations.join(' / ');
+  primary.categories=[...new Set(current.flatMap(x=>x.categories||[]))];
+  primary.transcription=primary.transcription||transcriptions[0]||'';
+  primary.note=notes.join(' · ');
+  primary.status=bestStatus;
+  primary.createdAt=current.map(x=>x.createdAt).filter(Boolean).sort()[0]||primary.createdAt;
+  primary.updatedAt=new Date().toISOString();
+  if(bestSRS)primary.srs=bestSRS; else delete primary.srs;
+
+  db.entries=db.entries.filter(x=>!ids.has(String(x.id))||String(x.id)===String(primary.id));
+  saveDB();
+
+  toast(`Об’єднано ${current.length} записи`,{
+    subtitle:primary.en,
+    icon:'✓',
+    duration:9000,
+    undo:()=>{
+      db.entries=db.entries.filter(x=>String(x.id)!==String(primary.id));
+      const insertAt=Math.max(0,Math.min(primaryIndex,db.entries.length));
+      db.entries.splice(insertAt,0,...snapshot);
+      saveDB();
+      renderDuplicateModal();
+      toast('Об’єднання скасовано',{subtitle:primary.en,icon:'↶'});
+    }
+  });
+  return true;
+}
+function renderDuplicateModal(){
+  const groups=duplicateGroups();
+  $('duplicateSummary').textContent=groups.length
+    ? `Знайдено ${groups.length} ${plural(groups.length,'групу','групи','груп')} можливих дублікатів.`
+    : 'Повторів за англійським написанням не знайдено.';
+  $('duplicateList').innerHTML=groups.length?groups.map((group,index)=>{
+    const en=group[0]?.en||'';
+    const entries=group.map(x=>`<div class="duplicate-entry"><strong>${esc(x.ua)}</strong><div class="duplicate-entry-meta">${x.transcription?esc(x.transcription)+' · ':''}${(x.categories||[]).length?'Теми: '+esc((x.categories||[]).join(', ')):'Без теми'}${x.srs?` · SRS: ${Number(x.srs.reps)||0} повт., ${Number(x.srs.intervalDays)||0} дн.`:''}</div></div>`).join('');
+    return `<div class="duplicate-group" data-dup-index="${index}"><div class="duplicate-group-head"><div><div class="duplicate-group-title">${esc(en)}</div><div class="small-note">${group.length} ${plural(group.length,'запис','записи','записів')}</div></div></div><div class="duplicate-entry-list">${entries}</div><div class="duplicate-group-actions"><button class="btn primary merge-duplicate" data-dup-index="${index}" type="button">Об’єднати</button><button class="btn ghost keep-duplicate" data-dup-index="${index}" type="button">Залишити окремо</button></div></div>`;
+  }).join(''):'<div class="duplicate-empty">У словнику немає англійських слів, які повторюються кілька разів.</div>';
+  document.querySelectorAll('.merge-duplicate').forEach(btn=>btn.onclick=()=>{
+    const fresh=duplicateGroups();
+    const group=fresh[Number(btn.dataset.dupIndex)];
+    if(!group)return renderDuplicateModal();
+    const translations=[...new Set(group.map(x=>x.ua))].join(' / ');
+    if(!confirm(`Об’єднати ${group.length} записи «${group[0].en}»?\n\nПереклад після об’єднання: ${translations}\n\nКатегорії та найкращий SRS-прогрес буде збережено.`))return;
+    mergeDuplicateGroup(group);
+    renderDuplicateModal();
+  });
+  document.querySelectorAll('.keep-duplicate').forEach(btn=>btn.onclick=()=>{
+    const card=btn.closest('.duplicate-group');
+    if(card)card.remove();
+  });
+}
+function openDuplicateFinder(){
+  renderDuplicateModal();
+  $('duplicateModal').classList.add('open');
+}
+function closeDuplicateFinder(){
+  $('duplicateModal').classList.remove('open');
+}
+
 function parseLine(line){line=line.trim();if(!line)return null;let parts=line.includes('\t')?line.split('\t'):line.split(/\s+[—–]\s+|\s+=\s+/);if(parts.length<2&&line.includes(',')){const csv=line.match(/(?:"([^"]*(?:""[^"]*)*)"|([^,]*))(?:,|$)/g)?.map(s=>s.replace(/,$/,'').replace(/^"|"$/g,'').replace(/""/g,'"').trim()).filter((_,i,a)=>i<a.length-1||a[i]);if(csv&&csv.length>=2)parts=csv}if(parts.length<2)return null;let transcription='',cats=[];const en=parts[0]?.trim(),ua=parts[1]?.trim();for(const p of parts.slice(2)){const v=(p||'').trim();if(!v)continue;if(/^\/.*\/$/.test(v))transcription=v;else cats.push(...v.split(/[,;]+/).map(x=>x.trim()).filter(Boolean))}return en&&ua?{en,ua,transcription,categories:[...new Set(cats)],type:guessType(en),status:'new'}:null}
 function inspectBulkText(text){
   const lines=String(text||'').split(/\r?\n/);
@@ -3204,6 +3313,9 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 $('closeProgressModal').onclick=()=>$('progressModal').classList.remove('open');
 $('progressModal').onclick=e=>{if(e.target===$('progressModal'))$('progressModal').classList.remove('open')};
 $('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('closeCategoryDeleteModal').onclick=closeCategoryDeleteChoice;$('cancelCategoryDelete').onclick=closeCategoryDeleteChoice;$('categoryDeleteModal').onclick=e=>{if(e.target===$('categoryDeleteModal'))closeCategoryDeleteChoice()};$('deleteCategoryOnly').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,false)};$('deleteCategoryWithWords').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,true)};$('trainFiltered').onclick=()=>prepareTrainer();
+$('findDuplicates').onclick=openDuplicateFinder;
+$('closeDuplicateModal').onclick=closeDuplicateFinder;
+$('duplicateModal').onclick=e=>{if(e.target===$('duplicateModal'))closeDuplicateFinder()};
 $('startDueReview').onclick=()=>{
   const due=dueEntries();
   if(!due.length){updateSRSReviewCard();return;}
