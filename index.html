@@ -32,7 +32,7 @@ button,input,select,textarea{font:inherit} button{cursor:pointer}.app{width:min(
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.stat{padding:16px 17px}.stat strong{font-size:25px;display:block}.stat span{font-size:12px;color:var(--muted)}
 .dictionary{padding:18px}.toolbar{display:grid;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(145px,.6fr));gap:10px;align-items:end}.field label{display:block;font-size:12px;font-weight:800;margin:0 0 6px;color:#4f596c}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:#fafbfe;color:var(--text);padding:11px 12px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#bbc0ff;box-shadow:0 0 0 4px rgba(98,107,232,.08);background:#fff}.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.chip{border:1px solid var(--line);background:#fff;color:#5c667b;border-radius:999px;padding:8px 11px;font-weight:800;font-size:12px}.chip.active{background:#eef0ff;border-color:#d7dbff;color:#4d57ce}.list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0;color:var(--muted);font-size:13px}.word-list{display:grid;gap:8px}.word-row{display:grid;grid-template-columns:1.15fr 1.25fr .95fr auto;gap:14px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:15px;background:#fff}.en{font-weight:900;font-size:16px}.ua{color:#4c5668}.ipa{font-size:12px;color:var(--accent);margin-top:4px}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tag{font-size:11px;background:#f2f4f8;color:#667085;border-radius:999px;padding:4px 7px}.type{font-size:12px;color:#697386}.status{font-size:11px;font-weight:850;border-radius:999px;padding:6px 8px;display:inline-flex}.status.new{background:#f1f3f7;color:#667085}.status.learning{background:#fff4df;color:#9c6200}.status.learned{background:#eaf8f2;color:#16815c}.quick-status{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.quick-status-btn{border:1px solid var(--line);background:#fff;color:#7a8394;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:850;line-height:1;transition:.15s}.quick-status-btn:hover{transform:translateY(-1px);border-color:#cfd4df}.quick-status-btn.active.new{background:#f1f3f7;color:#596273;border-color:#dfe3ea}.quick-status-btn.active.learning{background:#fff4df;color:#9c6200;border-color:#f1d49d}.quick-status-btn.active.learned{background:#eaf8f2;color:#16815c;border-color:#bfe7d7}.row-actions{display:flex;gap:5px}.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#687286;font-weight:900}.empty{padding:34px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px;background:#fbfcfe}
 .editor{padding:22px}.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.editor .full{grid-column:1/-1}.cat-picks{display:flex;gap:7px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:13px;background:#fafbfe;min-height:48px}.cat-pick{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}.cat-pick.selected{background:#eef0ff;color:#4d57ce;border-color:#cfd4ff}.editor-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px}.small-note{font-size:12px;color:var(--muted);line-height:1.5}.import-box{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}textarea{min-height:170px;resize:vertical}.file-label{display:inline-flex;align-items:center}.file-label input{display:none}
-.trainer{padding:22px}.train-setup{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.train-card{min-height:350px;margin-top:18px;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(98,107,232,.08),transparent 38%),#fff;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}.train-card.active{display:flex}.train-word{font-size:clamp(36px,6vw,68px);font-weight:900;letter-spacing:-.04em}.train-answer{display:none;margin-top:22px;font-size:25px;font-weight:800;color:#4e586b}.train-answer.show{display:block}.grading{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.grading.show{display:grid}.grade{border:0;border-radius:13px;padding:13px;font-weight:850}.grade.bad{background:#fff0f2;color:var(--red)}.grade.learning{background:#fff4df;color:var(--amber)}.grade.learned{background:#eaf8f2;color:var(--green)}
+.trainer{padding:22px}.train-setup{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.train-card{min-height:350px;margin-top:18px;border:1px solid var(--line);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(98,107,232,.08),transparent 38%),#fff;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}.train-card.active{display:flex}.train-word{font-size:clamp(36px,6vw,68px);font-weight:900;letter-spacing:-.04em}.train-answer{display:none;margin-top:22px;font-size:25px;font-weight:800;color:#4e586b}.train-answer.show{display:block}.train-answer .train-alt{display:inline-block;margin:3px 5px;padding:6px 10px;border-radius:10px;background:var(--soft,#f4f5f8);font-size:.78em;font-weight:750}.train-answer .train-alt.current{background:#eef0ff;color:#4d57ce;font-weight:900}.train-speak{display:none;margin-top:12px;min-width:44px;height:40px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:19px;align-items:center;justify-content:center;cursor:pointer}.train-speak.show{display:inline-flex}html[data-theme="dark"] .train-speak{background:#202633;color:#f2f4f8;border-color:#3a4252}html[data-theme="dark"] .train-answer .train-alt{background:#252c39;color:#e9ecf5}html[data-theme="dark"] .train-answer .train-alt.current{background:#343d75;color:#fff}.grading{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.grading.show{display:grid}.grade{border:0;border-radius:13px;padding:13px;font-weight:850}.grade.bad{background:#fff0f2;color:var(--red)}.grade.learning{background:#fff4df;color:var(--amber)}.grade.learned{background:#eaf8f2;color:var(--green)}
 .modal{position:fixed;inset:0;background:rgba(24,31,48,.48);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.open{display:flex}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;padding:22px;box-shadow:0 25px 80px rgba(20,28,50,.28)}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.modal-head h3{margin:0}.category-manage{display:grid;gap:8px}.category-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}.category-item button{border:0;background:#fff0f2;color:var(--red);border-radius:9px;padding:7px 9px;font-weight:800}
 .toast{
   position:fixed;left:50%;bottom:24px;
@@ -1342,7 +1342,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.7.1</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -1501,6 +1501,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 <div class="train-word" id="trainWord"></div>
 <div class="train-answer" id="trainAnswer"></div>
 <div class="small-note train-transcription" id="trainTranscription"></div>
+<button class="train-speak" id="trainSpeak" type="button" title="Прослухати англійською" aria-label="Прослухати англійською">🔊</button>
 <button class="btn primary train-reveal" id="revealAnswer">Показати відповідь</button>
 </div><div class="grading" id="grading"><button class="grade bad" data-grade="new">Не знаю<span class="train-grade-hint" id="srsHintNew"></span></button><button class="grade learning" data-grade="learning">Ще вчу<span class="train-grade-hint" id="srsHintLearning"></span></button><button class="grade learned" data-grade="learned">Знаю<span class="train-grade-hint" id="srsHintLearned"></span></button></div></div>
   </section>
@@ -2879,6 +2880,59 @@ function stopTrainer(){
   updateSRSReviewCard();
 }
 
+function englishAlternativesForUa(entry){
+  if(!entry||!entry.ua)return [];
+  const key=norm(entry.ua);
+  const seen=new Set();
+  const matches=db.entries.filter(e=>norm(e.ua)===key&&e.en).filter(e=>{
+    const k=norm(e.en);
+    if(seen.has(k))return false;
+    seen.add(k);return true;
+  });
+  matches.sort((a,b)=>{
+    if(a.id===entry.id)return -1;
+    if(b.id===entry.id)return 1;
+    return a.en.localeCompare(b.en,'en',{sensitivity:'base'});
+  });
+  return matches;
+}
+
+function renderReverseAnswer(entry){
+  const alternatives=englishAlternativesForUa(entry);
+  if(alternatives.length<=1){
+    $('trainAnswer').textContent=entry.en;
+    return;
+  }
+  $('trainAnswer').innerHTML=alternatives.map(e=>
+    `<span class="train-alt ${e.id===entry.id?'current':''}">${esc(e.en)}</span>`
+  ).join('');
+}
+
+function speakEnglish(text){
+  text=String(text||'').trim();
+  if(!text||!('speechSynthesis' in window))return;
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US';
+    u.rate=.9;
+    const voices=window.speechSynthesis.getVoices?.()||[];
+    const preferred=voices.find(v=>/^en-(GB|US)$/i.test(v.lang)&&/Google|Microsoft|Samantha|Daniel|Karen|Moira/i.test(v.name))
+      ||voices.find(v=>/^en-(GB|US)$/i.test(v.lang))
+      ||voices.find(v=>/^en/i.test(v.lang));
+    if(preferred)u.voice=preferred;
+    window.speechSynthesis.speak(u);
+  }catch(err){console.warn('WordFlow speech:',err)}
+}
+
+function updateTrainSpeak(entry,direction,revealed=false){
+  const btn=$('trainSpeak');
+  if(!btn)return;
+  const englishVisible=direction==='en-ua'||revealed;
+  btn.classList.toggle('show',englishVisible);
+  btn.dataset.text=entry?.en||'';
+}
+
 function renderTrain(){
   if(trainIndex>=trainPool.length){
     $('trainCard').classList.remove('active');
@@ -2898,11 +2952,13 @@ function renderTrain(){
   $('trainProgress').textContent=`${trainIndex+1} / ${trainPool.length}`;
   $('trainDirectionLabel').textContent=reverse?'Українська → English':'English → Українська';
   $('trainWord').textContent=reverse?x.ua:x.en;
-  $('trainAnswer').textContent=reverse?x.en:x.ua;
+  if(reverse)renderReverseAnswer(x);else $('trainAnswer').textContent=x.ua;
   $('trainTranscription').textContent=x.transcription||'';
   $('trainTranscription').classList.remove('show');
   $('trainAnswer').classList.remove('show');
-  $('revealAnswer').style.display='inline-flex'
+  updateTrainSpeak(x,direction,false);
+  $('revealAnswer').style.display='inline-flex';
+  if(!reverse)speakEnglish(x.en);
 }
 function gradeTrain(status){
   const x=trainPool[trainIndex];
@@ -3103,7 +3159,7 @@ $('startDueReview').onclick=()=>{
   if(!due.length){updateSRSReviewCard();return;}
   prepareTrainer(due,{shuffle:false,label:'Повторення на сьогодні'});
 };
-$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none'};document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
+$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{const x=trainPool[trainIndex],direction=trainDirections[trainIndex]||'en-ua';$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none';if(x){updateTrainSpeak(x,direction,true);if(direction==='ua-en')speakEnglish(x.en)}};$('trainSpeak').onclick=()=>speakEnglish($('trainSpeak').dataset.text);document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
 
 const loveMessages=[
   "Я тебе люблю.",
@@ -3476,6 +3532,6 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   });
 }
 </script>
-  
+
 </body>
 </html>
