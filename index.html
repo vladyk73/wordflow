@@ -1357,7 +1357,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.4</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.5</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -3184,7 +3184,6 @@ function renderTrain(){
   $('trainAnswer').classList.remove('show');
   updateTrainSpeak(x,direction,false);
   $('revealAnswer').style.display='inline-flex';
-  if(!reverse)speakEnglish(x.en);
 }
 function gradeTrain(status){
   const x=trainPool[trainIndex];
@@ -3388,7 +3387,7 @@ $('startDueReview').onclick=()=>{
   if(!due.length){updateSRSReviewCard();return;}
   prepareTrainer(due,{shuffle:false,label:'Повторення на сьогодні'});
 };
-$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{const x=trainPool[trainIndex],direction=trainDirections[trainIndex]||'en-ua';$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none';if(x){updateTrainSpeak(x,direction,true);if(direction==='ua-en')speakEnglish(x.en)}};$('trainSpeak').onclick=()=>speakEnglish($('trainSpeak').dataset.text);document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
+$('startTrain').onclick=startTrainer;$('stopTrain').onclick=stopTrainer;$('revealAnswer').onclick=()=>{const x=trainPool[trainIndex],direction=trainDirections[trainIndex]||'en-ua';$('trainAnswer').classList.add('show');if($('trainTranscription').textContent)$('trainTranscription').classList.add('show');$('grading').classList.add('show');$('revealAnswer').style.display='none';if(x){updateTrainSpeak(x,direction,true)}};$('trainSpeak').onclick=()=>speakEnglish($('trainSpeak').dataset.text);document.querySelectorAll('.grade').forEach(b=>b.onclick=()=>gradeTrain(b.dataset.grade));
 
 const loveMessages=[
   "Я тебе люблю.",
