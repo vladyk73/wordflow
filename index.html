@@ -1400,7 +1400,7 @@ html[data-theme="dark"] .writing-target.missed{background:#3a2228;border-color:#
 @media(max-width:480px){.learning-inline-add{grid-template-columns:1fr}.learning-inline-add .btn{width:100%}.learning-topic-actions{display:grid;grid-template-columns:1fr auto;width:100%}.learning-status{width:100%}.writing-actions .btn{flex:1 1 100%}}
 
 
-/* v11.10.1 — cleaner Learning UX */
+/* v11.10.2 — cleaner Learning UX */
 .learning-section-divider{height:1px;background:var(--line);margin:20px 0}
 .learning-head.compact{margin-bottom:10px}.learning-head.compact h3{font-size:17px}
 .ai-status-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;color:var(--muted);background:var(--panel);white-space:nowrap}.ai-status-badge.ok{color:#17764b;border-color:#9bdfbb;background:#effbf5}.ai-status-badge.busy{color:#8b5a00;border-color:#ecd39c;background:#fff9e9}.ai-status-badge.error{color:#b33449;border-color:#efbdc5;background:#fff5f6}
@@ -1415,7 +1415,7 @@ html[data-theme="dark"] .material-preview{background:#202436;border-color:#3c457
 @media(max-width:680px){.ai-config-grid{grid-template-columns:1fr}.ai-config-actions .btn,.material-import-actions .btn,.material-import-actions .file-label{flex:1 1 100%;justify-content:center}.learning-material-head{gap:7px}.writing-photo-buttons{display:grid;grid-template-columns:1fr}.writing-photo-buttons .btn{width:100%}}
 
 
-/* v11.10.1 — Learning UX cleanup */
+/* v11.10.2 — Learning UX cleanup */
 .learning-shell{display:grid;gap:14px;max-width:980px;margin:0 auto}
 .learning-hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,rgba(98,107,232,.09),rgba(133,139,255,.035)),var(--panel)}
 .learning-hero-copy{min-width:0}.learning-hero-copy h2{margin:2px 0 6px;font-size:25px}.learning-hero-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;max-width:680px}
@@ -1448,7 +1448,7 @@ html[data-theme="dark"] .learning-hero{background:linear-gradient(135deg,rgba(98
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.10.1</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.10.2</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -4119,7 +4119,7 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
     trainPrepared=false;
     showTrainSetup();
   }
-);
+});
 // Learning sub-navigation and hidden settings panels.
 document.querySelectorAll('[data-learning-page]').forEach(btn=>btn.onclick=()=>showLearningPage(btn.dataset.learningPage));
 try{showLearningPage(localStorage.getItem(LEARNING_PAGE_KEY)||'practice',false)}catch(_){showLearningPage('practice',false)}
