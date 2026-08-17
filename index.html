@@ -1353,11 +1353,102 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
   background:#2b3141;
 }
 
+
+/* v11.9 — Навчання та письмові вправи */
+.learning-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:14px;align-items:start}
+.learning-panel{padding:18px}
+.learning-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.learning-head h2,.learning-head h3{margin:0 0 4px}
+.learning-inline-add{display:grid;grid-template-columns:1fr auto;gap:8px;margin:12px 0}
+.learning-inline-add input{min-width:0;border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:var(--panel);color:var(--text)}
+.learning-presets{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 16px}
+.learning-preset{border:1px solid var(--line);background:var(--soft);color:var(--text);padding:8px 10px;border-radius:999px;font-weight:800;cursor:pointer}
+.learning-preset:hover{border-color:#aeb4ff;background:#f1f2ff}
+.learning-preset[disabled]{cursor:default;opacity:.52}
+.learning-topic-list{display:grid;gap:9px}
+.learning-topic-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--panel)}
+.learning-topic-title{font-weight:900;line-height:1.25}.learning-topic-summary{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}
+.learning-topic-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.learning-status{border:1px solid var(--line);border-radius:10px;padding:8px 9px;background:var(--panel);color:var(--text);font-weight:750}
+.learning-remove{border:0;background:#fff0f2;color:#d53e57;padding:8px 10px;border-radius:10px;font-weight:850;cursor:pointer}
+.learning-empty{border:1px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted)}
+.learning-info{border:1px solid #dfe2ff;background:#f7f7ff;border-radius:14px;padding:12px 13px;margin-top:14px;font-size:13px;line-height:1.5;color:#50597a}
+.writing-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.writing-controls .field:last-child{grid-column:1/-1}
+.writing-prompt-card{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--soft)}
+.writing-prompt-kicker{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#626be8;margin-bottom:7px}
+.writing-question{font-size:20px;font-weight:950;line-height:1.35;margin-bottom:8px}
+.writing-instruction{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.writing-target-label{font-size:12px;font-weight:900;margin-bottom:7px}
+.writing-targets{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.writing-target{border:1px solid var(--line);background:var(--panel);padding:7px 9px;border-radius:10px;font-weight:850;font-size:13px}
+.writing-target small{font-weight:600;color:var(--muted)}
+.writing-target.used{border-color:#8fd8b2;background:#effbf5;color:#18754a}
+.writing-target.missed{border-color:#efbdc5;background:#fff5f6;color:#b33449}
+.writing-answer{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel);color:var(--text);font:inherit;line-height:1.5}
+.writing-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.writing-check-result{font-size:13px;line-height:1.5;margin-top:10px;color:var(--muted)}
+.writing-mode-note{margin:8px 0 10px;font-size:12px;line-height:1.45;color:var(--muted)}
+.writing-photo-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.writing-photo-input{display:none}.writing-photo-preview{display:none;margin-top:10px;border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--panel)}.writing-photo-preview.show{display:block}.writing-photo-preview img{display:block;max-width:100%;max-height:300px;margin:auto;border-radius:10px;object-fit:contain}.writing-photo-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;font-size:12px;color:var(--muted)}
+.writing-reference{display:none;margin-top:12px;border:1px solid #cfd4ff;border-radius:14px;padding:13px;background:#f7f7ff}.writing-reference.show{display:block}.writing-reference-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.035em;color:#5862d8;margin-bottom:6px}.writing-reference-answer{font-size:17px;font-weight:850;line-height:1.45}.writing-reference-note{font-size:12px;color:var(--muted);line-height:1.45;margin-top:7px}
+.learning-status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:#a3a8b8}.learning-status-dot.active{background:#25a66a}.learning-status-dot.learned{background:#626be8}
+html[data-theme="dark"] .learning-preset{background:#222735}html[data-theme="dark"] .learning-preset:hover{background:#2a3043}
+html[data-theme="dark"] .learning-remove{background:#3b242b;color:#ff91a2}
+html[data-theme="dark"] .learning-info{background:#202436;border-color:#343a5a;color:#bcc5e9}
+html[data-theme="dark"] .writing-prompt-card{background:#1d212c}
+html[data-theme="dark"] .writing-target.used{background:#173629;border-color:#327e59;color:#91e3bb}
+html[data-theme="dark"] .writing-target.missed{background:#3a2228;border-color:#814653;color:#ffabb8}html[data-theme="dark"] .writing-reference{background:#202436;border-color:#3c4570}html[data-theme="dark"] .writing-photo-preview{background:#1d212c}
+@media(max-width:860px){.learning-layout{grid-template-columns:1fr}.learning-panel{padding:13px}.writing-controls{grid-template-columns:1fr}.writing-controls .field:last-child{grid-column:auto}.learning-topic-card{grid-template-columns:1fr}.learning-topic-actions{justify-content:flex-start}.learning-status{flex:1}.writing-question{font-size:18px}}
+@media(max-width:480px){.learning-inline-add{grid-template-columns:1fr}.learning-inline-add .btn{width:100%}.learning-topic-actions{display:grid;grid-template-columns:1fr auto;width:100%}.learning-status{width:100%}.writing-actions .btn{flex:1 1 100%}}
+
+
+/* v11.10.1 — cleaner Learning UX */
+.learning-section-divider{height:1px;background:var(--line);margin:20px 0}
+.learning-head.compact{margin-bottom:10px}.learning-head.compact h3{font-size:17px}
+.ai-status-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;color:var(--muted);background:var(--panel);white-space:nowrap}.ai-status-badge.ok{color:#17764b;border-color:#9bdfbb;background:#effbf5}.ai-status-badge.busy{color:#8b5a00;border-color:#ecd39c;background:#fff9e9}.ai-status-badge.error{color:#b33449;border-color:#efbdc5;background:#fff5f6}
+.ai-config-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(160px,.65fr);gap:9px}.ai-config-grid .field{min-width:0}.ai-config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.ai-config-actions .btn{min-height:40px}.ai-security-note{font-size:11px;color:var(--muted);line-height:1.45;margin-top:8px}
+.material-import{display:grid;gap:9px}.material-text{min-height:130px}.material-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.material-file-name{font-size:12px;color:var(--muted);min-width:0;overflow-wrap:anywhere}.material-status{font-size:12px;color:var(--muted);line-height:1.45}.material-status.error{color:#b33449}.material-status.ok{color:#17764b}
+.material-preview{display:none;margin-top:11px;border:1px solid #cfd4ff;background:#f7f7ff;border-radius:14px;padding:13px}.material-preview.show{display:block}.material-preview h4{margin:0 0 5px}.material-preview-grid{display:grid;gap:10px;margin-top:10px}.material-preview-block b{display:block;font-size:12px;margin-bottom:5px}.material-chip-row{display:flex;gap:6px;flex-wrap:wrap}.material-chip{padding:5px 7px;border:1px solid var(--line);background:var(--panel);border-radius:999px;font-size:11px;font-weight:800}.material-preview ul{margin:5px 0 0;padding-left:19px;font-size:12px;line-height:1.5}.material-preview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.learning-material-list{display:grid;gap:8px;margin-top:12px}.learning-material-card{border:1px solid var(--line);border-radius:13px;padding:11px;background:var(--panel)}.learning-material-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.learning-material-title{font-weight:900;line-height:1.3}.learning-material-meta{font-size:11px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.learning-material-summary{font-size:12px;color:var(--muted);line-height:1.45;margin-top:7px}.learning-material-remove{border:0;background:#fff0f2;color:#d53e57;border-radius:9px;padding:7px 9px;font-weight:850;cursor:pointer}
+.writing-ai-feedback{display:none;margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:13px;background:var(--panel)}.writing-ai-feedback.show{display:block}.writing-ai-feedback.correct{border-color:#9bdfbb;background:#effbf5}.writing-ai-feedback.almost{border-color:#ecd39c;background:#fff9e9}.writing-ai-feedback.incorrect{border-color:#efbdc5;background:#fff5f6}.writing-ai-feedback h4{margin:0 0 6px;font-size:15px}.writing-ai-corrected{margin-top:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.65);font-weight:850;line-height:1.45}.writing-ai-notes{margin:8px 0 0;padding-left:18px;font-size:12px;line-height:1.5}.writing-ai-ocr-status{font-size:12px;margin-top:7px;color:var(--muted)}
+.writing-photo-buttons{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.writing-photo-buttons .btn{min-height:38px}
+html[data-theme="dark"] .ai-status-badge.ok{background:#173629;border-color:#327e59;color:#91e3bb}html[data-theme="dark"] .ai-status-badge.busy{background:#3c3221;border-color:#725f36;color:#f3bf68}html[data-theme="dark"] .ai-status-badge.error{background:#3a2228;border-color:#814653;color:#ffabb8}
+html[data-theme="dark"] .material-preview{background:#202436;border-color:#3c4570}html[data-theme="dark"] .learning-material-remove{background:#3b242b;color:#ff91a2}html[data-theme="dark"] .writing-ai-feedback{background:#1d212c}html[data-theme="dark"] .writing-ai-feedback.correct{background:#173629;border-color:#327e59}html[data-theme="dark"] .writing-ai-feedback.almost{background:#3c3221;border-color:#725f36}html[data-theme="dark"] .writing-ai-feedback.incorrect{background:#3a2228;border-color:#814653}html[data-theme="dark"] .writing-ai-corrected{background:rgba(0,0,0,.16)}
+@media(max-width:680px){.ai-config-grid{grid-template-columns:1fr}.ai-config-actions .btn,.material-import-actions .btn,.material-import-actions .file-label{flex:1 1 100%;justify-content:center}.learning-material-head{gap:7px}.writing-photo-buttons{display:grid;grid-template-columns:1fr}.writing-photo-buttons .btn{width:100%}}
+
+
+/* v11.10.1 — Learning UX cleanup */
+.learning-shell{display:grid;gap:14px;max-width:980px;margin:0 auto}
+.learning-hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,rgba(98,107,232,.09),rgba(133,139,255,.035)),var(--panel)}
+.learning-hero-copy{min-width:0}.learning-hero-copy h2{margin:2px 0 6px;font-size:25px}.learning-hero-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;max-width:680px}
+.learning-eyebrow{font-size:11px;line-height:1.2;text-transform:uppercase;letter-spacing:.09em;font-weight:950;color:var(--accent)}
+.learning-hero-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}.learning-settings-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.learning-subtabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:6px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.72);box-shadow:0 8px 24px rgba(29,37,61,.06)}
+.learning-subtab{border:0;background:transparent;color:var(--muted);border-radius:12px;min-height:46px;padding:9px 12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:7px;transition:.16s}
+.learning-subtab:hover{background:var(--soft);color:var(--text)}.learning-subtab.active{background:var(--panel);color:var(--accent);box-shadow:0 4px 14px rgba(32,39,63,.09)}
+.learning-subtab small{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--soft);color:var(--muted);font-size:10px}.learning-subtab.active small{background:#eef0ff;color:#515bd3}
+.learning-page{display:none}.learning-page.active{display:block}.learning-single-panel,.learning-practice-panel{padding:20px 22px}.learning-single-panel{max-width:900px;margin:0 auto}
+.practice-start-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.practice-start-head h2{margin:2px 0 5px;font-size:24px}.practice-settings-btn{white-space:nowrap}
+.writing-setup-summary{display:flex;gap:7px;flex-wrap:wrap;margin:17px 0 14px;padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+.writing-summary-chip{display:inline-flex;align-items:center;gap:6px;min-width:0;border:1px solid var(--line);border-radius:999px;background:var(--panel);padding:7px 10px;font-size:12px;color:var(--muted);max-width:100%}.writing-summary-chip b{color:var(--text);font-size:11px}.writing-summary-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.writing-summary-chip.compact{font-weight:850;color:var(--text)}
+.practice-generate{min-height:48px;padding-left:22px;padding-right:22px;font-size:15px}.learning-practice-panel>.writing-prompt-card{margin-top:18px}
+.writing-prompt-card{padding:20px;border-radius:20px}.writing-question{font-size:clamp(20px,3vw,27px);letter-spacing:-.018em}.writing-answer{min-height:150px;border-radius:14px;background:var(--panel)}
+.writing-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.writing-actions .btn{min-height:44px}.writing-actions #checkWritingAI{grid-column:span 1}.writing-actions #checkWritingWords{grid-column:1/-1;justify-self:start;min-height:36px;padding:7px 10px;font-size:12px}.btn.subtle{background:transparent;border-color:transparent;color:var(--muted);box-shadow:none}.btn.subtle:hover{background:var(--soft);border-color:var(--line)}
+.writing-ai-disclaimer{margin-top:10px}.learning-settings-modal-card{width:min(680px,100%)}.learning-modal-actions{display:flex;justify-content:flex-end;margin-top:14px}.learning-modal-actions .btn{min-width:120px}
+html[data-theme="dark"] .learning-hero{background:linear-gradient(135deg,rgba(98,107,232,.16),rgba(98,107,232,.035)),#191e28}html[data-theme="dark"] .learning-subtabs{background:rgba(22,26,35,.9)}html[data-theme="dark"] .learning-subtab.active{background:#252b38;box-shadow:none}html[data-theme="dark"] .learning-subtab.active small{background:#343d75;color:#fff}
+@media(max-width:700px){
+  .learning-shell{gap:10px}.learning-hero{padding:15px 14px;align-items:flex-start}.learning-hero-copy h2{font-size:22px}.learning-hero-copy p{font-size:12px}.learning-hero-actions{display:grid;justify-items:end;gap:6px}.learning-settings-btn span{display:none}.learning-settings-btn{width:42px;height:40px;padding:0;justify-content:center;font-size:17px}
+  .learning-subtabs{position:sticky;top:0;z-index:18;grid-template-columns:repeat(3,1fr);padding:5px;border-radius:15px;backdrop-filter:blur(12px)}.learning-subtab{min-height:43px;padding:7px 5px;font-size:12px;gap:5px}.learning-subtab small{display:none}
+  .learning-single-panel,.learning-practice-panel{padding:15px 13px;border-radius:20px}.practice-start-head{align-items:center}.practice-start-head h2{font-size:21px}.practice-settings-btn{padding:9px 10px;font-size:12px}.writing-setup-summary{margin:13px 0 12px;padding:8px;gap:5px}.writing-summary-chip{font-size:11px;padding:6px 8px}.writing-summary-chip b{display:none}.practice-generate{width:100%;min-height:48px}
+  .writing-prompt-card{padding:15px 12px;margin-top:14px!important}.writing-question{font-size:21px}.writing-instruction{font-size:12px}.writing-answer{min-height:135px;font-size:16px}.writing-photo-row .btn{width:100%;justify-content:center}
+  .writing-photo-meta{display:grid;gap:8px}.writing-actions{grid-template-columns:1fr 1fr}.writing-actions #checkWritingAI{grid-column:1/-1}.writing-actions #nextWritingPrompt{grid-column:auto}.writing-actions #checkWritingWords{grid-column:1/-1;justify-self:stretch;width:100%}
+  .learning-modal-actions .btn{width:100%}.learning-settings-modal-card .writing-controls{grid-template-columns:1fr}.learning-settings-modal-card .writing-controls .field:last-child{grid-column:auto}
+}
+@media(max-width:390px){.learning-hero-copy p{display:none}.learning-subtab{font-size:11px}.learning-subtab span{display:block}.writing-actions{grid-template-columns:1fr}.writing-actions #checkWritingAI,.writing-actions #checkWritingWords{grid-column:auto}.writing-summary-chip{max-width:100%}.writing-summary-chip.compact{display:none}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.8.6</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.10.1</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -1395,7 +1486,7 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
       <span aria-hidden="true">☰</span><span>Меню</span>
     </button>
   </div></div>
-  <div class="panel tabs" id="mainTabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button></div>
+  <div class="panel tabs" id="mainTabs"><button class="tab active" data-view="dictionaryView">Словник</button><button class="tab" data-view="editorView">Додати / імпорт</button><button class="tab" data-view="trainerView">Повторення</button><button class="tab" data-view="learningView">Навчання</button></div>
 
   <section class="view active" id="dictionaryView">
     <div class="stats">
@@ -1521,6 +1612,160 @@ html[data-theme="dark"] #trainerView .train-exit:hover{
 <button class="btn primary train-reveal" id="revealAnswer">Показати відповідь</button>
 </div><div class="grading" id="grading"><button class="grade bad" data-grade="new">Не знаю<span class="train-grade-hint" id="srsHintNew"></span></button><button class="grade learning" data-grade="learning">Ще вчу<span class="train-grade-hint" id="srsHintLearning"></span></button><button class="grade learned" data-grade="learned">Знаю<span class="train-grade-hint" id="srsHintLearned"></span></button></div></div>
   </section>
+
+  <section class="view" id="learningView">
+    <div class="learning-shell">
+      <div class="panel learning-hero">
+        <div class="learning-hero-copy">
+          <div class="learning-eyebrow">WordFlow Learning</div>
+          <h2>Навчання</h2>
+          <p>Тут тільки практика. Матеріали, плани й технічні налаштування заховані окремо, щоб нічого не відволікало.</p>
+        </div>
+        <div class="learning-hero-actions">
+          <span class="ai-status-badge" id="aiConnectionBadge">Не налаштовано</span>
+          <button class="btn learning-settings-btn" id="openAiSettings" type="button" aria-label="Налаштування AI">⚙ <span>AI</span></button>
+        </div>
+      </div>
+
+      <div class="learning-subtabs" role="tablist" aria-label="Розділи навчання">
+        <button class="learning-subtab active" type="button" data-learning-page="practice" role="tab" aria-selected="true">✍️ <span>Вправи</span></button>
+        <button class="learning-subtab" type="button" data-learning-page="materials" role="tab" aria-selected="false">📚 <span>Матеріали</span><small id="learningMaterialCount">0</small></button>
+        <button class="learning-subtab" type="button" data-learning-page="plans" role="tab" aria-selected="false">🧭 <span>Плани</span><small id="learningActiveCount">0</small></button>
+      </div>
+
+      <div class="learning-page active" id="learningPracticePage" data-learning-page-panel="practice">
+        <div class="panel learning-practice-panel">
+          <div class="practice-start-head">
+            <div>
+              <div class="learning-eyebrow">Письмова практика</div>
+              <h2>Нове завдання</h2>
+              <div class="small-note">WordFlow поєднає активну граматику з лексикою твого словника.</div>
+            </div>
+            <button class="btn practice-settings-btn" id="openWritingSettings" type="button">⚙ Налаштувати</button>
+          </div>
+
+          <div class="writing-setup-summary" id="writingSetupSummary" aria-live="polite">
+            <span class="writing-summary-chip"><b>Граматика</b><span id="writingSummaryGrammar">—</span></span>
+            <span class="writing-summary-chip"><b>Лексика</b><span id="writingSummaryVocab">—</span></span>
+            <span class="writing-summary-chip compact"><span id="writingSummaryType">—</span></span>
+            <span class="writing-summary-chip compact"><span id="writingSummaryWords">—</span></span>
+          </div>
+
+          <button class="btn primary practice-generate" id="generateWritingPrompt" type="button">Створити завдання</button>
+
+          <div class="writing-prompt-card" id="writingPromptCard" style="display:none">
+            <div class="writing-prompt-kicker" id="writingPromptKicker">Письмова практика</div>
+            <div class="writing-question" id="writingQuestion"></div>
+            <div class="writing-instruction" id="writingInstruction"></div>
+            <div class="writing-target-label" id="writingTargetLabel">Спробуй використати:</div>
+            <div class="writing-targets" id="writingTargets"></div>
+            <textarea class="writing-answer" id="writingAnswer" placeholder="Напиши відповідь англійською…"></textarea>
+            <div class="writing-mode-note">Можеш відповісти тут або написати в зошиті. Для відповіді від руки сфотографуй сторінку нижче.</div>
+            <div class="writing-photo-row">
+              <label class="btn" for="writingPhotoInput">📷 Фото зошита</label>
+              <input class="writing-photo-input" id="writingPhotoInput" type="file" accept="image/*" capture="environment">
+            </div>
+            <div class="writing-photo-preview" id="writingPhotoPreview">
+              <img id="writingPhotoImage" alt="Фото відповіді з зошита">
+              <div class="writing-photo-meta"><span>Фото не зберігається у словнику. Перед перевіркою AI покаже, що саме розпізнав.</span><div class="writing-photo-buttons"><button class="btn" id="recognizeWritingPhoto" type="button">Розпізнати написане</button><button class="btn ghost" id="removeWritingPhoto" type="button">Прибрати фото</button></div></div>
+              <div class="writing-ai-ocr-status" id="writingOcrStatus"></div>
+            </div>
+            <div class="writing-actions">
+              <button class="btn primary" id="checkWritingAI" type="button">Перевірити AI</button>
+              <button class="btn" id="showWritingReference" type="button">Показати відповідь</button>
+              <button class="btn" id="nextWritingPrompt" type="button">Інше завдання</button>
+              <button class="btn subtle" id="checkWritingWords" type="button">Перевірити задані слова</button>
+            </div>
+            <div class="writing-reference" id="writingReference">
+              <div class="writing-reference-title" id="writingReferenceTitle">Правильна відповідь</div>
+              <div class="writing-reference-answer" id="writingReferenceAnswer"></div>
+              <div class="writing-reference-note" id="writingReferenceNote"></div>
+            </div>
+            <div class="writing-check-result" id="writingCheckResult"></div>
+            <div class="writing-ai-feedback" id="writingAiFeedback"></div>
+            <div class="small-note writing-ai-disclaimer">Для відкритих відповідей приклад не вважається єдиним правильним формулюванням.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="learning-page" id="learningMaterialsPage" data-learning-page-panel="materials">
+        <div class="panel learning-panel learning-single-panel">
+          <div class="learning-head">
+            <div><div class="learning-eyebrow">База для AI</div><h2>Навчальні матеріали</h2><div class="small-note">Встав домашку з чату або завантаж PPTX / DOCX. WordFlow витягне текст у браузері й визначить теми, правила та типи вправ.</div></div>
+          </div>
+          <div class="material-import">
+            <textarea class="material-text" id="materialTextInput" placeholder="Встав сюди домашнє завдання або навчальний текст…"></textarea>
+            <div class="material-import-actions">
+              <label class="btn file-label">Завантажити PPTX / DOCX<input id="materialFileInput" type="file" accept=".pptx,.docx,.txt,.md,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"></label>
+              <button class="btn primary" id="analyzeMaterial" type="button">Розібрати матеріал AI</button>
+              <span class="material-file-name" id="materialFileName"></span>
+            </div>
+            <div class="material-status" id="materialStatus"></div>
+          </div>
+          <div class="material-preview" id="materialPreview">
+            <h4 id="materialPreviewTitle"></h4>
+            <div class="small-note" id="materialPreviewSummary"></div>
+            <div class="material-preview-grid">
+              <div class="material-preview-block"><b>Знайдені теми</b><div class="material-chip-row" id="materialPreviewTopics"></div></div>
+              <div class="material-preview-block"><b>Основні правила</b><ul id="materialPreviewRules"></ul></div>
+              <div class="material-preview-block"><b>Типи вправ</b><div class="material-chip-row" id="materialPreviewExerciseTypes"></div></div>
+            </div>
+            <div class="material-preview-actions"><button class="btn primary" id="saveMaterialAnalysis" type="button">Зберегти матеріал і теми</button><button class="btn" id="cancelMaterialAnalysis" type="button">Скасувати</button></div>
+          </div>
+          <div class="learning-material-list" id="learningMaterialList"></div>
+        </div>
+      </div>
+
+      <div class="learning-page" id="learningPlansPage" data-learning-page-panel="plans">
+        <div class="panel learning-panel learning-single-panel">
+          <div class="learning-head">
+            <div><div class="learning-eyebrow">Що вчимо зараз</div><h2>Навчальні плани</h2><div class="small-note">Активні теми використовуються генератором вправ. Пройдені можна залишити в історії, а зайві поставити на паузу.</div></div>
+          </div>
+
+          <div class="learning-inline-add">
+            <input id="learningTopicInput" placeholder="Наприклад: Present Simple" aria-label="Нова навчальна тема">
+            <button class="btn primary" id="addLearningTopic" type="button">Додати тему</button>
+          </div>
+
+          <div class="small-note"><b>Швидко додати</b></div>
+          <div class="learning-presets" id="learningPresets"></div>
+          <div class="learning-topic-list" id="learningTopicList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="writingSettingsModal">
+  <div class="modal-card learning-settings-modal-card">
+    <div class="modal-head">
+      <div><h3>Налаштування вправи</h3><div class="small-note">Зміни це лише коли хочеш інший тип практики.</div></div>
+      <button class="icon-btn" id="closeWritingSettings" aria-label="Закрити">×</button>
+    </div>
+    <div class="writing-controls">
+      <div class="field"><label for="writingGrammarTopic">Граматика</label><select id="writingGrammarTopic"></select></div>
+      <div class="field"><label for="writingVocabCategory">Лексика</label><select id="writingVocabCategory"></select></div>
+      <div class="field"><label for="writingExerciseType">Тип вправи</label><select id="writingExerciseType"><option value="translate">Переклади речення</option><option value="open">Відповідь на запитання</option></select></div>
+      <div class="field"><label for="writingWordCount">Скільки слів дати</label><select id="writingWordCount"><option value="2">2 слова</option><option value="3" selected>3 слова</option><option value="4">4 слова</option></select></div>
+      <div class="field"><label for="writingGeneratorMode">Генератор</label><select id="writingGeneratorMode"><option value="ai">AI — за матеріалами</option><option value="local">Локальний — без API</option></select></div>
+    </div>
+    <div class="learning-modal-actions"><button class="btn primary" id="saveWritingSettings" type="button">Готово</button></div>
+  </div>
+</div>
+
+<div class="modal" id="aiSettingsModal">
+  <div class="modal-card learning-settings-modal-card">
+    <div class="modal-head">
+      <div><h3>AI-підключення</h3><div class="small-note">Технічні налаштування потрібні лише один раз на цьому браузері.</div></div>
+      <button class="icon-btn" id="closeAiSettings" aria-label="Закрити">×</button>
+    </div>
+    <div class="ai-config-grid">
+      <div class="field"><label for="aiWorkerUrl">Адреса Worker</label><input id="aiWorkerUrl" placeholder="https://wordflow-api....workers.dev"></div>
+      <div class="field"><label for="aiAccessToken">Код доступу</label><input id="aiAccessToken" type="password" autocomplete="off" placeholder="Твій код"></div>
+    </div>
+    <div class="ai-config-actions"><button class="btn primary" id="saveAiConfig" type="button">Зберегти</button><button class="btn" id="testAiConnection" type="button">Перевірити підключення</button></div>
+    <div class="ai-security-note">Адреса Worker і код доступу зберігаються тільки в localStorage цього браузера. API-ключ OpenAI залишається секретом у Cloudflare.</div>
+  </div>
 </div>
 
 <div class="modal" id="progressModal">
@@ -1637,6 +1882,8 @@ let wordsUnsubscribe=null;
 let settingsUnsubscribe=null;
 let cloudMirror=new Map();
 let cloudThemes=[];
+let cloudLearningTopics=[];
+let cloudLearningMaterials=[];
 let syncTimer=null;
 let pendingLocalWrite=false;
 
@@ -1645,6 +1892,102 @@ function setSyncState(text,kind=''){
   if(!el)return;
   el.textContent=text;
   el.className='sync-state'+(kind?' '+kind:'');
+}
+
+const LEARNING_TOPIC_PRESETS=[
+  {name:'Present Simple',summary:'Звички, регулярні дії, факти; do / does; 3-тя особа однини; маркери always, often, usually, every day.'},
+  {name:'Present Continuous',summary:'Дії зараз і around now; am / is / are + verb-ing; тимчасові ситуації та домовленості на найближче майбутнє.'},
+  {name:'To be — am / is / are',summary:'Теперішній час дієслова to be: am, is, are; ствердження, заперечення та питання.'},
+  {name:'To be — was / were',summary:'Минулий час дієслова to be: was, were; ствердження, заперечення та питання.'},
+  {name:'Subject & Object Pronouns',summary:'I / me, he / him, she / her, we / us, they / them та вибір форми займенника у реченні.'},
+  {name:'Possessive Adjectives & Pronouns',summary:'my / mine, your / yours, his / his, her / hers, our / ours, their / theirs.'},
+  {name:'Singular & Plural Nouns',summary:'Однина та множина іменників, включно з irregular plurals.'}
+];
+function cleanLearningTopics(raw){
+  if(!Array.isArray(raw))return [];
+  const allowed=new Set(['active','paused','learned']);
+  const seen=new Set();
+  return raw.map((x,i)=>{
+    const name=String(x?.name||'').trim();
+    if(!name)return null;
+    const key=name.toLocaleLowerCase('en');
+    if(seen.has(key))return null;
+    seen.add(key);
+    return {
+      id:String(x?.id||('lt_'+Date.now().toString(36)+'_'+i)),
+      name,
+      status:allowed.has(x?.status)?x.status:'active',
+      summary:String(x?.summary||'').trim(),
+      source:String(x?.source||'manual').trim()||'manual',
+      createdAt:x?.createdAt||new Date().toISOString(),
+      updatedAt:x?.updatedAt||new Date().toISOString()
+    };
+  }).filter(Boolean);
+}
+function learningPresetFor(name=''){
+  const key=String(name).trim().toLocaleLowerCase('en');
+  return LEARNING_TOPIC_PRESETS.find(x=>x.name.toLocaleLowerCase('en')===key)||null;
+}
+
+function cleanLearningMaterials(raw){
+  if(!Array.isArray(raw))return [];
+  return raw.map((x,i)=>{
+    const title=String(x?.title||x?.fileName||'').trim();
+    if(!title)return null;
+    const topics=Array.isArray(x?.topics)?x.topics.map(t=>({name:String(t?.name||'').trim(),summary:String(t?.summary||'').trim()})).filter(t=>t.name):[];
+    const rules=Array.isArray(x?.rules)?x.rules.map(String).map(v=>v.trim()).filter(Boolean).slice(0,30):[];
+    const exerciseTypes=Array.isArray(x?.exerciseTypes)?x.exerciseTypes.map(String).map(v=>v.trim()).filter(Boolean).slice(0,20):[];
+    const sampleExercises=Array.isArray(x?.sampleExercises)?x.sampleExercises.slice(0,20).map(ex=>({
+      instruction:String(ex?.instruction||'').trim(),type:String(ex?.type||'other').trim(),question:String(ex?.question||'').trim(),
+      options:Array.isArray(ex?.options)?ex.options.map(String).slice(0,8):[],answers:Array.isArray(ex?.answers)?ex.answers.map(String).slice(0,8):[],
+      exampleAnswer:String(ex?.exampleAnswer||'').trim(),explanation:String(ex?.explanation||'').trim()
+    })).filter(ex=>ex.question||ex.instruction):[];
+    return {
+      id:String(x?.id||('lm_'+Date.now().toString(36)+'_'+i)),title,fileName:String(x?.fileName||'').trim(),sourceType:String(x?.sourceType||'text').trim()||'text',
+      summary:String(x?.summary||'').trim(),topics,rules,exerciseTypes,sampleExercises,
+      createdAt:x?.createdAt||new Date().toISOString(),updatedAt:x?.updatedAt||new Date().toISOString()
+    };
+  }).filter(Boolean);
+}
+const AI_URL_KEY='wordflow_ai_worker_url_v1';
+const AI_ACCESS_KEY='wordflow_ai_access_v1';
+function normalizeWorkerUrl(value=''){return String(value||'').trim().replace(/\/+$/,'')}
+function currentAiConfig(){
+  const url=normalizeWorkerUrl($('aiWorkerUrl')?.value||localStorage.getItem(AI_URL_KEY)||'');
+  const token=String($('aiAccessToken')?.value||localStorage.getItem(AI_ACCESS_KEY)||'').trim();
+  return {url,token};
+}
+function setAiBadge(text,kind=''){
+  const badge=$('aiConnectionBadge');if(!badge)return;badge.textContent=text;badge.className='ai-status-badge'+(kind?' '+kind:'');
+}
+function loadAiConfig(){
+  try{
+    const url=localStorage.getItem(AI_URL_KEY)||'',token=localStorage.getItem(AI_ACCESS_KEY)||'';
+    if($('aiWorkerUrl'))$('aiWorkerUrl').value=url;if($('aiAccessToken'))$('aiAccessToken').value=token;
+    setAiBadge(url&&token?'Налаштовано':'Не налаштовано',url&&token?'busy':'');
+  }catch(_){setAiBadge('Не налаштовано')}
+}
+function saveAiConfig(){
+  const {url,token}=currentAiConfig();
+  if(!url||!/^https:\/\//i.test(url)){alert('Встав HTTPS-адресу Cloudflare Worker.');return false}
+  if(!token){alert('Введи код доступу до WordFlow AI.');return false}
+  try{localStorage.setItem(AI_URL_KEY,url);localStorage.setItem(AI_ACCESS_KEY,token)}catch(_){}
+  if($('aiWorkerUrl'))$('aiWorkerUrl').value=url;setAiBadge('Збережено','busy');toast('AI-налаштування збережено');return true;
+}
+async function aiFetch(path,payload=null,{method='POST'}={}){
+  const {url,token}=currentAiConfig();
+  if(!url||!token)throw new Error('Спочатку налаштуй AI-підключення в розділі «Навчання».');
+  const options={method,headers:{'X-WordFlow-Access':token}};
+  if(payload!==null){options.headers['Content-Type']='application/json';options.body=JSON.stringify(payload)}
+  const response=await fetch(url+path,options);let data={};try{data=await response.json()}catch(_){}
+  if(!response.ok)throw new Error(data.error||`Сервер повернув помилку ${response.status}.`);
+  return data;
+}
+async function testAiConnection(){
+  if(!saveAiConfig())return;
+  setAiBadge('Перевіряємо…','busy');
+  try{const data=await aiFetch('/health',null,{method:'GET'});setAiBadge('AI готовий','ok');toast(`AI підключено${data.model?` · ${data.model}`:''}`)}
+  catch(err){setAiBadge('Помилка','error');alert(err.message||'Не вдалося підключитися до Worker.')}
 }
 
 function seedDB(){
@@ -1658,6 +2001,8 @@ function seedDB(){
       updatedAt:now
     })),
     categories:[...NOTEBOOK_TOPICS],
+    learningTopics:[],
+    learningMaterials:[],
     notebookSeedVersion:NOTEBOOK_SEED_VERSION
   };
 }
@@ -1675,6 +2020,8 @@ function readLocalByKey(key){
       version:2,
       entries:data.entries,
       categories:Array.isArray(data.categories)?data.categories:[...NOTEBOOK_TOPICS],
+      learningTopics:cleanLearningTopics(data.learningTopics),
+      learningMaterials:cleanLearningMaterials(data.learningMaterials),
       notebookSeedVersion:Number(data.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
     };
   }catch(err){
@@ -1788,11 +2135,13 @@ function stableEntry(e){
   return JSON.stringify(entryForCloud(e));
 }
 
-function applyRemoteState(entries,themes){
+function applyRemoteState(entries,themes,learningTopics=[],learningMaterials=[]){
   db={
     version:2,
     entries,
     categories:[...new Set((themes||[]).map(String).map(v=>v.trim()).filter(Boolean))],
+    learningTopics:cleanLearningTopics(learningTopics),
+    learningMaterials:cleanLearningMaterials(learningMaterials),
     notebookSeedVersion:NOTEBOOK_SEED_VERSION
   };
   selectedCategories=new Set([...selectedCategories].filter(c=>allCategories().includes(c)));
@@ -1842,6 +2191,8 @@ async function seedOrMigrateCloud(user,localDB=null){
       categories:Array.isArray(localDB.categories)
         ? [...new Set(localDB.categories.map(String).map(v=>v.trim()).filter(Boolean))]
         : [...new Set(localEntries.flatMap(e=>e.categories||[]))],
+      learningTopics:cleanLearningTopics(localDB.learningTopics),
+      learningMaterials:cleanLearningMaterials(localDB.learningMaterials),
       notebookSeedVersion:Number(localDB.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
     };
   }
@@ -1857,6 +2208,8 @@ async function seedOrMigrateCloud(user,localDB=null){
 
   await setDoc(sref,{
     themes:[...new Set(initial.categories||[])],
+    learningTopics:cleanLearningTopics(initial.learningTopics),
+    learningMaterials:cleanLearningMaterials(initial.learningMaterials),
     initialized:true,
     schemaVersion:2,
     notebookSeedVersion:NOTEBOOK_SEED_VERSION,
@@ -1873,6 +2226,8 @@ function stopCloudListeners(){
   if(settingsUnsubscribe){settingsUnsubscribe();settingsUnsubscribe=null}
   cloudMirror=new Map();
   cloudThemes=[];
+  cloudLearningTopics=[];
+  cloudLearningMaterials=[];
   cloudReady=false;
 }
 
@@ -1885,9 +2240,14 @@ async function connectUserCloud(user,localDBSnapshot=null){
     await upgradeBuiltinTranscriptions(user);
 
     let remoteThemes=[];
+    let remoteLearningTopics=[];
+    let remoteLearningMaterials=[];
     const initialSettings=await getDoc(settingsRef(user));
-    if(initialSettings.exists()&&Array.isArray(initialSettings.data().themes)){
-      remoteThemes=initialSettings.data().themes;
+    if(initialSettings.exists()){
+      const settingsData=initialSettings.data()||{};
+      if(Array.isArray(settingsData.themes))remoteThemes=settingsData.themes;
+      remoteLearningTopics=cleanLearningTopics(settingsData.learningTopics);
+      remoteLearningMaterials=cleanLearningMaterials(settingsData.learningMaterials);
     }
 
     const initialWords=await getDocs(wordsRef(user));
@@ -1897,7 +2257,9 @@ async function connectUserCloud(user,localDBSnapshot=null){
 
     cloudMirror=new Map(initialEntries.map(e=>[e.id,stableEntry(e)]));
     cloudThemes=[...new Set(remoteThemes)];
-    applyRemoteState(initialEntries,remoteThemes);
+    cloudLearningTopics=cleanLearningTopics(remoteLearningTopics);
+    cloudLearningMaterials=cleanLearningMaterials(remoteLearningMaterials);
+    applyRemoteState(initialEntries,remoteThemes,remoteLearningTopics,remoteLearningMaterials);
 
     cloudReady=true;
     setSyncState(navigator.onLine?'Синхронізовано':'Офлайн','ok');
@@ -1929,9 +2291,16 @@ async function connectUserCloud(user,localDBSnapshot=null){
       {includeMetadataChanges:true},
       snap=>{
         if(!snap.exists())return;
-        const themes=Array.isArray(snap.data().themes)?snap.data().themes:[];
+        const settingsData=snap.data()||{};
+        const themes=Array.isArray(settingsData.themes)?settingsData.themes:[];
+        const learningTopics=cleanLearningTopics(settingsData.learningTopics);
+        const learningMaterials=cleanLearningMaterials(settingsData.learningMaterials);
         cloudThemes=[...new Set(themes)];
+        cloudLearningTopics=learningTopics;
+        cloudLearningMaterials=learningMaterials;
         db.categories=cloudThemes;
+        db.learningTopics=learningTopics;
+        db.learningMaterials=learningMaterials;
         renderAll();
         saveLocalDB();
       },
@@ -1969,9 +2338,16 @@ function queueCloudSave(){
       }
 
       const themes=[...new Set(db.categories)];
-      if(JSON.stringify(themes)!==JSON.stringify(cloudThemes)){
+      const learningTopics=cleanLearningTopics(db.learningTopics);
+      const learningMaterials=cleanLearningMaterials(db.learningMaterials);
+      const settingsChanged=JSON.stringify(themes)!==JSON.stringify(cloudThemes)
+        || JSON.stringify(learningTopics)!==JSON.stringify(cloudLearningTopics)
+        || JSON.stringify(learningMaterials)!==JSON.stringify(cloudLearningMaterials);
+      if(settingsChanged){
         operations.push(batch=>batch.set(settingsRef(),{
           themes,
+          learningTopics,
+          learningMaterials,
           initialized:true,
           schemaVersion:2,
           notebookSeedVersion:NOTEBOOK_SEED_VERSION,
@@ -2019,7 +2395,7 @@ const TYPES=[['word','Слово'],['phrase','Фраза'],['phrasal','Фраз�
 const NOTEBOOK_SEED = [{"en":"than","ua":"ніж","transcription":"/ðˈɐn/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"dry","ua":"сухий","transcription":"/dɹˈaɪ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"raw","ua":"сирий","transcription":"/ɹˈɔː/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"aunt","ua":"тітка","transcription":"/ˈant/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"nephew","ua":"племінник","transcription":"/nˈɛfjuː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"niece","ua":"племінниця","transcription":"/nˈiːs/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepfather","ua":"вітчим","transcription":"/stˈɛpfɑːðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepmother","ua":"мачуха","transcription":"/stˈɛpmʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepson","ua":"пасинок","transcription":"/stˈɛpsʌn/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"stepdaughter","ua":"падчерка","transcription":"/stˈɛpdɔːtə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"half-brother","ua":"єдинокровний або єдиноутробний брат","transcription":"/hˈɑːfbɹˈʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepbrother — зведений брат."},{"en":"half-sister","ua":"єдинокровна або єдиноутробна сестра","transcription":"/hˈɑːfsˈɪstə/","type":"word","categories":["Сім’я"],"status":"new","note":"Не те саме, що stepsister — зведена сестра."},{"en":"father-in-law","ua":"свекор / тесть","transcription":"/fˈɑːðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"mother-in-law","ua":"свекруха / теща","transcription":"/mˈʌðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"brother-in-law","ua":"брат чоловіка/дружини; зять","transcription":"/bɹˈʌðəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"sister-in-law","ua":"сестра чоловіка/дружини; невістка","transcription":"/sˈɪstəɹɪnlˈɔː/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godfather","ua":"хрещений батько","transcription":"/ɡˈɒdfɑːðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godmother","ua":"хрещена мати","transcription":"/ɡˈɒdmʌðə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"godson","ua":"хрещеник","transcription":"/ɡˈɒdsən/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"goddaughter","ua":"хрещениця","transcription":"/ɡˈɒdɔːtə/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"relative","ua":"родич","transcription":"/ɹˈɛlətˌɪv/","type":"word","categories":["Сім’я"],"status":"new","note":""},{"en":"expensive","ua":"дорогий","transcription":"/ɛkspˈɛnsɪv/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"at the back","ua":"позаду; ззаду","transcription":"/at ðə bˈak/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"belong","ua":"належати","transcription":"/bɪlˈɒŋ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"enough","ua":"достатньо","transcription":"/ɪnˈʌf/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"decision","ua":"рішення","transcription":"/dɪsˈɪʒən/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"sold","ua":"продав; продано; проданий","transcription":"/sˈəʊld/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"we met","ua":"ми зустрілися","transcription":"/wiː mˈɛt/","type":"phrase","categories":["Загальна лексика"],"status":"new","note":""},{"en":"invited","ua":"запросив; запрошений","transcription":"/ɪnvˈaɪtɪd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"noisy","ua":"галасливий","transcription":"/nˈɔɪzi/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"choose","ua":"вибирати; обирати","transcription":"/tʃˈuːz/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"hat","ua":"капелюх","transcription":"/hˈat/","type":"word","categories":["Одяг"],"status":"new","note":""},{"en":"bought","ua":"купив; куплений","transcription":"/bˈɔːt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"saw","ua":"бачив","transcription":"/sˈɔː/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"mistake","ua":"помилка","transcription":"/mɪstˈeɪk/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"under","ua":"під","transcription":"/ˈʌndə/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"above","ua":"над","transcription":"/əbˈʌv/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"below","ua":"нижче; під","transcription":"/bɪlˈəʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"between","ua":"між","transcription":"/bɪtwˈiːn/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"behind","ua":"позаду","transcription":"/bɪhˈaɪnd/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"in front of","ua":"перед","transcription":"/ɪn fɹˈʌnt ɒv/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"onto","ua":"на; на поверхню","transcription":"/ˈɒntʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"put","ua":"класти; ставити","transcription":"/pˈʊt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"far away","ua":"далеко","transcription":"/fˈɑːɹ ɐwˈeɪ/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"home-cooked food","ua":"домашня їжа","transcription":"/hˈəʊmkˈʊkt fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"I'd rather eat","ua":"я б краще з’їв / з’їла","transcription":"/aɪd ɹˈɑːðəɹ ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm not keen on","ua":"я не дуже люблю; я не в захваті від","transcription":"/aɪm nˌɒt kˈiːn ˈɒn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I avoid","ua":"я уникаю","transcription":"/aɪ ɐvˈɔɪd/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I can't stand","ua":"я не можу терпіти","transcription":"/aɪ kˈɑːnt stˈand/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I hate","ua":"я ненавиджу","transcription":"/aɪ hˈeɪt/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I usually eat","ua":"я зазвичай їм","transcription":"/aɪ jˈuːʒuːəli ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I always have","ua":"я завжди маю / беру","transcription":"/aɪ ˈɔːlweɪz hˈav/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I cook most of my meals","ua":"я готую більшість своїх страв","transcription":"/aɪ kˈʊk mˈəʊst əv maɪ mˈiːlz/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I hardly ever eat","ua":"я майже ніколи не їм","transcription":"/aɪ hˈɑːdli ˈɛvəɹ ˈiːt/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm hungry","ua":"я голодний / голодна","transcription":"/aɪm hˈʌŋɡɹi/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm starving","ua":"я страшенно голодний / голодна","transcription":"/aɪm stˈɑːvɪŋ/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm craving pizza","ua":"мені дуже хочеться піци","transcription":"/aɪm kɹˈeɪvɪŋ pˈiːtsə/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"I'm in the mood for","ua":"мені хочеться; я в настрої для","transcription":"/aɪm ɪnðə mˈuːd fɔː/","type":"phrase","categories":["Розмовні фрази","Їжа"],"status":"new","note":""},{"en":"Either is fine","ua":"мені підходить будь-який варіант","transcription":"/ˈaɪðəɹ ɪz fˈaɪn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It doesn't matter to me","ua":"мені байдуже; для мене неважливо","transcription":"/ɪt dˈʌzənt mˈatə tə mˌiː/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"It depends","ua":"це залежить","transcription":"/ɪt dɪpˈɛndz/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"Not really","ua":"не дуже; не зовсім","transcription":"/nˌɒt ɹˈiəlɪ/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"over there","ua":"там; он там","transcription":"/ˌəʊvə ðˈeə/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"mountain","ua":"гора","transcription":"/mˈaʊntɪn/","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"across","ua":"через; поперек","transcription":"/əkɹˈɒs/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"through","ua":"через; крізь","transcription":"/θɹˈuː/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"next to","ua":"біля; поруч із","transcription":"/nˈɛkst tuː/","type":"phrase","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"here","ua":"тут","transcription":"/hˈiə/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"ground","ua":"мелений; ґрунт; земля","transcription":"/ɡɹˈaʊnd/","type":"word","categories":["Їжа","Природа"],"status":"new","note":""},{"en":"minced","ua":"подрібнений; рублений; перемелений на фарш","transcription":"/mˈɪnst/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"prawn","ua":"креветка","transcription":"/pɹˈɔːn/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"shrimp","ua":"креветка","transcription":"/ʃɹˈɪmp/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour cream","ua":"сметана","transcription":"/sˈaʊə kɹˈiːm/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"wheat","ua":"пшениця","transcription":"/wˈiːt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"chewy","ua":"жувальний; тягучий; важко жувати","transcription":"/tʃjˈuːi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crunchy","ua":"хрусткий","transcription":"/kɹˈʌntʃi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"crispy","ua":"хрусткий; підсмажений","transcription":"/kɹˈɪspi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"juicy","ua":"соковитий","transcription":"/dʒˈuːsi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bland","ua":"прісний; несмачний; безвиразний","transcription":"/blˈand/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"overcooked","ua":"переготовлений; пересмажений; переварений","transcription":"/ˌəʊvəkˈʊkt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"greasy","ua":"жирний; масний","transcription":"/ɡɹˈiːzi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"stale","ua":"несвіжий; черствий","transcription":"/stˈeɪl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"spoiled","ua":"зіпсований","transcription":"/spˈɔɪld/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"gone bad","ua":"зіпсований; зіпсувалося","transcription":"/ɡɒn bˈad/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"rotten","ua":"гнилий","transcription":"/ɹˈɒtən/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fattening","ua":"калорійний; той, від якого набирають вагу","transcription":"/fˈatənɪŋ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"I absolutely love","ua":"я просто обожнюю","transcription":"/aɪ ˌabsəlˈuːtli lˈʌv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm a big fan of","ua":"я великий прихильник; мені дуже подобається","transcription":"/aɪm ɐ bˈɪɡ fˈan ɒv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"I'm fond of","ua":"мені подобається; я люблю","transcription":"/aɪm fˈɒnd ɒv/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"ill","ua":"хворий / хвора","transcription":"/ˈɪl/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"medicine","ua":"ліки","transcription":"/mˈɛdsən/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"some","ua":"трохи; деякі","transcription":"/sˈʌm/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"many","ua":"багато","transcription":"/mˈɛni/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"fed","ua":"годував; нагодував","transcription":"/fˈɛd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"into","ua":"в; всередину","transcription":"/ˈɪntʊ/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"depend","ua":"залежати","transcription":"/dɪpˈɛnd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"it depends on","ua":"це залежить від","transcription":"/ɪt dɪpˈɛndz ˈɒn/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"savory","ua":"пікантний; несолодкий; насичений смаком","transcription":"/sˈeɪvəɹi/","type":"word","categories":["Їжа"],"status":"new","note":"Американський варіант. Британський: savoury."},{"en":"prefer bigger","ua":"віддавати перевагу більшому","transcription":"/pɹɪfˈɜː bˈɪɡə/","type":"phrase","categories":["Розмовні фрази"],"status":"new","note":""},{"en":"have a sweet tooth","ua":"бути ласуном; любити солодке","transcription":"/hav ɐ swˈiːt tˈuːθ/","type":"idiom","categories":["Їжа","Ідіоми"],"status":"new","note":""},{"en":"junk","ua":"мотлох; непотріб; сміття","transcription":"/dʒˈʌŋk/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"junk food","ua":"шкідлива їжа; фастфуд","transcription":"/dʒˈʌŋk fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy food","ua":"нездорова їжа","transcription":"/ʌnhˈɛlθi fˈuːd/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"unhealthy","ua":"нездоровий; шкідливий для здоров’я","transcription":"/ʌnhˈɛlθi/","type":"word","categories":["Здоров’я"],"status":"new","note":""},{"en":"out","ua":"назовні; поза","transcription":"/ˈaʊt/","type":"word","categories":["Прийменники та напрямок"],"status":"new","note":""},{"en":"eat out","ua":"їсти не вдома; їсти в кафе чи ресторані","transcription":"/ˈiːt ˈaʊt/","type":"phrasal","categories":["Їжа"],"status":"new","note":""},{"en":"savour","ua":"насолоджуватися смаком або запахом","transcription":"/sˈeɪvə/","type":"word","categories":["Їжа"],"status":"new","note":"Британський варіант. Американський: savor."},{"en":"for dessert","ua":"на десерт","transcription":"/fɔː dɪzˈɜːt/","type":"phrase","categories":["Їжа"],"status":"new","note":""},{"en":"desert","ua":"пустеля","transcription":"/dˈɛsət/","type":"word","categories":["Природа"],"status":"new","note":""},{"en":"I","ua":"я","transcription":"/ˈaɪ/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"me","ua":"мене; мені","transcription":"/mˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"my","ua":"мій; моя; моє; мої","transcription":"/mˈaɪ/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"mine","ua":"мій; моя; моє; мої","transcription":"/mˈaɪn/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"you","ua":"ти; ви; тебе; вас","transcription":"/jˈuː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"your","ua":"твій; ваш","transcription":"/jˈɔː/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"yours","ua":"твій; ваш","transcription":"/jˈɔːz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"he","ua":"він","transcription":"/hˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"him","ua":"його; йому","transcription":"/hˈɪm/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"his","ua":"його","transcription":"/hˈɪz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник або займенник"},{"en":"she","ua":"вона","transcription":"/ʃˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"her","ua":"її; їй","transcription":"/hˈɜː/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник / присвійний прикметник"},{"en":"hers","ua":"її","transcription":"/hˈɜːz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"it","ua":"воно; це","transcription":"/ˈɪt/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий або об’єктний займенник"},{"en":"its","ua":"його; її (для неживого/тварини)","transcription":"/ˈɪts/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"we","ua":"ми","transcription":"/wˈiː/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"us","ua":"нас; нам","transcription":"/ˈʌs/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"our","ua":"наш; наша; наше; наші","transcription":"/ˈaʊə/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"ours","ua":"наш; наша; наше; наші","transcription":"/ˈaʊəz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"they","ua":"вони","transcription":"/ðˈeɪ/","type":"word","categories":["Займенники"],"status":"new","note":"підметовий займенник"},{"en":"them","ua":"їх; їм","transcription":"/ðˈɛm/","type":"word","categories":["Займенники"],"status":"new","note":"об’єктний займенник"},{"en":"their","ua":"їхній; їхня; їхнє; їхні","transcription":"/ðˈeə/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний прикметник"},{"en":"theirs","ua":"їхній; їхня; їхнє; їхні","transcription":"/ðˈeəz/","type":"word","categories":["Займенники"],"status":"new","note":"присвійний займенник"},{"en":"this","ua":"цей; ця; це","transcription":"/ðˈɪs/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"that","ua":"той; та; те","transcription":"/ðˈat/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"these","ua":"ці","transcription":"/ðˈiːz/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"those","ua":"ті","transcription":"/ðˈəʊz/","type":"word","categories":["Займенники"],"status":"new","note":"вказівний займенник"},{"en":"ham","ua":"шинка","transcription":"/hˈam/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"snack","ua":"перекус","transcription":"/snˈak/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"meal","ua":"прийом їжі","transcription":"/mˈiːl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"plate","ua":"тарілка","transcription":"/plˈeɪt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bowl","ua":"миска","transcription":"/bˈəʊl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cook","ua":"готувати","transcription":"/kˈʊk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bake","ua":"пекти","transcription":"/bˈeɪk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"boil","ua":"варити","transcription":"/bˈɔɪl/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fry","ua":"смажити","transcription":"/fɹˈaɪ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"thirsty","ua":"спраглий","transcription":"/θˈɜːsti/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"delicious","ua":"смачний","transcription":"/dɪlˈɪʃəs/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salty","ua":"солоний","transcription":"/sˈɒlti/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"sour","ua":"кислий","transcription":"/sˈaʊə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"bitter","ua":"гіркий","transcription":"/bˈɪtə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"fresh","ua":"свіжий","transcription":"/fɹˈɛʃ/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"hot","ua":"гарячий","transcription":"/hˈɒt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cold","ua":"холодний","transcription":"/kˈəʊld/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"recipe","ua":"рецепт","transcription":"/ɹˈɛsɪpˌiː/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"foot","ua":"ступня; стопа","transcription":"/fˈʊt/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: feet"},{"en":"ox","ua":"віл","transcription":"/ˈɒks/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: oxen"},{"en":"dice","ua":"гральні кубики","transcription":"/dˈaɪs/","type":"word","categories":["Граматика"],"status":"new","note":"Однина: die"},{"en":"louse","ua":"воша","transcription":"/lˈaʊs/","type":"word","categories":["Граматика"],"status":"new","note":"Множина: lice"},{"en":"to enable","ua":"увімкнути; дозволити; активувати","transcription":"/tʊ ɛnˈeɪbəl/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"received","ua":"отримав; отримано; отриманий","transcription":"/ɹɪsˈiːvd/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to proceed","ua":"продовжити; перейти далі","transcription":"/tə pɹəsˈiːd/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"reporting","ua":"звітування; подання звітності","transcription":"/ɹɪpˈɔːtɪŋ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"quality","ua":"якість","transcription":"/kwˈɒlɪti/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"deviations","ua":"відхилення","transcription":"/dˌiːvɪˈeɪʃənz/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"kind","ua":"добрий; вид; тип","transcription":"/kˈaɪnd/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"examples","ua":"приклади","transcription":"/ɛɡzˈampəlz/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"plum","ua":"слива","transcription":"/plˈʌm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cherry","ua":"вишня","transcription":"/tʃˈɛɹi/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"carrot","ua":"морква","transcription":"/kˈaɹət/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"garlic","ua":"часник","transcription":"/ɡˈɑːlɪk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"lettuce","ua":"листя салату","transcription":"/lˈɛtɪs/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"peas","ua":"горох","transcription":"/pˈiːz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pepper","ua":"перець","transcription":"/pˈɛpə/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beans","ua":"квасоля","transcription":"/bˈiːnz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"mushroom","ua":"гриб","transcription":"/mˈʌʃɹuːm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"eggplant","ua":"баклажан","transcription":"/ˈɛɡplənt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"cream","ua":"вершки","transcription":"/kɹˈiːm/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"noodles","ua":"локшина","transcription":"/nˈuːdəlz/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"salt","ua":"сіль","transcription":"/sˈɒlt/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"beef","ua":"яловичина","transcription":"/bˈiːf/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"pork","ua":"свинина","transcription":"/pˈɔːk/","type":"word","categories":["Їжа"],"status":"new","note":""},{"en":"if","ua":"якщо","transcription":"/ˈɪf/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"shrink wrap","ua":"термоусадочна плівка","transcription":"/ʃɹˈɪŋk ɹˈap/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"whether","ua":"чи","transcription":"/wˈɛðə/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"should","ua":"слід; повинен","transcription":"/ʃˈʊd/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"stack","ua":"складати в стопку; стос","transcription":"/stˈak/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"applies to","ua":"стосується; застосовується до","transcription":"/ɐplˈaɪz tuː/","type":"phrase","categories":["Робота"],"status":"new","note":""},{"en":"quantity","ua":"кількість","transcription":"/kwˈɒntɪti/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"sufficient","ua":"достатній","transcription":"/səfˈɪʃənt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"refresh","ua":"оновити","transcription":"/ɹɪfɹˈɛʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"batch","ua":"партія; серія","transcription":"/bˈatʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"search","ua":"пошук; шукати","transcription":"/sˈɜːtʃ/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"waste","ua":"відходи; сміття","transcription":"/wˈeɪst/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"important","ua":"важливий; важливо","transcription":"/ɪmpˈɔːtənt/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"meaning","ua":"значення","transcription":"/mˈiːnɪŋ/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"already","ua":"вже","transcription":"/ɔːlɹˈɛdi/","type":"word","categories":["Службові слова"],"status":"new","note":""},{"en":"configure","ua":"налаштовувати","transcription":"/kənfˈɪɡə/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"insert","ua":"вставити; вставка","transcription":"/ˈɪnsɜːt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"reset","ua":"скинути; скинути налаштування","transcription":"/ɹɪsˈɛt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"explanation","ua":"пояснення","transcription":"/ɛksplɐnˈeɪʃən/","type":"word","categories":["Загальна лексика"],"status":"new","note":""},{"en":"set","ua":"встановити; задати","transcription":"/sˈɛt/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"counter","ua":"лічильник","transcription":"/kˈaʊntə/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"value","ua":"значення; ціна; цінність","transcription":"/vˈaljuː/","type":"word","categories":["Робота"],"status":"new","note":""},{"en":"to produce","ua":"виробляти; створювати","transcription":"/tə pɹədjˈuːs/","type":"phrase","categories":["Робота"],"status":"new","note":""}];
 const NOTEBOOK_SEED_VERSION = 3;
 const NOTEBOOK_TOPICS = ["Ідіоми","Їжа","Граматика","Загальна лексика","Займенники","Здоров’я","Одяг","Прийменники та напрямок","Природа","Робота","Розмовні фрази","Службові слова","Сім’я"];
-let db=loadDB(); let editingId=null; let selectedCategories=new Set(); let trainPool=[]; let trainIndex=0; let trainDirections=[]; let trainPrepared=false; let trainPreparedShuffle=true; let trainPreparedLabel=''; let trainSpeechSlowNext=false; let bulkPreviewData=[]; let toastTimer=null; let undoAction=null;
+let db=loadDB(); if(!Array.isArray(db.learningTopics))db.learningTopics=[]; if(!Array.isArray(db.learningMaterials))db.learningMaterials=[]; let editingId=null; let selectedCategories=new Set(); let trainPool=[]; let trainIndex=0; let trainDirections=[]; let trainPrepared=false; let trainPreparedShuffle=true; let trainPreparedLabel=''; let trainSpeechSlowNext=false; let bulkPreviewData=[]; let toastTimer=null; let undoAction=null; let writingPromptState=null; let writingPhotoUrl=null; let writingPhotoFile=null; let pendingMaterialFile=null; let pendingMaterialAnalysis=null;
 const LIST_PAGE_SIZE=50;
 let listStart=0;
 let listLimit=LIST_PAGE_SIZE;
@@ -2252,7 +2628,7 @@ function fuzzyTextMatch(query,text){
 
 function currentFilters(){return {q:norm($('search').value),type:$('typeFilter').value,status:$('statusFilter').value,sort:$('sort').value,cats:[...document.querySelectorAll('.chip.active')].map(x=>x.dataset.cat)}}
 function filteredEntries(){const f=currentFilters();let out=db.entries.filter(x=>{const hay=norm([x.en,x.ua,x.transcription,x.note,(x.categories||[]).join(' ')].join(' '));return(!f.q||fuzzyTextMatch(f.q,hay))&&(!f.type||x.type===f.type)&&(!f.status||x.status===f.status)&&(!f.cats.length||f.cats.some(c=>(x.categories||[]).includes(c)))});out.sort((a,b)=>f.sort==='za'?b.en.localeCompare(a.en,'en',{sensitivity:'base'}):f.sort==='recent'?String(b.createdAt||'').localeCompare(String(a.createdAt||'')):a.en.localeCompare(b.en,'en',{sensitivity:'base'}));return out}
-function renderAll(){renderStats();renderCategories();renderList();renderEditorCats();renderCategoryManage();updateSRSReviewCard()}
+function renderAll(){renderStats();renderCategories();renderList();renderEditorCats();renderCategoryManage();renderLearning();updateSRSReviewCard()}
 function renderStats(){
   const f=filteredEntries();
   const learned=db.entries.filter(x=>x.status==='learned').length;
@@ -2846,6 +3222,396 @@ function confirmBulkImport(){
   toast(`Додано: ${added}${merged?` · об’єднано: ${merged}`:''}${skipped?` · пропущено: ${skipped}`:''}`);
 }
 
+
+
+function xmlTextContent(xml,mode='flat'){
+  const doc=new DOMParser().parseFromString(xml,'application/xml');
+  if(doc.querySelector('parsererror'))return '';
+  if(mode==='paragraphs'){
+    const paragraphs=[...doc.getElementsByTagName('*')].filter(n=>n.localName==='p');
+    return paragraphs.map(p=>[...p.getElementsByTagName('*')].filter(n=>n.localName==='t').map(n=>n.textContent||'').join('')).map(v=>v.trim()).filter(Boolean).join('\n');
+  }
+  return [...doc.getElementsByTagName('*')].filter(n=>n.localName==='t').map(n=>String(n.textContent||'').trim()).filter(Boolean).join(' ');
+}
+async function extractStudyFileText(file){
+  const name=String(file?.name||'').toLowerCase();
+  if(!file)throw new Error('Файл не вибрано.');
+  if(file.size>18*1024*1024)throw new Error('Файл завеликий. Для навчальних матеріалів ліміт — 18 МБ.');
+  if(name.endsWith('.txt')||name.endsWith('.md'))return (await file.text()).slice(0,90000);
+  if(!window.JSZip)throw new Error('Не завантажилась бібліотека для читання DOCX/PPTX. Онови сторінку з інтернетом.');
+  const zip=await window.JSZip.loadAsync(await file.arrayBuffer());
+  if(name.endsWith('.docx')){
+    const part=zip.file('word/document.xml');if(!part)throw new Error('У DOCX не знайдено document.xml.');
+    return xmlTextContent(await part.async('text'),'paragraphs').slice(0,90000);
+  }
+  if(name.endsWith('.pptx')){
+    const parts=[];
+    zip.forEach((path,entry)=>{if(!entry.dir&&(/^ppt\/slides\/slide\d+\.xml$/i.test(path)||/^ppt\/diagrams\/data\d+\.xml$/i.test(path)))parts.push({path,entry})});
+    parts.sort((a,b)=>a.path.localeCompare(b.path,undefined,{numeric:true}));
+    const chunks=[];
+    for(const part of parts){const text=xmlTextContent(await part.entry.async('text'),'flat');if(text)chunks.push(`[${part.path}]\n${text}`)}
+    const joined=chunks.join('\n\n');if(!joined.trim())throw new Error('Не вдалося витягнути текст із PPTX.');return joined.slice(0,90000);
+  }
+  throw new Error('Поки підтримуються PPTX, DOCX, TXT і MD.');
+}
+function setMaterialStatus(text='',kind=''){
+  const el=$('materialStatus');if(!el)return;el.textContent=text;el.className='material-status'+(kind?' '+kind:'');
+}
+function renderMaterialPreview(data){
+  pendingMaterialAnalysis=data;
+  $('materialPreviewTitle').textContent=data.title||'Навчальний матеріал';
+  $('materialPreviewSummary').textContent=data.summary||'';
+  $('materialPreviewTopics').innerHTML=(data.topics||[]).map(t=>`<span class="material-chip">${esc(t.name)}</span>`).join('')||'<span class="small-note">Тем не визначено</span>';
+  $('materialPreviewRules').innerHTML=(data.rules||[]).slice(0,12).map(r=>`<li>${esc(r)}</li>`).join('')||'<li>Явних правил не знайдено.</li>';
+  $('materialPreviewExerciseTypes').innerHTML=(data.exerciseTypes||[]).map(t=>`<span class="material-chip">${esc(t)}</span>`).join('')||'<span class="small-note">Не визначено</span>';
+  $('materialPreview').classList.add('show');
+}
+function closeMaterialPreview(){pendingMaterialAnalysis=null;$('materialPreview').classList.remove('show')}
+function renderLearningMaterials(){
+  db.learningMaterials=cleanLearningMaterials(db.learningMaterials);
+  const list=$('learningMaterialList');if(!list)return;
+  list.innerHTML=db.learningMaterials.length?db.learningMaterials.map(m=>`<div class="learning-material-card"><div class="learning-material-head"><div><div class="learning-material-title">${esc(m.title)}</div><div class="learning-material-meta">${esc(m.fileName||m.sourceType||'текст')} · ${(m.topics||[]).map(t=>esc(t.name)).join(', ')||'без тем'}</div></div><button class="learning-material-remove" type="button" data-material-remove="${esc(m.id)}">×</button></div>${m.summary?`<div class="learning-material-summary">${esc(m.summary)}</div>`:''}</div>`).join(''):'<div class="learning-empty">Збережених навчальних матеріалів ще немає.</div>';
+  if($('learningMaterialCount'))$('learningMaterialCount').textContent=String(db.learningMaterials.length);
+  document.querySelectorAll('[data-material-remove]').forEach(btn=>btn.onclick=()=>removeLearningMaterial(btn.dataset.materialRemove));
+}
+function removeLearningMaterial(id){
+  const index=(db.learningMaterials||[]).findIndex(x=>String(x.id)===String(id));if(index<0)return;const removed=db.learningMaterials[index];db.learningMaterials.splice(index,1);saveDB();toast('Матеріал прибрано',{undo:()=>{db.learningMaterials.splice(Math.min(index,db.learningMaterials.length),0,removed);saveDB()},duration:4200});
+}
+function savePendingMaterialAnalysis(){
+  if(!pendingMaterialAnalysis)return;
+  const now=new Date().toISOString();
+  const material=cleanLearningMaterials([{...pendingMaterialAnalysis,id:'lm_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6),createdAt:now,updatedAt:now}])[0];
+  if(!material)return;
+  db.learningMaterials=cleanLearningMaterials([...(db.learningMaterials||[]),material]);
+  for(const topic of material.topics||[]){
+    const existing=(db.learningTopics||[]).find(x=>norm(x.name)===norm(topic.name));
+    if(existing){if(!existing.summary&&topic.summary)existing.summary=topic.summary;existing.updatedAt=now;continue}
+    db.learningTopics.push({id:'lt_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6),name:topic.name,status:'active',summary:topic.summary||'',source:'ai-material',createdAt:now,updatedAt:now});
+  }
+  saveDB();closeMaterialPreview();setMaterialStatus('Матеріал збережено. Знайдені теми додані до навчального плану.','ok');toast('Навчальний матеріал збережено');
+}
+async function analyzeStudyMaterial(){
+  const pasted=String($('materialTextInput').value||'').trim();
+  if(!pasted&&!pendingMaterialFile){alert('Встав домашнє завдання або вибери PPTX / DOCX.');return}
+  setMaterialStatus('Готуємо матеріал…');$('analyzeMaterial').disabled=true;
+  try{
+    let extracted='';let sourceType='text';let fileName='Вставлений текст';
+    if(pendingMaterialFile){fileName=pendingMaterialFile.name;sourceType=fileName.split('.').pop().toLowerCase();setMaterialStatus('Читаємо файл у браузері…');extracted=await extractStudyFileText(pendingMaterialFile)}
+    if(pasted)extracted=(extracted?extracted+'\n\n[Вставлений текст]\n':'')+pasted;
+    extracted=extracted.trim().slice(0,90000);if(!extracted)throw new Error('У матеріалі не знайшлося тексту.');
+    setMaterialStatus('AI визначає теми, правила та вправи…');
+    const result=await aiFetch('/materials/analyze',{fileName,sourceType,text:extracted});
+    renderMaterialPreview({...result,fileName,sourceType});setMaterialStatus('Аналіз готовий. Перевір результат перед збереженням.','ok');
+  }catch(err){setMaterialStatus(err.message||'Не вдалося розібрати матеріал.','error')}
+  finally{$('analyzeMaterial').disabled=false}
+}
+function materialContextForTopic(topicName=''){
+  const key=norm(topicName);const matched=(db.learningMaterials||[]).filter(m=>(m.topics||[]).some(t=>{const n=norm(t.name);return n===key||n.includes(key)||key.includes(n)})).slice(0,4);
+  return matched.map(m=>({title:m.title,summary:m.summary,topics:m.topics,rules:(m.rules||[]).slice(0,12),sampleExercises:(m.sampleExercises||[]).slice(0,6)}));
+}
+function renderAiFeedback(result){
+  const box=$('writingAiFeedback');if(!box)return;const verdict=['correct','almost','incorrect'].includes(result?.verdict)?result.verdict:'almost';
+  const title=verdict==='correct'?'Правильно':verdict==='almost'?'Майже правильно':'Є помилки';
+  const grammar=(result.grammarNotes||[]).map(x=>`<li>${esc(x)}</li>`).join('');const vocab=(result.vocabularyNotes||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+  box.className='writing-ai-feedback show '+verdict;
+  box.innerHTML=`<h4>${title}${Number.isFinite(Number(result.score))?` · ${Math.round(Number(result.score))}%`:''}</h4><div>${esc(result.shortFeedback||'')}</div>${result.correctedAnswer?`<div class="writing-ai-corrected"><small>Краще так:</small><br>${esc(result.correctedAnswer)}</div>`:''}${result.explanation?`<div class="small-note" style="margin-top:8px">${esc(result.explanation)}</div>`:''}${grammar?`<b style="display:block;margin-top:9px;font-size:12px">Граматика</b><ul class="writing-ai-notes">${grammar}</ul>`:''}${vocab?`<b style="display:block;margin-top:9px;font-size:12px">Лексика</b><ul class="writing-ai-notes">${vocab}</ul>`:''}`;
+}
+async function checkWritingAI(){
+  if(!writingPromptState)return;
+  const answer=String($('writingAnswer').value||'').trim();
+  if(!answer){alert(writingPhotoFile?'Спочатку натисни «Розпізнати написане», перевір текст у полі відповіді, а тоді запускай AI-перевірку.':'Спочатку напиши відповідь.');return}
+  const btn=$('checkWritingAI');btn.disabled=true;const old=btn.textContent;btn.textContent='Перевіряємо…';$('writingAiFeedback').className='writing-ai-feedback';
+  try{
+    const result=await aiFetch('/writing/check',{exercise:{exerciseType:writingPromptState.exerciseType,question:writingPromptState.question||$('writingQuestion').textContent,instruction:$('writingInstruction').textContent,referenceAnswer:writingPromptState.referenceAnswer||'',referenceTitle:writingPromptState.referenceTitle||''},answer,grammarTopic:writingPromptState.topicName,targetWords:writingPromptState.words||[],materials:materialContextForTopic(writingPromptState.topicName)});
+    renderAiFeedback(result);
+  }catch(err){alert(err.message||'Не вдалося перевірити відповідь.')}
+  finally{btn.disabled=false;btn.textContent=old}
+}
+function imageFileToDataUrl(file,maxSide=1800,quality=.84){
+  return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{try{let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;const scale=Math.min(1,maxSide/Math.max(w,h));w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);const out=canvas.toDataURL('image/jpeg',quality);URL.revokeObjectURL(url);resolve(out)}catch(e){URL.revokeObjectURL(url);reject(e)}};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Не вдалося прочитати фото.'))};img.src=url});
+}
+async function recognizeWritingPhoto(){
+  if(!writingPhotoFile){alert('Спочатку додай фото зошита.');return}
+  const btn=$('recognizeWritingPhoto');btn.disabled=true;const old=btn.textContent;btn.textContent='Читаємо…';$('writingOcrStatus').textContent='Готуємо фото…';
+  try{const image=await imageFileToDataUrl(writingPhotoFile);$('writingOcrStatus').textContent='AI читає почерк…';const result=await aiFetch('/writing/ocr',{image,exerciseQuestion:$('writingQuestion').textContent});$('writingAnswer').value=result.text||'';$('writingOcrStatus').textContent=`Розпізнано (${result.confidence==='high'?'висока':result.confidence==='low'?'низька':'середня'} впевненість). Перевір текст перед перевіркою.${result.notes?' '+result.notes:''}`;$('writingAnswer').focus()}
+  catch(err){$('writingOcrStatus').textContent=err.message||'Не вдалося розпізнати фото.'}
+  finally{btn.disabled=false;btn.textContent=old}
+}
+
+
+const LEARNING_PAGE_KEY='wordflow_learning_page_v1';
+function showLearningPage(page='practice',persist=true){
+  if(!['practice','materials','plans'].includes(page))page='practice';
+  document.querySelectorAll('[data-learning-page-panel]').forEach(el=>el.classList.toggle('active',el.dataset.learningPagePanel===page));
+  document.querySelectorAll('[data-learning-page]').forEach(btn=>{const active=btn.dataset.learningPage===page;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false')});
+  if(persist)try{localStorage.setItem(LEARNING_PAGE_KEY,page)}catch(_){ }
+}
+function openSimpleModal(id){const el=$(id);if(el)el.classList.add('open')}
+function closeSimpleModal(id){const el=$(id);if(el)el.classList.remove('open')}
+function optionText(id,fallback='—'){const el=$(id);if(!el)return fallback;const opt=el.options?.[el.selectedIndex];return String(opt?.textContent||fallback).trim()||fallback}
+function updateWritingSetupSummary(){
+  if(!$('writingSummaryGrammar'))return;
+  $('writingSummaryGrammar').textContent=optionText('writingGrammarTopic','Немає активної теми');
+  $('writingSummaryVocab').textContent=optionText('writingVocabCategory','Усі теми словника');
+  $('writingSummaryType').textContent=optionText('writingExerciseType','Вправа');
+  $('writingSummaryWords').textContent=optionText('writingWordCount','3 слова');
+}
+function learningStatusLabel(status){
+  return status==='learned'?'Пройдено':status==='paused'?'Пауза':'Активна';
+}
+function addLearningTopic(name,preset=null){
+  name=String(name||'').trim();
+  if(!name)return false;
+  db.learningTopics=cleanLearningTopics(db.learningTopics);
+  if(db.learningTopics.some(x=>norm(x.name)===norm(name))){toast('Така навчальна тема вже є');return false}
+  const matched=preset||learningPresetFor(name);
+  const now=new Date().toISOString();
+  db.learningTopics.push({
+    id:'lt_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6),
+    name,
+    status:'active',
+    summary:matched?.summary||'',
+    source:matched?'preset':'manual',
+    createdAt:now,
+    updatedAt:now
+  });
+  saveDB();
+  toast('Навчальну тему додано');
+  return true;
+}
+function setLearningTopicStatus(id,status){
+  if(!['active','paused','learned'].includes(status))return;
+  const topic=(db.learningTopics||[]).find(x=>String(x.id)===String(id));
+  if(!topic)return;
+  topic.status=status;topic.updatedAt=new Date().toISOString();
+  saveDB();
+}
+function removeLearningTopic(id){
+  const index=(db.learningTopics||[]).findIndex(x=>String(x.id)===String(id));
+  if(index<0)return;
+  const removed={...db.learningTopics[index]};
+  db.learningTopics.splice(index,1);
+  saveDB();
+  toast('Навчальну тему прибрано',{undo:()=>{db.learningTopics.splice(Math.min(index,db.learningTopics.length),0,removed);saveDB()},duration:4200});
+}
+function renderLearning(){
+  if(!$('learningTopicList'))return;
+  db.learningTopics=cleanLearningTopics(db.learningTopics);
+  const existing=new Set(db.learningTopics.map(x=>norm(x.name)));
+  $('learningPresets').innerHTML=LEARNING_TOPIC_PRESETS.map(p=>{
+    const added=existing.has(norm(p.name));
+    return `<button class="learning-preset" type="button" data-learning-preset="${esc(p.name)}" ${added?'disabled':''}>${added?'✓ ': '+ '}${esc(p.name)}</button>`;
+  }).join('');
+  document.querySelectorAll('[data-learning-preset]:not(:disabled)').forEach(btn=>btn.onclick=()=>{
+    const p=learningPresetFor(btn.dataset.learningPreset);if(p)addLearningTopic(p.name,p);
+  });
+
+  const statusOrder={active:0,paused:1,learned:2};
+  const topics=[...db.learningTopics].sort((a,b)=>(statusOrder[a.status]??9)-(statusOrder[b.status]??9)||a.name.localeCompare(b.name,'uk'));
+  $('learningTopicList').innerHTML=topics.length?topics.map(topic=>`<div class="learning-topic-card">
+    <div><div class="learning-topic-title"><span class="learning-status-dot ${esc(topic.status)}"></span>${esc(topic.name)}</div>${topic.summary?`<div class="learning-topic-summary">${esc(topic.summary)}</div>`:''}</div>
+    <div class="learning-topic-actions"><select class="learning-status" data-learning-status="${esc(topic.id)}" aria-label="Статус теми ${esc(topic.name)}"><option value="active" ${topic.status==='active'?'selected':''}>Активна</option><option value="paused" ${topic.status==='paused'?'selected':''}>Пауза</option><option value="learned" ${topic.status==='learned'?'selected':''}>Пройдено</option></select><button class="learning-remove" type="button" data-learning-remove="${esc(topic.id)}">Видалити</button></div>
+  </div>`).join(''):'<div class="learning-empty">Ще немає навчальних тем. Додай тему вручну або натисни один із готових варіантів вище.</div>';
+  document.querySelectorAll('[data-learning-status]').forEach(sel=>sel.onchange=()=>setLearningTopicStatus(sel.dataset.learningStatus,sel.value));
+  document.querySelectorAll('[data-learning-remove]').forEach(btn=>btn.onclick=()=>removeLearningTopic(btn.dataset.learningRemove));
+
+  const active=db.learningTopics.filter(x=>x.status==='active');
+  const grammar=$('writingGrammarTopic');
+  const previousGrammar=grammar.value;
+  grammar.innerHTML=active.length?active.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join(''):'<option value="">Немає активних тем</option>';
+  if(active.some(x=>String(x.id)===previousGrammar))grammar.value=previousGrammar;
+
+  const vocab=$('writingVocabCategory');
+  const previousVocab=vocab.value;
+  const cats=allCategories();
+  vocab.innerHTML='<option value="">Усі теми словника</option>'+cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  if(!previousVocab||cats.includes(previousVocab))vocab.value=previousVocab;
+  $('generateWritingPrompt').disabled=!active.length||!db.entries.length;
+  if($('learningActiveCount'))$('learningActiveCount').textContent=String(active.length);
+  if($('learningMaterialCount'))$('learningMaterialCount').textContent=String((db.learningMaterials||[]).length);
+  updateWritingSetupSummary();
+  renderLearningMaterials();
+}
+function writingGrammarHint(topicName=''){
+  const n=norm(topicName);
+  if(n.includes('present simple'))return 'Використай Present Simple. Звертай увагу на -s / -es у he, she, it та на do / does у питаннях і запереченнях.';
+  if(n.includes('present continuous'))return 'Використай Present Continuous: am / is / are + дієслово з -ing.';
+  if(n.includes('was')||n.includes('were'))return 'Використай was / were та, де доречно, wasn’t / weren’t.';
+  if(n.includes('am')||n.includes('is')||n.includes('are')||n.includes('to be'))return 'Використай правильну форму to be: am / is / are.';
+  if(n.includes('subject')||n.includes('object pronoun'))return 'Стеж за формою займенників: subject pronouns перед дієсловом, object pronouns після дієслова або прийменника.';
+  if(n.includes('possessive'))return 'Використай присвійні форми доречно: my / your / his / her / our / their перед іменником або mine / yours / his / hers / ours / theirs без іменника.';
+  if(n.includes('plural'))return 'Використай іменники в однині та множині й звертай увагу на irregular plural forms.';
+  return `Пиши в межах теми «${topicName}».`;
+}
+function writingQuestionPool(category='',topicName=''){
+  const c=norm(category);
+  const n=norm(topicName);
+  const pools={
+    'їжа':['Яка твоя улюблена їжа і як часто ти її їси?','Що ти зазвичай готуєш або їси протягом дня?','Опиши просту страву, яку ти любиш.'],
+    'кухня':['Що ти зазвичай робиш на кухні?','Опиши, як ти готуєш просту вечерю.','Які речі на кухні ти використовуєш найчастіше?'],
+    'сім’я':['Розкажи 2–3 речення про свою сім’ю.','Що члени твоєї сім’ї зазвичай роблять разом?','Опиши одного члена сім’ї та ваші звичні заняття.'],
+    'робота':['Опиши свій звичайний робочий день.','Що ти зазвичай робиш на роботі?','Опиши одну типову ситуацію зі своєї роботи.'],
+    'одяг':['Що ти зазвичай носиш у будні?','Опиши одяг, який тобі подобається.','Що ти носиш сьогодні або зазвичай носиш у таку погоду?'],
+    'природа':['Опиши погоду або природу навколо тебе.','Яка погода тобі подобається і чому?','Що ти зазвичай робиш на природі?'],
+    'здоров’я':['Що ти зазвичай робиш, щоб добре себе почувати?','Опиши свій звичайний режим дня з погляду здоров’я.','Що людина може робити, коли почувається втомленою?']
+  };
+  let pool=pools[c]||['Розкажи про свій звичайний день.','Напиши 2–3 речення про себе або про те, що відбувається навколо тебе.','Склади коротку відповідь на тему, використовуючи слова нижче.'];
+  if(n.includes('present continuous'))pool=['Що відбувається зараз? Уяви сцену й опиши її 2–3 реченнями.','Опиши, що ти або інші люди роблять у цей момент.','Уяви, що ти дивишся навколо себе. Що зараз відбувається?'];
+  else if(n.includes('was')||n.includes('were'))pool=['Де ти був учора і яким був твій день?','Опиши 2–3 реченнями, де були люди або речі вчора.','Напиши коротко про вчорашній день, використовуючи was / were.'];
+  else if(n.includes('possessive'))pool=['Опиши, кому належать 3 речі навколо тебе.','Склади 3 речення про свої та чужі речі.','Напиши короткий опис речей, використовуючи присвійні форми.'];
+  else if(n.includes('subject')||n.includes('object pronoun'))pool=['Напиши 3 короткі речення про людей, а потім використай займенники замість повторення їхніх імен.','Склади кілька речень із subject та object pronouns.','Опиши коротку взаємодію між двома людьми, використовуючи займенники.'];
+  else if(n.includes('plural'))pool=['Напиши 3 речення про кілька предметів або людей. Використай форми множини.','Опиши, що є навколо тебе, використовуючи щонайменше три іменники у множині.','Склади речення з одниною та множиною іменників.'];
+  return pool;
+}
+function writingExactExercisePool(topicName=''){
+  const n=norm(topicName);
+  if(n.includes('present continuous'))return [
+    {question:'Я зараз роблю домашнє завдання.',answer:'I am doing my homework now.'},
+    {question:'Вона зараз розмовляє телефоном.',answer:'She is talking on the phone now.'},
+    {question:'Ми зараз вивчаємо англійську.',answer:'We are studying English now.'},
+    {question:'Діти зараз граються надворі.',answer:'The children are playing outside now.'}
+  ];
+  if(n.includes('present simple'))return [
+    {question:'Я зазвичай прокидаюся о сьомій.',answer:'I usually wake up at seven.'},
+    {question:'Вона щодня п’є каву.',answer:'She drinks coffee every day.'},
+    {question:'Ми часто граємо у футбол.',answer:'We often play football.'},
+    {question:'Він працює в лікарні.',answer:'He works in a hospital.'}
+  ];
+  if(n.includes('was')||n.includes('were'))return [
+    {question:'Я був удома вчора.',answer:'I was at home yesterday.'},
+    {question:'Ми були в Києві минулого літа.',answer:'We were in Kyiv last summer.'},
+    {question:'Вони не були в школі.',answer:"They weren't at school.",alternatives:['They were not at school.']},
+    {question:'Ти був учора на роботі?',answer:'Were you at work yesterday?'}
+  ];
+  if(n.includes('subject')||n.includes('object pronoun'))return [
+    {question:'Вона моя подруга. Я бачу її щодня.',answer:'She is my friend. I see her every day.'},
+    {question:'Вони люблять нас.',answer:'They love us.'},
+    {question:'Він допомагає мені.',answer:'He helps me.'},
+    {question:'Ми знаємо його.',answer:'We know him.'}
+  ];
+  if(n.includes('possessive'))return [
+    {question:'Це моя книга.',answer:'This is my book.'},
+    {question:'Ця книга моя.',answer:'This book is mine.'},
+    {question:'Це їхня машина.',answer:'This is their car.'},
+    {question:'Ця машина їхня.',answer:'This car is theirs.'}
+  ];
+  if(n.includes('plural'))return [
+    {question:'У саду три дерева.',answer:'There are three trees in the garden.'},
+    {question:'У мене дві дитини.',answer:'I have two children.'},
+    {question:'На столі п’ять помідорів.',answer:'There are five tomatoes on the table.'},
+    {question:'Я бачу двох жінок.',answer:'I see two women.'}
+  ];
+  if(n.includes('am')||n.includes('is')||n.includes('are')||n.includes('to be'))return [
+    {question:'Я голодний.',answer:'I am hungry.'},
+    {question:'Вона щаслива.',answer:'She is happy.'},
+    {question:'Вони вдома.',answer:'They are at home.'},
+    {question:'Ми готові.',answer:'We are ready.'}
+  ];
+  return [
+    {question:'Я вчу англійську.',answer:'I study English.'},
+    {question:'Ми зараз удома.',answer:'We are at home now.'}
+  ];
+}
+function writingOpenExample(topicName=''){
+  const n=norm(topicName);
+  if(n.includes('present continuous'))return 'I am studying English now. My family is relaxing at home. We are having a quiet evening.';
+  if(n.includes('present simple'))return 'I usually get up at seven. I drink coffee in the morning and I study English in the evening.';
+  if(n.includes('was')||n.includes('were'))return 'Yesterday I was at home. My parents were at work, and the weather was cold.';
+  if(n.includes('possessive'))return 'This is my phone. That bag is hers. The books on the table are ours.';
+  if(n.includes('subject')||n.includes('object pronoun'))return 'Anna is my friend. She often calls me, and I help her with English.';
+  if(n.includes('plural'))return 'There are two books on my desk. I can see three boxes and two watches in the room.';
+  return 'I study English every week. It is important to me, and I try to practise regularly.';
+}
+function randomItem(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function pickWritingWords(category='',count=3){
+  let pool=db.entries.filter(e=>!category||(e.categories||[]).includes(category));
+  if(!pool.length)return [];
+  pool=[...pool].sort((a,b)=>({learning:0,new:1,learned:2}[a.status]??3)-({learning:0,new:1,learned:2}[b.status]??3));
+  const preferred=pool.slice(0,Math.max(count*5,Math.ceil(pool.length*.65)));
+  const source=preferred.length>=count?preferred:pool;
+  const shuffled=[...source].sort(()=>Math.random()-.5);
+  return shuffled.slice(0,Math.min(count,shuffled.length));
+}
+function clearWritingPhoto(){
+  if(writingPhotoUrl){URL.revokeObjectURL(writingPhotoUrl);writingPhotoUrl=null}
+  writingPhotoFile=null;
+  if($('writingPhotoInput'))$('writingPhotoInput').value='';
+  if($('writingPhotoImage'))$('writingPhotoImage').removeAttribute('src');
+  if($('writingPhotoPreview'))$('writingPhotoPreview').classList.remove('show');
+  if($('writingOcrStatus'))$('writingOcrStatus').textContent='';
+}
+function renderWritingPromptState({topic,category,exerciseType,words,question,referenceAnswer,referenceTitle,referenceNote,instruction='',generatedBy='local'}){
+  writingPromptState={exerciseType,topicId:topic.id,topicName:topic.name,category,words:words.map(x=>({id:x.id||'',en:x.en,ua:x.ua||''})),question,referenceAnswer,referenceTitle,referenceNote,generatedBy};
+  $('writingPromptKicker').textContent=topic.name+(category?' · '+category:'')+(generatedBy==='ai'?' · AI':'');
+  $('writingQuestion').textContent=question;
+  $('writingInstruction').textContent=instruction||((exerciseType==='translate'?'Переклади речення англійською. ':'Відповідай англійською 2–3 реченнями. ')+writingGrammarHint(topic.name));
+  const showTargets=exerciseType!=='translate';
+  $('writingTargetLabel').textContent='Спробуй використати:';$('writingTargetLabel').style.display=showTargets?'block':'none';$('writingTargets').style.display=showTargets?'flex':'none';$('checkWritingWords').style.display=showTargets?'inline-flex':'none';
+  $('writingTargets').innerHTML=writingPromptState.words.map(w=>`<span class="writing-target" data-writing-word="${esc(w.en)}"><b>${esc(w.en)}</b>${w.ua?` <small>— ${esc(w.ua)}</small>`:''}</span>`).join('');
+  $('writingAnswer').value='';$('writingCheckResult').textContent='';$('writingReference').classList.remove('show');$('writingAiFeedback').className='writing-ai-feedback';$('writingAiFeedback').innerHTML='';
+  $('writingReferenceTitle').textContent=referenceTitle;$('writingReferenceAnswer').textContent=referenceAnswer;$('writingReferenceNote').textContent=referenceNote;$('showWritingReference').textContent=exerciseType==='translate'?'Показати відповідь':'Показати приклад';
+  document.querySelectorAll('#writingTargets .writing-target').forEach(chip=>chip.classList.remove('used','missed'));clearWritingPhoto();$('writingPromptCard').style.display='block';if(exerciseType!=='translate')$('writingAnswer').focus();
+}
+async function generateWritingPrompt(){
+  const topic=(db.learningTopics||[]).find(x=>String(x.id)===String($('writingGrammarTopic').value)&&x.status==='active');
+  if(!topic){alert('Спочатку додай або активуй навчальну тему.');return}
+  const category=$('writingVocabCategory').value,exerciseType=$('writingExerciseType').value||'translate',count=Math.max(2,Math.min(4,Number($('writingWordCount').value)||3));
+  const words=pickWritingWords(category,count);if(!words.length){alert('У вибраній темі словника немає слів. Обери іншу тему.');return}
+  const mode=$('writingGeneratorMode')?.value||'ai';
+  if(mode==='ai'){
+    const btn=$('generateWritingPrompt');btn.disabled=true;const old=btn.textContent;btn.textContent='AI створює…';
+    try{
+      const result=await aiFetch('/writing/generate',{grammarTopic:{name:topic.name,summary:topic.summary||'',hint:writingGrammarHint(topic.name)},category,exerciseType,words:words.map(w=>({en:w.en,ua:w.ua,status:w.status})),materials:materialContextForTopic(topic.name)});
+      renderWritingPromptState({topic,category,exerciseType,words,question:result.question,instruction:result.instruction,referenceAnswer:result.referenceAnswer,referenceTitle:result.referenceTitle,referenceNote:result.referenceNote,generatedBy:'ai'});return;
+    }catch(err){alert((err.message||'AI не створив завдання.')+'\n\nWordFlow зараз створить локальне завдання без API.');}
+    finally{btn.disabled=false;btn.textContent=old}
+  }
+  let question='',referenceAnswer='',referenceTitle='',referenceNote='';
+  if(exerciseType==='translate'){const ex=randomItem(writingExactExercisePool(topic.name));question=ex.question;referenceAnswer=ex.answer;referenceTitle='Правильна відповідь';referenceNote=ex.alternatives?.length?'Також прийнятно: '+ex.alternatives.join(' / '):'Контрольний варіант для звірки.';}
+  else{question=randomItem(writingQuestionPool(category,topic.name));referenceAnswer=writingOpenExample(topic.name);referenceTitle='Приклад відповіді';referenceNote='У відкритому завданні немає однієї єдиної правильної відповіді. Це лише граматично коректний приклад.';}
+  renderWritingPromptState({topic,category,exerciseType,words,question,referenceAnswer,referenceTitle,referenceNote,generatedBy:'local'});
+}
+function showWritingReference(){
+  if(!writingPromptState)return;
+  $('writingReference').classList.add('show');
+}
+function handleWritingPhoto(file){
+  clearWritingPhoto();
+  if(!file)return;
+  if(!String(file.type||'').startsWith('image/')){alert('Обери фото або зображення.');return}
+  writingPhotoFile=file;
+  writingPhotoUrl=URL.createObjectURL(file);
+  $('writingPhotoImage').src=writingPhotoUrl;
+  $('writingPhotoPreview').classList.add('show');
+}
+function wordFormsForCheck(word=''){
+  let w=norm(word).replace(/[^a-z' -]/g,' ').replace(/\s+/g,' ').trim();
+  if(!w)return [];
+  // Словникові записи на кшталт “to cook” мають зараховувати cook / cooks / cooking.
+  if(w.startsWith('to ')&&w.split(' ').length===2)w=w.slice(3);
+  if(w.includes(' '))return [w];
+  const forms=new Set([w,w+'s',w+'es',w+'ed',w+'ing']);
+  if(w.endsWith('e'))forms.add(w.slice(0,-1)+'ing');
+  if(w.endsWith('y'))forms.add(w.slice(0,-1)+'ies');
+  return [...forms];
+}
+function writingAnswerUses(answer,word){
+  const a=' '+norm(answer).replace(/[^a-z' -]/g,' ').replace(/\s+/g,' ').trim()+' ';
+  return wordFormsForCheck(word).some(form=>a.includes(' '+form+' '));
+}
+function checkWritingWords(){
+  if(!writingPromptState)return;
+  const answer=$('writingAnswer').value;
+  if(!answer.trim()){alert('Спочатку напиши відповідь.');return}
+  let used=0;
+  document.querySelectorAll('#writingTargets .writing-target').forEach((chip,i)=>{
+    const ok=writingAnswerUses(answer,writingPromptState.words[i]?.en||'');
+    chip.classList.toggle('used',ok);chip.classList.toggle('missed',!ok);if(ok)used++;
+  });
+  const total=writingPromptState.words.length;
+  $('writingCheckResult').textContent=used===total?`Чудово: використано всі ${total} задані слова.`:`Використано ${used} з ${total}. Червоні слова WordFlow поки не знайшов у відповіді.`;
+}
+
 function exportJSON(){const blob=new Blob([JSON.stringify({...db,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wordflow-dictionary-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSONFile(file){
   const r=new FileReader();
@@ -2865,6 +3631,8 @@ function importJSONFile(file){
         version:2,
         entries,
         categories,
+        learningTopics:Array.isArray(data.learningTopics)?cleanLearningTopics(data.learningTopics):cleanLearningTopics(db.learningTopics),
+        learningMaterials:Array.isArray(data.learningMaterials)?cleanLearningMaterials(data.learningMaterials):cleanLearningMaterials(db.learningMaterials),
         notebookSeedVersion:Number(data.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
       };
       saveDB();
@@ -3279,6 +4047,7 @@ $('mobileLogoutBtn').onclick=()=>{
 
 $('themeToggle').onclick=()=>applyWordFlowTheme(getWordFlowTheme()==='dark'?'light':'dark');
 $('googleLoginBtn').onclick=googleLogin;$('logoutBtn').onclick=googleLogout;$('toastAction').onclick=runUndo;
+loadAiConfig();
 
 function setManageMenu(open){
   $('manageMenu').classList.toggle('open',open);
@@ -3334,6 +4103,8 @@ onAuthStateChanged(firebaseAuth,async user=>{
       ? guestBeforeLogin.entries.map(e=>({...e,categories:[...(e.categories||[])]}))
       : [],
     categories:Array.isArray(guestBeforeLogin?.categories)?[...guestBeforeLogin.categories]:[],
+    learningTopics:cleanLearningTopics(guestBeforeLogin?.learningTopics),
+    learningMaterials:cleanLearningMaterials(guestBeforeLogin?.learningMaterials),
     notebookSeedVersion:Number(guestBeforeLogin?.notebookSeedVersion)||NOTEBOOK_SEED_VERSION
   };
   await connectUserCloud(user,localDBSnapshot);
@@ -3348,7 +4119,19 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
     trainPrepared=false;
     showTrainSetup();
   }
-});['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{
+);
+// Learning sub-navigation and hidden settings panels.
+document.querySelectorAll('[data-learning-page]').forEach(btn=>btn.onclick=()=>showLearningPage(btn.dataset.learningPage));
+try{showLearningPage(localStorage.getItem(LEARNING_PAGE_KEY)||'practice',false)}catch(_){showLearningPage('practice',false)}
+$('openWritingSettings').onclick=()=>openSimpleModal('writingSettingsModal');
+$('closeWritingSettings').onclick=()=>closeSimpleModal('writingSettingsModal');
+$('saveWritingSettings').onclick=()=>{updateWritingSetupSummary();closeSimpleModal('writingSettingsModal')};
+$('writingSettingsModal').onclick=e=>{if(e.target===$('writingSettingsModal'))closeSimpleModal('writingSettingsModal')};
+$('openAiSettings').onclick=()=>openSimpleModal('aiSettingsModal');
+$('closeAiSettings').onclick=()=>closeSimpleModal('aiSettingsModal');
+$('aiSettingsModal').onclick=e=>{if(e.target===$('aiSettingsModal'))closeSimpleModal('aiSettingsModal')};
+['writingGrammarTopic','writingVocabCategory','writingExerciseType','writingWordCount','writingGeneratorMode'].forEach(id=>$(id)?.addEventListener('change',updateWritingSetupSummary));
+['search','typeFilter','statusFilter','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{
   listFilterSignature='';
   resetListWindow();
   renderStats();
@@ -3382,6 +4165,19 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 $('closeProgressModal').onclick=()=>$('progressModal').classList.remove('open');
 $('progressModal').onclick=e=>{if(e.target===$('progressModal'))$('progressModal').classList.remove('open')};
 $('categoryBtn').onclick=()=>{$('categoryModal').classList.add('open');renderCategoryManage()};$('closeCategoryModal').onclick=()=>$('categoryModal').classList.remove('open');$('categoryModal').onclick=e=>{if(e.target===$('categoryModal'))$('categoryModal').classList.remove('open')};$('modalAddCategory').onclick=()=>{const c=addCategory($('modalCategoryInput').value,false);if(c)$('modalCategoryInput').value=''};$('closeCategoryDeleteModal').onclick=closeCategoryDeleteChoice;$('cancelCategoryDelete').onclick=closeCategoryDeleteChoice;$('categoryDeleteModal').onclick=e=>{if(e.target===$('categoryDeleteModal'))closeCategoryDeleteChoice()};$('deleteCategoryOnly').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,false)};$('deleteCategoryWithWords').onclick=()=>{if(pendingCategoryDelete)removeCategory(pendingCategoryDelete,true)};$('trainFiltered').onclick=()=>prepareTrainer();
+$('addLearningTopic').onclick=()=>{if(addLearningTopic($('learningTopicInput').value))$('learningTopicInput').value=''};
+$('learningTopicInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('addLearningTopic').click()}});
+$('generateWritingPrompt').onclick=generateWritingPrompt;
+$('saveAiConfig').onclick=saveAiConfig;$('testAiConnection').onclick=testAiConnection;
+$('materialFileInput').onchange=e=>{pendingMaterialFile=e.target.files?.[0]||null;$('materialFileName').textContent=pendingMaterialFile?pendingMaterialFile.name:'';closeMaterialPreview();setMaterialStatus(pendingMaterialFile?'Файл готовий до аналізу.':'')};
+$('analyzeMaterial').onclick=analyzeStudyMaterial;$('saveMaterialAnalysis').onclick=savePendingMaterialAnalysis;$('cancelMaterialAnalysis').onclick=closeMaterialPreview;
+$('nextWritingPrompt').onclick=generateWritingPrompt;
+$('checkWritingWords').onclick=checkWritingWords;
+$('checkWritingAI').onclick=checkWritingAI;
+$('showWritingReference').onclick=showWritingReference;
+$('writingPhotoInput').onchange=e=>handleWritingPhoto(e.target.files?.[0]);
+$('removeWritingPhoto').onclick=clearWritingPhoto;
+$('recognizeWritingPhoto').onclick=recognizeWritingPhoto;
 $('findDuplicates').onclick=openDuplicateFinder;
 $('closeDuplicateModal').onclick=closeDuplicateFinder;
 $('duplicateModal').onclick=e=>{if(e.target===$('duplicateModal'))closeDuplicateFinder()};

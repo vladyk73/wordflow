@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordflow-shell-v31';
+const CACHE_NAME = 'wordflow-shell-v35';
 const APP_SHELL = [
   './',
   './index.html',
@@ -38,6 +38,7 @@ self.addEventListener('fetch', event => {
   const firebaseModule =
     url.hostname === 'www.gstatic.com' &&
     url.pathname.includes('/firebasejs/');
+  const helperLibrary = url.hostname === 'cdn.jsdelivr.net' && url.pathname.includes('/jszip@');
 
   if(request.mode === 'navigate'){
     event.respondWith(
@@ -52,7 +53,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if(sameOrigin || firebaseModule){
+  if(sameOrigin || firebaseModule || helperLibrary){
     event.respondWith(
       caches.match(request).then(cached => {
         const network = fetch(request).then(response => {
