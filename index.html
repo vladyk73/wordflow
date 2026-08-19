@@ -1427,6 +1427,19 @@ body.writing-session-active{overflow:hidden}
 .writing-session-next.done{background:#eaf8f2;color:#16815c;border-color:#bfe7d7}
 .writing-session-card.card-enter{animation:writingCardIn .24s cubic-bezier(.2,.8,.2,1)}
 @keyframes writingCardIn{from{opacity:.25;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.writing-prompt-card.session-open .writing-session-card{position:relative}
+.writing-session-loading{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;border-radius:inherit;background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(7px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility .16s ease}
+.writing-session-card.is-loading .writing-session-loading{opacity:1;visibility:visible;pointer-events:auto}
+.writing-session-loading strong{font-size:17px;margin-top:15px}.writing-session-loading>span{font-size:12px;color:var(--muted);margin-top:5px;max-width:310px;line-height:1.45}
+.writing-loading-stack{position:relative;width:76px;height:66px}
+.writing-loading-stack i{position:absolute;left:50%;top:50%;width:54px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel);box-shadow:0 8px 22px rgba(31,39,70,.09);transform-origin:center}
+.writing-loading-stack i:nth-child(1){transform:translate(-58%,-42%) rotate(-8deg);animation:writingLoadBack 1.15s ease-in-out infinite}
+.writing-loading-stack i:nth-child(2){transform:translate(-42%,-48%) rotate(7deg);animation:writingLoadBack 1.15s .14s ease-in-out infinite}
+.writing-loading-stack i:nth-child(3){background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;transform:translate(-50%,-58%);animation:writingLoadCard 1.15s ease-in-out infinite}
+@keyframes writingLoadCard{0%,100%{transform:translate(-50%,-58%) translateY(0) rotate(0)}45%{transform:translate(-50%,-58%) translateY(-8px) rotate(3deg)}70%{transform:translate(-50%,-58%) translateY(2px) rotate(-1deg)}}
+@keyframes writingLoadBack{0%,100%{opacity:.62}50%{opacity:1}}
+html[data-theme="dark"] .writing-session-loading{background:rgba(23,27,36,.9)}
+@media(prefers-reduced-motion:reduce){.writing-loading-stack i{animation:none!important}.writing-session-card.card-enter{animation:none}}
 html[data-theme="dark"] .writing-prompt-card.session-open{background:radial-gradient(circle at 50% 0,rgba(98,107,232,.14),transparent 34%),var(--bg)}
 html[data-theme="dark"] .writing-prompt-card.session-open .writing-session-card{background:#171b24;border-color:#303746;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 @media(max-width:680px){
@@ -1449,7 +1462,7 @@ html[data-theme="dark"] .writing-prompt-card.session-open .writing-session-card{
 @media(max-width:480px){.learning-inline-add{grid-template-columns:1fr}.learning-inline-add .btn{width:100%}.learning-topic-actions{display:grid;grid-template-columns:1fr auto;width:100%}.learning-status{width:100%}.writing-actions .btn{flex:1 1 100%}}
 
 
-/* v11.11.0 — cleaner Learning UX */
+/* v11.11.1 — cleaner Learning UX */
 .learning-section-divider{height:1px;background:var(--line);margin:20px 0}
 .learning-head.compact{margin-bottom:10px}.learning-head.compact h3{font-size:17px}
 .ai-status-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;color:var(--muted);background:var(--panel);white-space:nowrap}.ai-status-badge.ok{color:#17764b;border-color:#9bdfbb;background:#effbf5}.ai-status-badge.busy{color:#8b5a00;border-color:#ecd39c;background:#fff9e9}.ai-status-badge.error{color:#b33449;border-color:#efbdc5;background:#fff5f6}
@@ -1464,7 +1477,7 @@ html[data-theme="dark"] .material-preview{background:#202436;border-color:#3c457
 @media(max-width:680px){.ai-config-grid{grid-template-columns:1fr}.ai-config-actions .btn,.material-import-actions .btn,.material-import-actions .file-label{flex:1 1 100%;justify-content:center}.learning-material-head{gap:7px}.writing-photo-buttons{display:grid;grid-template-columns:1fr}.writing-photo-buttons .btn{width:100%}}
 
 
-/* v11.11.0 — Learning UX cleanup */
+/* v11.11.1 — Learning UX cleanup */
 .learning-shell{display:grid;gap:14px;max-width:980px;margin:0 auto}
 .learning-hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(135deg,rgba(98,107,232,.09),rgba(133,139,255,.035)),var(--panel)}
 .learning-hero-copy{min-width:0}.learning-hero-copy h2{margin:2px 0 6px;font-size:25px}.learning-hero-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;max-width:680px}
@@ -1497,7 +1510,7 @@ html[data-theme="dark"] .learning-hero{background:linear-gradient(135deg,rgba(98
 </head>
 <body>
 <div class="app">
-  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.11.0</span></p></div></div><div class="actions">
+  <div class="topbar" id="mainTopbar"><div class="brand"><div class="logo">W</div><div><h1>WordFlow Dictionary</h1><p>Особистий словник, фільтри та повторення <span class="build-badge">v11.11.1</span></p></div></div><div class="actions">
     <div class="auth-box">
       <button class="btn primary" id="googleLoginBtn" type="button">Увійти через Google</button>
       <div class="auth-user" id="authUser">
@@ -1709,6 +1722,11 @@ html[data-theme="dark"] .learning-hero{background:linear-gradient(135deg,rgba(98
               <div class="writing-session-count" id="writingSessionCount">1 / 10</div>
             </div>
             <div class="writing-session-card">
+            <div class="writing-session-loading" id="writingSessionLoading" aria-live="polite" aria-hidden="true">
+              <div class="writing-loading-stack" aria-hidden="true"><i></i><i></i><i></i></div>
+              <strong id="writingLoadingTitle">Готую наступну картку…</strong>
+              <span id="writingLoadingText">AI підбирає природне речення під твою граматику й лексику.</span>
+            </div>
             <div class="writing-prompt-kicker" id="writingPromptKicker">Письмова практика</div>
             <div class="writing-question" id="writingQuestion"></div>
             <div class="writing-instruction" id="writingInstruction"></div>
@@ -3608,6 +3626,15 @@ function clearWritingPhoto(){
   if($('writingPhotoPreview'))$('writingPhotoPreview').classList.remove('show');
   if($('writingOcrStatus'))$('writingOcrStatus').textContent='';
 }
+function setWritingSessionLoading(on,title='Готую наступну картку…',text='AI підбирає природне речення під твою граматику й лексику.'){
+  const card=document.querySelector('.writing-session-card');
+  const overlay=$('writingSessionLoading');
+  if(card)card.classList.toggle('is-loading',!!on);
+  if(overlay)overlay.setAttribute('aria-hidden',on?'false':'true');
+  if($('writingLoadingTitle'))$('writingLoadingTitle').textContent=title;
+  if($('writingLoadingText'))$('writingLoadingText').textContent=text;
+  ['nextWritingPrompt','checkWritingAI','showWritingReference','checkWritingWords','recognizeWritingPhoto'].forEach(id=>{const el=$(id);if(el)el.disabled=!!on});
+}
 function updateWritingSessionChrome(){
   if($('writingSessionCount'))$('writingSessionCount').textContent=`${writingSessionIndex} / ${WRITING_SESSION_SIZE}`;
   if($('writingSessionMeta')){
@@ -3642,8 +3669,19 @@ async function nextWritingSessionCard(){
     writingSessionIndex=1;
     return;
   }
+  setWritingSessionLoading(true);
+  const previousIndex=writingSessionIndex;
   writingSessionIndex+=1;
-  await generateWritingPrompt({keepSession:true});
+  updateWritingSessionChrome();
+  try{
+    await generateWritingPrompt({keepSession:true});
+  }catch(err){
+    writingSessionIndex=previousIndex;
+    updateWritingSessionChrome();
+    alert(err?.message||'Не вдалося створити наступну картку.');
+  }finally{
+    setWritingSessionLoading(false);
+  }
 }
 function renderWritingPromptState({topic,category,exerciseType,words,question,referenceAnswer,referenceTitle,referenceNote,instruction='',generatedBy='local'}){
   writingPromptState={exerciseType,topicId:topic.id,topicName:topic.name,category,words:words.map(x=>({id:x.id||'',en:x.en,ua:x.ua||''})),question,referenceAnswer,referenceTitle,referenceNote,generatedBy};
@@ -3657,25 +3695,41 @@ function renderWritingPromptState({topic,category,exerciseType,words,question,re
   $('writingReferenceTitle').textContent=referenceTitle;$('writingReferenceAnswer').textContent=referenceAnswer;$('writingReferenceNote').textContent=referenceNote;$('showWritingReference').textContent=exerciseType==='translate'?'Показати відповідь':'Показати приклад';
   document.querySelectorAll('#writingTargets .writing-target').forEach(chip=>chip.classList.remove('used','missed'));clearWritingPhoto();$('writingPromptCard').style.display='block';openWritingSession();const sessionCard=document.querySelector('.writing-session-card');if(sessionCard){sessionCard.classList.remove('card-enter');requestAnimationFrame(()=>sessionCard.classList.add('card-enter'));}if(exerciseType!=='translate'&&window.innerWidth>680)$('writingAnswer').focus();
 }
+function resolveAiTargetWords(candidates,targetWords,requestedCount){
+  const wanted=Array.isArray(targetWords)?targetWords.map(v=>norm(v)).filter(Boolean):[];
+  const picked=[];
+  for(const wantedWord of wanted){
+    const match=candidates.find(w=>norm(w.en)===wantedWord&&!picked.some(x=>x.id===w.id));
+    if(match)picked.push(match);
+    if(picked.length>=requestedCount)break;
+  }
+  for(const candidate of candidates){
+    if(picked.length>=requestedCount)break;
+    if(!picked.some(x=>x.id===candidate.id))picked.push(candidate);
+  }
+  return picked.slice(0,requestedCount);
+}
 async function generateWritingPrompt({keepSession=false}={}){
   if(!keepSession){writingSessionIndex=1;}
   const topic=(db.learningTopics||[]).find(x=>String(x.id)===String($('writingGrammarTopic').value)&&x.status==='active');
   if(!topic){alert('Спочатку додай або активуй навчальну тему.');return}
   const category=$('writingVocabCategory').value,exerciseType=$('writingExerciseType').value||'translate',count=Math.max(2,Math.min(4,Number($('writingWordCount').value)||3));
-  const words=pickWritingWords(category,count);if(!words.length){alert('У вибраній темі словника немає слів. Обери іншу тему.');return}
   const mode=$('writingGeneratorMode')?.value||'ai';
+  const candidateCount=mode==='ai'?Math.min(8,Math.max(count,count*3)):count;
+  const words=pickWritingWords(category,candidateCount);if(!words.length){alert('У вибраній темі словника немає слів. Обери іншу тему.');return}
   if(mode==='ai'){
     const btn=$('generateWritingPrompt');btn.disabled=true;const old=btn.textContent;btn.textContent='AI створює…';
     try{
-      const result=await aiFetch('/writing/generate',{grammarTopic:{name:topic.name,summary:topic.summary||'',hint:writingGrammarHint(topic.name)},category,exerciseType,words:words.map(w=>({en:w.en,ua:w.ua,status:w.status})),materials:materialContextForTopic(topic.name)});
-      renderWritingPromptState({topic,category,exerciseType,words,question:result.question,instruction:result.instruction,referenceAnswer:result.referenceAnswer,referenceTitle:result.referenceTitle,referenceNote:result.referenceNote,generatedBy:'ai'});return;
+      const result=await aiFetch('/writing/generate',{grammarTopic:{name:topic.name,summary:topic.summary||'',hint:writingGrammarHint(topic.name)},category,exerciseType,requestedWordCount:count,words:words.map(w=>({en:w.en,ua:w.ua,status:w.status})),materials:materialContextForTopic(topic.name)});
+      const targetWords=resolveAiTargetWords(words,result.targetWords,count);
+      renderWritingPromptState({topic,category,exerciseType,words:targetWords,question:result.question,instruction:result.instruction,referenceAnswer:result.referenceAnswer,referenceTitle:result.referenceTitle,referenceNote:result.referenceNote,generatedBy:'ai'});return;
     }catch(err){alert((err.message||'AI не створив завдання.')+'\n\nWordFlow зараз створить локальне завдання без API.');}
     finally{btn.disabled=false;btn.textContent=old}
   }
   let question='',referenceAnswer='',referenceTitle='',referenceNote='';
   if(exerciseType==='translate'){const ex=randomItem(writingExactExercisePool(topic.name));question=ex.question;referenceAnswer=ex.answer;referenceTitle='Правильна відповідь';referenceNote=ex.alternatives?.length?'Також прийнятно: '+ex.alternatives.join(' / '):'Контрольний варіант для звірки.';}
   else{question=randomItem(writingQuestionPool(category,topic.name));referenceAnswer=writingOpenExample(topic.name);referenceTitle='Приклад відповіді';referenceNote='У відкритому завданні немає однієї єдиної правильної відповіді. Це лише граматично коректний приклад.';}
-  renderWritingPromptState({topic,category,exerciseType,words,question,referenceAnswer,referenceTitle,referenceNote,generatedBy:'local'});
+  renderWritingPromptState({topic,category,exerciseType,words:words.slice(0,count),question,referenceAnswer,referenceTitle,referenceNote,generatedBy:'local'});
 }
 function showWritingReference(){
   if(!writingPromptState)return;
